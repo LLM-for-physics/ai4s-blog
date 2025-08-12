@@ -1,0 +1,33 @@
+{
+  "name": "ai4s-course-docs",
+  "version": "1.0.0",
+  "description": "AI x Physics 课程知识库网站",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "docs:serve": "vitepress serve docs"
+  },
+  "keywords": [
+    "ai",
+    "physics",
+    "course",
+    "documentation",
+    "vitepress"
+  ],
+  "author": "AI4S Course Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vitepress": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538",
+  "dependencies": {
+    "markdown-it-mathjax3": "^4.3.2"
+  }
+}

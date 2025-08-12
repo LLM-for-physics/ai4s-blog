@@ -1,0 +1,163 @@
+/**
+ * 自定义主题样式
+ * 用于覆盖 VitePress 默认样式
+ */
+
+:root {
+  /* 主题色彩 */
+  --vp-c-brand-1: #3b82f6;
+  --vp-c-brand-2: #2563eb;
+  --vp-c-brand-3: #1d4ed8;
+  
+  /* 代码块样式 */
+  --vp-code-block-bg: #f8fafc;
+  --vp-code-bg: #f1f5f9;
+  
+  /* 自定义颜色 */
+  --ai4s-primary: #3b82f6;
+  --ai4s-secondary: #10b981;
+  --ai4s-accent: #f59e0b;
+  --ai4s-danger: #ef4444;
+}
+
+/* 深色模式 */
+.dark {
+  --vp-code-block-bg: #1e293b;
+  --vp-code-bg: #334155;
+}
+
+/* 自定义容器样式 */
+.custom-block.tip {
+  border-color: var(--ai4s-secondary);
+}
+
+.custom-block.warning {
+  border-color: var(--ai4s-accent);
+}
+
+.custom-block.danger {
+  border-color: var(--ai4s-danger);
+}
+
+/* 首页英雄部分样式 */
+.VPHero .name {
+  background: linear-gradient(135deg, var(--ai4s-primary), var(--ai4s-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 代码块增强 */
+.vp-code-group {
+  margin: 16px 0;
+}
+
+/* 表格样式 */
+.vp-doc table {
+  border-collapse: collapse;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.vp-doc table th,
+.vp-doc table td {
+  border: 1px solid var(--vp-c-divider);
+  padding: 8px 16px;
+}
+
+.vp-doc table th {
+  background-color: var(--vp-c-bg-soft);
+  font-weight: 600;
+}
+
+/* Mermaid 图表样式 */
+.mermaid {
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .vp-doc table {
+    font-size: 14px;
+  }
+  
+  .vp-doc table th,
+  .vp-doc table td {
+    padding: 6px 12px;
+  }
+}
+
+/* 自定义按钮样式 */
+.ai4s-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background: var(--ai4s-primary);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.ai4s-button:hover {
+  background: var(--ai4s-secondary);
+}
+
+/* 进度条样式 */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: var(--vp-c-bg-soft);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ai4s-primary), var(--ai4s-secondary));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-2);
+  border-radius: 12px;
+  font-size: 12px;
+  margin: 2px 4px 2px 0;
+}
+
+.tag.primary {
+  background: var(--ai4s-primary);
+  color: white;
+}
+
+.tag.secondary {
+  background: var(--ai4s-secondary);
+  color: white;
+}
+
+/* 卡片样式 */
+.card {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  background: var(--vp-c-bg-soft);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--vp-c-text-1);
+}
+
+.card-content {
+  color: var(--vp-c-text-2);
+  line-height: 1.6;
+}

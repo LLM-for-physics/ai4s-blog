@@ -1,0 +1,26 @@
+node_modules/
+.DS_Store
+.vitepress/dist/
+.vitepress/cache/
+*.log
+.env
+.env.local
+.env.*.local
+coverage/
+dist/
+temp/
+
+# Yarn PnP
+.yarn/install-state.gz
+.yarn/unplugged/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
