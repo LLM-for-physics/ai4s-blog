@@ -1063,7 +1063,8 @@ __metadata:
     "@types/node": "npm:^20.0.0"
     markdown-it-mathjax3: "npm:^4.3.2"
     typescript: "npm:^5.0.0"
-    vitepress: "npm:^1.0.0"
+    vitepress: "npm:^1.6.4"
+    vue: "npm:^3.5.18"
   languageName: unknown
   linkType: soft
 
@@ -2798,7 +2799,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitepress@npm:^1.0.0":
+"vitepress@npm:^1.6.4":
   version: 1.6.4
   resolution: "vitepress@npm:1.6.4"
   dependencies:
@@ -2834,7 +2835,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:^3.5.13":
+"vue@npm:^3.5.13, vue@npm:^3.5.18":
   version: 3.5.18
   resolution: "vue@npm:3.5.18"
   dependencies:

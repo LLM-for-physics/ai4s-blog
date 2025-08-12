@@ -191,7 +191,7 @@ large_array = np.memmap('data.dat', dtype='float32', mode='r')
 
 ### Q: 推荐哪些额外的学习资源？
 **A**: 
-- **书籍**：见[推荐书籍页面](/resources/books)
+- **书籍**：见[推荐书籍页面](/resources/book.pdf)
 - **在线课程**：Coursera, edX, Udacity
 - **实践平台**：Kaggle, Google Colab
 - **论文网站**：arXiv, Papers with Code

@@ -32,7 +32,8 @@ const RAW_RUNTIME_STATE =
           ["ai4s-course-docs", "workspace:."],\
           ["markdown-it-mathjax3", "npm:4.3.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
-          ["vitepress", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:1.6.4"]\
+          ["vitepress", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:1.6.4"],\
+          ["vue", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:3.5.18"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -1241,6 +1242,21 @@ const RAW_RUNTIME_STATE =
           "vue"\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["virtual:4ce1de2f0422014e5a1ddf84d9e814e5c8a34c474506e445d565c42369c3274a66c1a83a1e415fbde0507bd07a044f975295440ba092c631c609f9589084a85b#npm:3.5.18", {\
+        "packageLocation": "./.yarn/__virtual__/@vue-server-renderer-virtual-3351df71f0/2/.yarn/berry/cache/@vue-server-renderer-npm-3.5.18-311d24a004-10c0.zip/node_modules/@vue/server-renderer/",\
+        "packageDependencies": [\
+          ["@types/vue", null],\
+          ["@vue/compiler-ssr", "npm:3.5.18"],\
+          ["@vue/server-renderer", "virtual:4ce1de2f0422014e5a1ddf84d9e814e5c8a34c474506e445d565c42369c3274a66c1a83a1e415fbde0507bd07a044f975295440ba092c631c609f9589084a85b#npm:3.5.18"],\
+          ["@vue/shared", "npm:3.5.18"],\
+          ["vue", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:3.5.18"]\
+        ],\
+        "packagePeers": [\
+          "@types/vue",\
+          "vue"\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@vue/shared", [\
@@ -1388,7 +1404,8 @@ const RAW_RUNTIME_STATE =
           ["ai4s-course-docs", "workspace:."],\
           ["markdown-it-mathjax3", "npm:4.3.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
-          ["vitepress", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:1.6.4"]\
+          ["vitepress", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:1.6.4"],\
+          ["vue", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:3.5.18"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -3303,6 +3320,24 @@ const RAW_RUNTIME_STATE =
           ["vue", "npm:3.5.18"]\
         ],\
         "linkType": "SOFT"\
+      }],\
+      ["virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:3.5.18", {\
+        "packageLocation": "./.yarn/__virtual__/vue-virtual-4ce1de2f04/2/.yarn/berry/cache/vue-npm-3.5.18-946142de5c-10c0.zip/node_modules/vue/",\
+        "packageDependencies": [\
+          ["@types/typescript", null],\
+          ["@vue/compiler-dom", "npm:3.5.18"],\
+          ["@vue/compiler-sfc", "npm:3.5.18"],\
+          ["@vue/runtime-dom", "npm:3.5.18"],\
+          ["@vue/server-renderer", "virtual:4ce1de2f0422014e5a1ddf84d9e814e5c8a34c474506e445d565c42369c3274a66c1a83a1e415fbde0507bd07a044f975295440ba092c631c609f9589084a85b#npm:3.5.18"],\
+          ["@vue/shared", "npm:3.5.18"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
+          ["vue", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:3.5.18"]\
+        ],\
+        "packagePeers": [\
+          "@types/typescript",\
+          "typescript"\
+        ],\
+        "linkType": "HARD"\
       }],\
       ["virtual:8290f2faced0721532d844694aee6076653d8706c8fc11617eda2de673fdcf2b27838137c3148b50a91a2379fd6363507032a5c23dea63034c6f305f0786f452#npm:3.5.18", {\
         "packageLocation": "./.yarn/__virtual__/vue-virtual-3126e153ce/2/.yarn/berry/cache/vue-npm-3.5.18-946142de5c-10c0.zip/node_modules/vue/",\

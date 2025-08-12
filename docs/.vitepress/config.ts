@@ -138,5 +138,14 @@ export default defineConfig({
   markdown: {
     lineNumbers: true,
     math: true
+  },
+
+  // Vite 配置
+  vite: {
+    build: {
+      rollupOptions: {
+        external: ['vue', 'vue/server-renderer']
+      }
+    }
   }
 })

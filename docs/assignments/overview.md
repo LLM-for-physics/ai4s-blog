@@ -212,7 +212,7 @@ torch>=1.11.0
 - **在线教程**: [Python科学计算教程](https://python-course.eu/)
 - **文档资源**: [NumPy用户指南](https://numpy.org/doc/)
 - **视频课程**: [机器学习实战](https://coursera.org/ml)
-- **参考书籍**: 见[推荐书籍页面](/resources/books)
+- **参考书籍**: 见[推荐书籍页面](/resources/book.pdf)
 
 ## 🎓 学术诚信
 
