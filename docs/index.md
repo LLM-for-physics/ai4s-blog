@@ -6,7 +6,7 @@ hero:
   text: "课程知识库"
   tagline: "人工智能与物理学交叉学科学习平台"
   image:
-    src: /hero-image.svg
+    src: /image.svg
     alt: AI x Physics
   actions:
     - theme: brand

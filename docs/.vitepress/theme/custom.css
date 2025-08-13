@@ -47,6 +47,26 @@
   background-clip: text;
 }
 
+/* 首页 Hero 图片样式 */
+.VPHero .image img {
+  max-width: 900px !important;
+  height: auto !important;
+  width: 100% !important;
+}
+
+/* 响应式图片调整 */
+@media (max-width: 768px) {
+  .VPHero .image img {
+    max-width: 675px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .VPHero .image img {
+    max-width: 562px !important;
+  }
+}
+
 /* 代码块增强 */
 .vp-code-group {
   margin: 16px 0;
