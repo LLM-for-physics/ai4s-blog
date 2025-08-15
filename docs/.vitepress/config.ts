@@ -41,7 +41,6 @@ export default defineConfig({
           items: [
             { text: '课程概述', link: '/course/introduction' },
             { text: '课程大纲', link: '/course/syllabus' },
-            { text: '学习目标', link: '/course/objectives' },
             { text: '评分标准', link: '/course/grading' }
           ]
         }
@@ -85,13 +84,13 @@ export default defineConfig({
 
     // 社交链接
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/your-org/ai4s-course' }
+      { icon: 'github', link: 'https://github.com/LLM-for-physics/ai4s-blog' }
     ],
 
     // 页脚
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2024 AI x Physics Course Team'
+      copyright: 'Copyright © 2025 AI x Physics Course Team'
     },
 
     // 搜索
@@ -101,7 +100,7 @@ export default defineConfig({
 
     // 编辑链接
     editLink: {
-      pattern: 'https://github.com/your-org/ai4s-course/edit/main/docs/:path',
+      pattern: 'https://github.com/LLM-for-physics/ai4s-blog/edit/master/docs/:path',
       text: '在 GitHub 上编辑此页'
     },
 

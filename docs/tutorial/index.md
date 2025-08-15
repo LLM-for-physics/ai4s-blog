@@ -57,7 +57,7 @@ conda deactivate
 此时可以退出服务器，只需输入`exit`并按回车键即可。
 
 2. 设置免密登陆（强烈推荐）：如果你不想每次登陆服务器都输入密码，可以设置免密登陆。具体方法如下：
-   - 在自己电脑的`C:\Users\自己电脑的用户名/.ssh`(Windows)或`~/.ssh`(MacOS或Linux)目录下检查有没有`id_rsa`和`id_rsa.pub`文件。如果没有该目录或该目录下没有这两个文件，在`命令提示符`（Windows）或`终端`（MacOS或Linux）输入：
+   - 在自己电脑的`C:\Users\自己电脑的用户名\.ssh`(Windows)或`~/.ssh`(MacOS或Linux)目录下检查有没有`id_rsa`和`id_rsa.pub`文件。如果没有该目录或该目录下没有这两个文件，在`命令提示符`（Windows）或`终端`（MacOS或Linux）输入：
    ```bash
    ssh-keygen
    ```
@@ -66,9 +66,9 @@ conda deactivate
    ```bash
    ssh-copy-id -p 2024 username@ip_address
    ```
-   输入密码后，公钥就会被上传到服务器上，这样你就可以免密登陆了。对于Windows用户，操作稍微麻烦一些，需要先从刚才生成的`id_rsa.pub`中把公钥（也就是那一长串东西）复制出来。登录服务器，在`～`目录下，输入`ls -lah`查看有没有`.ssh`目录，若没有，先输入`mkdir .ssh`创建该目录。创建完成后，输入`vim .ssh/authorized_keys`，按`i`进入编辑状态，将刚刚复制的本地`id_rsa.pub`中的内容粘贴，然后按`esc`退出编辑模式，输入`:wq！`保存退出(注意，":"不可省略)。`exit`退出服务器；这样就完成了免密登陆的设置。
+   输入密码后，公钥就会被上传到服务器上，这样你就可以免密登陆了。对于Windows用户，操作稍微麻烦一些，需要先从刚才生成的`id_rsa.pub`中把公钥（也就是那一长串东西）复制出来。登录服务器，在`～`目录下，输入`ls -lah`查看有没有`.ssh`目录，若没有，先输入`mkdir .ssh`创建该目录。创建完成后，输入`vim .ssh/authorized_keys`，按`i`进入编辑状态，将刚刚复制的本地`id_rsa.pub`中的内容粘贴，然后按`esc`退出编辑模式，输入`:wq!`保存退出(注意，":"不可省略)。`exit`退出服务器；这样就完成了免密登陆的设置。
 
-3. 配置config文件：为了后续连接服务器时不再需要输入ssh那一长串命令以及利用vscode连接服务器的方便，在自己电脑的`C:\Users\自己电脑的用户名/.ssh`(Windows)或`~/.ssh`(MacOS或Linux)目录下新建一个名为`config`的文件（如已经存在则无需新建，直接打开该文件另起一行添加即可；这个文件的名字就是config，没有扩展名，所以注意不要弄成config.txt之类的），内容如下：
+3. 配置config文件：为了后续连接服务器时不再需要输入ssh那一长串命令以及利用vscode连接服务器的方便，在自己电脑的`C:\Users\自己电脑的用户名\.ssh`(Windows)或`~/.ssh`(MacOS或Linux)目录下新建一个名为`config`的文件（如已经存在则无需新建，直接打开该文件另起一行添加即可；这个文件的名字就是config，没有扩展名，所以注意不要弄成config.txt之类的），内容如下：
    ```
    Host server1
        HostName ip_address
@@ -84,13 +84,13 @@ conda deactivate
 1. 安装VSCode：首先需要在自己的电脑上安装VSCode（https://code.visualstudio.com/ ），根据自己的操作系统下载对应的版本并安装。
 
 2. 打开vscode，点击左侧的“扩展”按钮，搜索`Remote - SSH`插件并安装（如果想要中文界面，可以先安装simplified Chinese插件）。
-![alt text](5251725454499_.pic.jpg) ![alt text](5261725454535_.pic.jpg) ![alt text](5271725454558_.pic.jpg) 
-![alt text](5281725454593_.pic.jpg) 
+![alt text](images/vscode-extensions-search.jpg) ![alt text](images/remote-ssh-install.jpg) ![alt text](images/remote-ssh-search.jpg) 
+![alt text](images/remote-ssh-chinese.jpg)
 
 3. 安装完成后，左侧会出现该插件的图标，点击该图标，可以看到之前写入config文件的服务器名字，光标悬停在上面，点击那个向右指的箭头即可连接到服务器（会让选择操作系统，选Linux）。
-![alt text](5291725454624_.pic.jpg) ![alt text](5301725454641_.pic.jpg) ![alt text](5311725454662_.pic.jpg)
+![alt text](images/ssh-connection-icon.jpg) ![alt text](images/ssh-server-select.jpg) ![alt text](images/ssh-connect-linux.jpg)
 vscode随后会在服务器端安装vscode-server，可能需要一段时间。安装完成后，左下角会显示连接状态。
-![alt text](5321725458918_.pic.jpg)
+![alt text](images/vscode-server-installing.jpg)
 
 4. 如法炮制安装python、pylance、jupyter等插件。需要注意的是，如果之前在本地使用过vscode并且安装过这些插件，在连接到服务器时还需要再安装一次，因为当你用vscode远程连接到服务器时，实际上是在服务器上运行vscode-server，本地的vscode只是一个编辑器，所以还需要在服务器上安装这些插件（除了个别高亮显示之类的与程序运行本身无关的插件）。
 
@@ -100,13 +100,13 @@ cd ~
 mkdir test
 ```
 然后在菜单栏`‘文件’`->`‘打开文件夹’`中选择刚刚新建的文件夹，就可以将vscode的工作区切换到这个文件夹中了。（可能会提示是否信任作者，选择是。）
-![alt text](5331725459232_.pic.jpg)
+![alt text](images/terminal-new.jpg)
 
 6. 在vscode中编写python程序（.py），并在虚拟环境中运行：
    - 在左侧点击如图所示位置的图标，创建一个新文件hello_world.py；
-![alt text](5341725459311_.pic.jpg) ![alt text](5361725459795_.pic.jpg) 
+![alt text](images/file-new.jpg) ![alt text](images/file-create-python.jpg)
    - 在界面右下角点击选择python环境，选择pubpy。选择完成后可以看到右下角发生的变化；
-![alt text](5371725459815_.pic.jpg) ![alt text](5381725459828_.pic.jpg) ![alt text](5391725459845_.pic.jpg) 
+![alt text](images/python-interpreter-select.jpg) ![alt text](images/python-interpreter-pubpy.jpg) ![alt text](images/python-interpreter-selected.jpg)
    - 在hello_world.py中输入以下代码：
 ```python
 import torch
@@ -114,13 +114,13 @@ import torch
 print(torch.cuda.is_available())
 print("Hello, world!")
 ```
-![alt text](5401725459916_.pic.jpg) 
+![alt text](images/python-code-example.jpg)
    - 点击右上角的运行按钮，在下方终端中可以看到输出结果。
-![alt text](5411725459933_.pic_hd.jpg) ![alt text](5421725459947_.pic.jpg)
+![alt text](images/python-run-button.jpg) ![alt text](images/python-output.jpg)
 
 7. 在vscode中运行jupyter notebook：
    - 同上，创建一个新文件hello_world.ipynb；
    - 点击新建的jupyter notebook文件，点击如图右上角的`“选择内核”`，选择pubpy；
-![alt text](5431725459999_.pic.jpg) ![alt text](5441725460011_.pic.jpg) ![alt text](5451725460026_.pic.jpg) 
+![alt text](images/jupyter-select-kernel.jpg) ![alt text](images/jupyter-kernel-options.jpg) ![alt text](images/jupyter-kernel-pubpy.jpg)
    - 在（或者新建一个）cell，输入刚才在hello_world.py中的代码，点击运行按钮，可以在cell下方看到输出结果。
-![alt text](5461725460049_.pic.jpg)
+![alt text](images/jupyter-run-cell.jpg)
