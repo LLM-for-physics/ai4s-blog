@@ -28,7 +28,7 @@
   </style>
   
   <!-- Cute Robot -->
-  <g transform="translate(20, 30)">
+  <g transform="translate(120, 60)">
     <!-- Robot body -->
     <rect class="robot-body" x="0" y="20" width="30" height="35" rx="5"/>
     
@@ -55,7 +55,7 @@
   </g>
   
   <!-- Main Text -->
-  <g transform="translate(100, 80)">
+  <g transform="translate(200, 110)">
     <text class="main-text a">a</text>
     <text class="main-text i" x="50">i</text>
     <text class="main-text s" x="90">s</text>
@@ -65,13 +65,13 @@
   </g>
   
   <!-- Subtitle -->
-  <text class="sub-text" x="100" y="110">ai for physics blog</text>
+  <text class="sub-text" x="200" y="140">ai for physics blog</text>
   
   <!-- Decorative line -->
-  <rect x="100" y="120" width="250" height="4" fill="#0066FF" opacity="0.5"/>
+  <rect x="200" y="150" width="250" height="4" fill="#0066FF" opacity="0.5"/>
   
   <!-- Small decorative elements -->
-  <circle fill="#00CCFF" opacity="0.3" cx="500" cy="40" r="10"/>
-  <circle fill="#00FFCC" opacity="0.3" cx="530" cy="70" r="8"/>
-  <circle fill="#00FF66" opacity="0.3" cx="510" cy="100" r="9"/>
+  <circle fill="#00CCFF" opacity="0.3" cx="500" cy="70" r="10"/>
+  <circle fill="#00FFCC" opacity="0.3" cx="530" cy="100" r="8"/>
+  <circle fill="#00FF66" opacity="0.3" cx="510" cy="130" r="9"/>
 </svg>

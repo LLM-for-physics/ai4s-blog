@@ -31,6 +31,7 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:20.19.10"],\
           ["ai4s-course-docs", "workspace:."],\
           ["markdown-it-mathjax3", "npm:4.3.2"],\
+          ["terser", "npm:5.43.1"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
           ["vitepress", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:1.6.4"],\
           ["vue", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:3.5.18"]\
@@ -664,11 +665,53 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@jridgewell/gen-mapping", [\
+      ["npm:0.3.13", {\
+        "packageLocation": "../.yarn/berry/cache/@jridgewell-gen-mapping-npm-0.3.13-9bd96ac800-10c0.zip/node_modules/@jridgewell/gen-mapping/",\
+        "packageDependencies": [\
+          ["@jridgewell/gen-mapping", "npm:0.3.13"],\
+          ["@jridgewell/sourcemap-codec", "npm:1.5.5"],\
+          ["@jridgewell/trace-mapping", "npm:0.3.30"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@jridgewell/resolve-uri", [\
+      ["npm:3.1.2", {\
+        "packageLocation": "../.yarn/berry/cache/@jridgewell-resolve-uri-npm-3.1.2-5bc4245992-10c0.zip/node_modules/@jridgewell/resolve-uri/",\
+        "packageDependencies": [\
+          ["@jridgewell/resolve-uri", "npm:3.1.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@jridgewell/source-map", [\
+      ["npm:0.3.11", {\
+        "packageLocation": "../.yarn/berry/cache/@jridgewell-source-map-npm-0.3.11-4cf013eacf-10c0.zip/node_modules/@jridgewell/source-map/",\
+        "packageDependencies": [\
+          ["@jridgewell/gen-mapping", "npm:0.3.13"],\
+          ["@jridgewell/source-map", "npm:0.3.11"],\
+          ["@jridgewell/trace-mapping", "npm:0.3.30"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@jridgewell/sourcemap-codec", [\
       ["npm:1.5.5", {\
         "packageLocation": "../.yarn/berry/cache/@jridgewell-sourcemap-codec-npm-1.5.5-5189d9fc79-10c0.zip/node_modules/@jridgewell/sourcemap-codec/",\
         "packageDependencies": [\
           ["@jridgewell/sourcemap-codec", "npm:1.5.5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@jridgewell/trace-mapping", [\
+      ["npm:0.3.30", {\
+        "packageLocation": "../.yarn/berry/cache/@jridgewell-trace-mapping-npm-0.3.30-cd079ed37e-10c0.zip/node_modules/@jridgewell/trace-mapping/",\
+        "packageDependencies": [\
+          ["@jridgewell/resolve-uri", "npm:3.1.2"],\
+          ["@jridgewell/sourcemap-codec", "npm:1.5.5"],\
+          ["@jridgewell/trace-mapping", "npm:0.3.30"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1387,6 +1430,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["acorn", [\
+      ["npm:8.15.0", {\
+        "packageLocation": "../.yarn/berry/cache/acorn-npm-8.15.0-0764cf600e-10c0.zip/node_modules/acorn/",\
+        "packageDependencies": [\
+          ["acorn", "npm:8.15.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["agent-base", [\
       ["npm:7.1.4", {\
         "packageLocation": "../.yarn/berry/cache/agent-base-npm-7.1.4-cb8b4604d5-10c0.zip/node_modules/agent-base/",\
@@ -1403,6 +1455,7 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:20.19.10"],\
           ["ai4s-course-docs", "workspace:."],\
           ["markdown-it-mathjax3", "npm:4.3.2"],\
+          ["terser", "npm:5.43.1"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
           ["vitepress", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:1.6.4"],\
           ["vue", "virtual:757166c0740c20d0de614e26ae7ccb236158b88efcbb67ca4f54f7eb081ff123903e0b6bcb1782e03c13a7021ce92ae1ecb55dc2d2c71e5f363b2038aa182c03#npm:3.5.18"]\
@@ -1508,6 +1561,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["balanced-match", "npm:1.0.2"],\
           ["brace-expansion", "npm:2.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["buffer-from", [\
+      ["npm:1.1.2", {\
+        "packageLocation": "../.yarn/berry/cache/buffer-from-npm-1.1.2-03d2f20d7e-10c0.zip/node_modules/buffer-from/",\
+        "packageDependencies": [\
+          ["buffer-from", "npm:1.1.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1632,6 +1694,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../.yarn/berry/cache/commander-npm-13.1.0-bdbbfaaf9d-10c0.zip/node_modules/commander/",\
         "packageDependencies": [\
           ["commander", "npm:13.1.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:2.20.3", {\
+        "packageLocation": "../.yarn/berry/cache/commander-npm-2.20.3-d8dcbaa39b-10c0.zip/node_modules/commander/",\
+        "packageDependencies": [\
+          ["commander", "npm:2.20.3"]\
         ],\
         "linkType": "HARD"\
       }],\
@@ -2923,11 +2992,31 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["source-map", [\
+      ["npm:0.6.1", {\
+        "packageLocation": "../.yarn/berry/cache/source-map-npm-0.6.1-1a3621db16-10c0.zip/node_modules/source-map/",\
+        "packageDependencies": [\
+          ["source-map", "npm:0.6.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["source-map-js", [\
       ["npm:1.2.1", {\
         "packageLocation": "../.yarn/berry/cache/source-map-js-npm-1.2.1-b9a47d7e1a-10c0.zip/node_modules/source-map-js/",\
         "packageDependencies": [\
           ["source-map-js", "npm:1.2.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["source-map-support", [\
+      ["npm:0.5.21", {\
+        "packageLocation": "../.yarn/berry/cache/source-map-support-npm-0.5.21-09ca99e250-10c0.zip/node_modules/source-map-support/",\
+        "packageDependencies": [\
+          ["buffer-from", "npm:1.1.2"],\
+          ["source-map", "npm:0.6.1"],\
+          ["source-map-support", "npm:0.5.21"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3053,6 +3142,19 @@ const RAW_RUNTIME_STATE =
           ["mkdirp", "npm:3.0.1"],\
           ["tar", "npm:7.4.3"],\
           ["yallist", "npm:5.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["terser", [\
+      ["npm:5.43.1", {\
+        "packageLocation": "../.yarn/berry/cache/terser-npm-5.43.1-4358d9add0-10c0.zip/node_modules/terser/",\
+        "packageDependencies": [\
+          ["@jridgewell/source-map", "npm:0.3.11"],\
+          ["acorn", "npm:8.15.0"],\
+          ["commander", "npm:2.20.3"],\
+          ["source-map-support", "npm:0.5.21"],\
+          ["terser", "npm:5.43.1"]\
         ],\
         "linkType": "HARD"\
       }]\

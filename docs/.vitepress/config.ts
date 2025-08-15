@@ -10,6 +10,10 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   
+  // 确保客户端水合正常工作
+  appearance: true,
+  ignoreDeadLinks: false,
+  
   // 头部配置
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
@@ -21,9 +25,7 @@ export default defineConfig({
   ],
 
   // 主题配置
-  themeConfig: {
-    logo: '/logo.svg',
-    
+  themeConfig: {    
     // 导航栏
     nav: [
       { text: '首页', link: '/' },
@@ -41,7 +43,17 @@ export default defineConfig({
           items: [
             { text: '课程概述', link: '/course/introduction' },
             { text: '课程大纲', link: '/course/syllabus' },
-            { text: '评分标准', link: '/course/grading' }
+            { text: '评分标准', link: '/course/grading' },
+          ]
+        },
+        {
+          text: 'LLM agent 技术文档',
+          items: [
+            { text: '概述', link: '/course/llm-agent/overview' },
+            { text: '基础 API 调用', link: '/course/llm-agent/api-basics' },
+            { text: '高级用法', link: '/course/llm-agent/advanced-usage' },
+            { text: '数学问题求解', link: '/course/llm-agent/math-solver' },
+            { text: '智能体构建', link: '/course/llm-agent/agent-building' }
           ]
         }
       ],
@@ -121,6 +133,7 @@ export default defineConfig({
 
     // 大纲标题
     outline: {
+      level: [2, 3, 4],
       label: '页面导航'
     },
 
@@ -142,9 +155,26 @@ export default defineConfig({
   // Vite 配置
   vite: {
     build: {
+      minify: 'terser',
       rollupOptions: {
-        external: ['vue', 'vue/server-renderer']
+        output: {
+          manualChunks: {
+            'vue-vendor': ['vue']
+          }
+        }
+      },
+      terserOptions: {
+        compress: {
+          drop_console: false,
+          drop_debugger: false
+        }
       }
+    },
+    ssr: {
+      noExternal: ['vue']
+    },
+    optimizeDeps: {
+      include: ['vue']
     }
   }
 })
