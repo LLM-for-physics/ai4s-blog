@@ -41,7 +41,7 @@
 
 ## 💻 代码示例
 
-所有课程相关的代码示例都存放在 [`code-examples/`](./code-examples/) 目录中，包括：
+所有课程相关的代码示例都存放在 [`./code-examples`](./code-examples/index) 目录中，包括：
 
 - 基础 API 调用示例
 - Prompt 模板库
@@ -82,7 +82,7 @@
 ## 📞 获取帮助
 
 - 课程相关问题请参考各模块的详细文档
-- 代码问题可以查看 `code-examples/` 中的完整示例
+- 代码问题可以查看 [./code-examples](./code-examples/index) 中的完整示例
 - 如有疑问，请通过课程邮箱联系教学团队
 
 ---

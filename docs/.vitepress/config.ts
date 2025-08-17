@@ -12,7 +12,10 @@ export default defineConfig({
   
   // 确保客户端水合正常工作
   appearance: true,
-  ignoreDeadLinks: false,
+  ignoreDeadLinks: [
+    // 忽略对代码文件的死链接检查
+    /\/.*\.(py|txt)$/,
+  ],
   
   // 头部配置
   head: [
@@ -154,6 +157,16 @@ export default defineConfig({
 
   // Vite 配置
   vite: {
+    // 将 .py 和 .txt 文件作为静态资源处理
+    assetsInclude: ['**/*.py', '**/*.txt'],
+    server: {
+      fs: {
+        allow: ['..']
+      }
+    },
+    define: {
+      __VUE_PROD_DEVTOOLS__: false
+    },
     build: {
       minify: 'terser',
       rollupOptions: {

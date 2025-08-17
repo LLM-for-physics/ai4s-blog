@@ -33,15 +33,23 @@ yarn docs:preview
 ## 📁 项目结构
 
 ```
-ai4s_blog/
+ai4s-blog/
 ├── docs/                    # 文档源文件
 │   ├── .vitepress/         # VitePress 配置
-│   │   └── config.ts       # 主配置文件
+│   │   ├── config.ts       # 主配置文件
+│   │   ├── cache/          # 构建缓存
+│   │   ├── dist/           # 构建输出
+│   │   └── theme/          # 自定义主题
 │   ├── course/             # 课程介绍
+│   │   └── llm-agent/      # LLM Agent 技术文档
+│   │       └── code-examples/  # 代码示例索引
 │   ├── setup/              # 环境配置
 │   ├── assignments/        # 作业指南
 │   ├── resources/          # 学习资源
+│   ├── public/             # 静态资源
+│   │   └── course/llm-agent/code-examples/  # 代码示例文件
 │   └── index.md           # 首页
+├── deploy/                 # 部署配置
 ├── package.json
 ├── tsconfig.json
 └── README.md
@@ -117,6 +125,12 @@ graph TD
 - 外部链接在新窗口打开
 - 确保链接的有效性
 
+### 代码示例管理
+- Python 代码文件 (`.py`) 和依赖文件 (`.txt`) 存放在 `docs/public/` 目录下
+- 在 Markdown 中使用绝对路径链接到这些文件：`/course/llm-agent/code-examples/filename.py`
+- VitePress 配置中已设置忽略对代码文件的死链接检查
+- 代码文件会作为静态资源直接提供下载
+
 ## 🤝 贡献指南
 
 ### 提交规范
@@ -129,6 +143,50 @@ graph TD
 - 确保链接和代码示例正确
 - 测试构建是否成功
 
+## 🔧 故障排除
+
+### 常见问题
+
+#### 构建失败：找不到模块 "vitepress"
+```bash
+# 重新安装依赖
+rm -rf node_modules yarn.lock
+yarn install
+```
+
+#### 代码文件链接显示 404 或编码错误
+- 确保代码文件已放置在 `docs/public/` 目录下
+- 检查 Markdown 中的链接路径是否正确（使用绝对路径）
+- 验证 `config.ts` 中的 `ignoreDeadLinks` 配置
+
+#### 构建时出现死链接警告
+```typescript
+// 在 docs/.vitepress/config.ts 中添加：
+ignoreDeadLinks: [
+  /\/.*\.(py|txt)$/,  // 忽略代码文件的死链接检查
+],
+```
+
+#### 开发服务器启动失败
+```bash
+# 清理缓存并重启
+rm -rf docs/.vitepress/cache
+yarn docs:dev
+```
+
+#### 数学公式不显示
+确保在 `config.ts` 中启用了数学支持：
+```typescript
+markdown: {
+  math: true
+}
+```
+
+### 调试技巧
+- 使用 `yarn docs:build` 检查构建错误
+- 查看浏览器控制台的错误信息
+- 检查文件路径和大小写是否正确
+
 ## 📄 许可证
 
 MIT License - 详见 [LICENSE](LICENSE) 文件。
@@ -137,8 +195,9 @@ MIT License - 详见 [LICENSE](LICENSE) 文件。
 
 如果遇到问题：
 1. 查看 [VitePress 官方文档](https://vitepress.dev/)
-2. 在项目 Issues 中搜索相关问题
-3. 联系课程技术支持
+2. 查看上方的故障排除部分
+3. 在项目 Issues 中搜索相关问题
+4. 联系课程技术支持
 
 ---
 

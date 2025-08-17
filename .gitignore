@@ -25,3 +25,5 @@ cache/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+.pnp.*
