@@ -277,3 +277,57 @@ git commit -m "Add .gitignore"
 **注意**：`.gitignore` 只能忽略那些从未被跟踪过的文件。如果某个文件已经被纳入了版本库，你需要先从版本库中删除它 (`git rm --cached <file>`)，然后再将其加入 `.gitignore`。
 
 关于 Git 版本控制的一些更加进阶的知识（例如分支管理等内容），欢迎查阅更多资料。 我们在高阶课程7.1中会介绍一些 Git 的进阶用法。
+
+## 远程仓库与协作
+
+到目前为止，我们所有的操作都只在本地的 Git 仓库中进行。但 Git 的真正威力在于其分布式协作的能力。通过将本地仓库与一个**远程仓库**（通常托管在 GitHub、GitLab 或 Gitee 等平台上）关联，我们可以实现代码的备份、分享和团队协作。
+
+### 关联远程仓库
+
+首先，你需要在代码托管平台上创建一个新的空仓库。创建完成后，平台会为你提供一个远程仓库的地址（URL）。这个地址通常有两种形式：HTTPS 和 SSH。
+
+1.  **HTTPS 方式**：
+    -   URL 类似于 `https://github.com/username/repository.git`。
+    -   每次推送（push）或拉取（pull）时，通常需要输入用户名和密码（或者使用 Personal Access Token）。
+    -   优点是设置简单，在任何网络环境下都能工作。
+
+2.  **SSH 方式**：
+    -   URL 类似于 `git@github.com:username/repository.git`。
+    -   需要预先在你的电脑上生成 SSH 密钥对，并将公钥添加到代码托管平台的账户设置中。
+    -   优点是配置完成后，不再需要重复输入密码，更加安全和方便。关于如何配置 SSH，可以参考 [SSH 身份验证](./ssh.md) 章节。
+
+假设我们已经有了一个远程仓库地址，我们可以使用 `git remote add` 命令将它与我们的本地仓库关联起来。通常，我们会将这个远程仓库命名为 `origin`。
+
+```bash
+# 使用 HTTPS
+git remote add origin https://github.com/username/repository.git
+
+# 或者使用 SSH
+git remote add origin git@github.com:username/repository.git
+```
+
+### 推送与拉取
+
+-   **推送 (`git push`)**：将本地的提交推送到远程仓库。
+
+    ```bash
+    # 将本地的 master 分支推送到 origin 远程仓库
+    git push -u origin master
+    ```
+    `-u` 参数会将本地的 `master` 分支与远程的 `master` 分支关联起来，这样以后你就可以直接使用 `git push` 命令了。
+
+-   **拉取 (`git pull`)**：从远程仓库获取最新的版本，并与本地分支合并。
+
+    ```bash
+    git pull origin master
+    ```
+
+-   **克隆 (`git clone`)**：如果你想获取一个已存在的远程仓库到本地，可以使用 `git clone` 命令。这会自动将远程仓库克隆到你的电脑上，并自动设置好 `origin`。
+
+    ```bash
+    # 使用 HTTPS
+    git clone https://github.com/username/repository.git
+
+    # 使用 SSH
+    git clone git@github.com:username/repository.git
+    ```

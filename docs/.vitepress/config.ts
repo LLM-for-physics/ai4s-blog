@@ -78,7 +78,9 @@ export default defineConfig({
           items: [
             { text: '概述', link: '/computer-basic/overview' },
             { text: '科学上网', link: '/computer-basic/vpn' },
-            { text: 'git 使用', link: '/computer-basic/git-usage' }
+            { text: 'git 基础', link: '/computer-basic/git-usage' },
+            { text: 'SSH 使用指南', link: '/computer-basic/ssh' },
+            { text: 'python 基础', link: '/computer-basic/python' }
           ]
         }
       ],
