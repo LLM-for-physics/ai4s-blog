@@ -80,7 +80,7 @@ export default defineConfig({
             { text: '科学上网', link: '/computer-basic/vpn' },
             { text: 'git 基础', link: '/computer-basic/git-usage' },
             { text: 'SSH 使用指南', link: '/computer-basic/ssh' },
-            { text: 'python 基础', link: '/computer-basic/python' },
+            { text: 'Python 基础', link: '/computer-basic/python' },
             { text: 'VS Code 介绍', links: '/computer-basic/vscode' }
           ]
         }
