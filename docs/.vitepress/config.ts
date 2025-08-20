@@ -32,8 +32,9 @@ export default defineConfig({
     // 导航栏
     nav: [
       { text: '首页', link: '/' },
-      { text: '课程介绍', link: '/course/introduction' },
+      { text: '课程', link: '/course/introduction' },
       { text: '环境配置', link: '/setup/overview' },
+      { text: '计算机基础', link: '/computer-basic/overview' },
       { text: '作业', link: '/assignments/overview' },
       { text: '资源', link: '/resources/links' }
     ],
@@ -66,9 +67,18 @@ export default defineConfig({
           items: [
             { text: '配置概述', link: '/setup/overview' },
             { text: '服务器使用', link: '/setup/server' },
-            { text: '计算机基础', link: '/setup/computer-basics' },
             { text: '开发环境', link: '/setup/development' },
             { text: '常见问题', link: '/setup/troubleshooting' }
+          ]
+        }
+      ],
+      '/computer-basic/': [
+        {
+          text: '计算机基础',
+          items: [
+            { text: '概述', link: '/computer-basic/overview' },
+            { text: '科学上网', link: '/computer-basic/vpn' },
+            { text: 'git 使用', link: '/computer-basic/git-usage' }
           ]
         }
       ],
