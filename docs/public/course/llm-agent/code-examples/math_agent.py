@@ -1,564 +1,362 @@
 """
-数学求解 Agent 示例
-演示如何构建专门用于数学问题求解的 LLM Agent
+数学代理示例 - 通过 Function Calling 求解方程组
+演示如何使用 LLM 的工具调用能力来解决数学问题
 """
 
 import os
 import json
 import sympy as sp
-import numpy as np
-import matplotlib.pyplot as plt
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass
-from abc import ABC, abstractmethod
+from typing import List, Dict, Any, Union
 from dotenv import load_dotenv
+from openai import OpenAI
+import re
 
 # 加载环境变量
 load_dotenv()
 
-@dataclass
-class Task:
-    """任务定义"""
-    id: str
-    description: str
-    priority: int = 1
-    status: str = "pending"
-    result: Optional[Any] = None
-
-class Tool(ABC):
-    """工具抽象基类"""
+class MathSolver:
+    """数学求解器 - 提供具体的数学工具"""
     
-    def __init__(self, name: str, description: str):
-        self.name = name
-        self.description = description
-    
-    @abstractmethod
-    def execute(self, **kwargs) -> Dict[str, Any]:
-        """执行工具"""
-        pass
-
-class SymPyTool(Tool):
-    """SymPy 符号计算工具"""
-    
-    def __init__(self):
-        super().__init__("sympy_calculator", "执行符号数学计算")
-    
-    def execute(self, operation: str, expression: str, **kwargs) -> Dict[str, Any]:
-        """执行 SymPy 计算"""
-        try:
-            # 创建符号变量
-            x, y, z, t = sp.symbols('x y z t')
-            
-            # 安全的命名空间
-            safe_dict = {
-                'x': x, 'y': y, 'z': z, 't': t,
-                'pi': sp.pi, 'e': sp.E,
-                'sin': sp.sin, 'cos': sp.cos, 'tan': sp.tan,
-                'exp': sp.exp, 'log': sp.log, 'sqrt': sp.sqrt,
-                'diff': sp.diff, 'integrate': sp.integrate,
-                'solve': sp.solve, 'simplify': sp.simplify
-            }
-            
-            # 解析表达式
-            expr = eval(expression, {"__builtins__": {}}, safe_dict)
-            
-            if operation == "solve":
-                # 求解方程
-                variable = kwargs.get("variable", "x")
-                var_symbol = safe_dict.get(variable, x)
-                result = sp.solve(expr, var_symbol)
-                return {
-                    "operation": "solve",
-                    "expression": str(expr),
-                    "variable": variable,
-                    "solutions": [str(sol) for sol in result]
-                }
-            
-            elif operation == "differentiate":
-                # 求导
-                variable = kwargs.get("variable", "x")
-                var_symbol = safe_dict.get(variable, x)
-                result = sp.diff(expr, var_symbol)
-                return {
-                    "operation": "differentiate",
-                    "expression": str(expr),
-                    "variable": variable,
-                    "result": str(result)
-                }
-            
-            elif operation == "integrate":
-                # 积分
-                variable = kwargs.get("variable", "x")
-                var_symbol = safe_dict.get(variable, x)
-                result = sp.integrate(expr, var_symbol)
-                return {
-                    "operation": "integrate",
-                    "expression": str(expr),
-                    "variable": variable,
-                    "result": str(result)
-                }
-            
-            elif operation == "simplify":
-                # 化简
-                result = sp.simplify(expr)
-                return {
-                    "operation": "simplify",
-                    "expression": str(expr),
-                    "result": str(result)
-                }
-            
-            else:
-                return {"error": f"不支持的操作: {operation}"}
-                
-        except Exception as e:
-            return {"error": f"SymPy 计算错误: {str(e)}"}
-
-class CalculatorTool(Tool):
-    """基础计算器工具"""
-    
-    def __init__(self):
-        super().__init__("calculator", "执行基础数学计算")
-    
-    def execute(self, expression: str) -> Dict[str, Any]:
-        """执行数学表达式"""
-        try:
-            # 安全的数学表达式求值
-            allowed_names = {
-                k: v for k, v in __builtins__.items() 
-                if k in ['abs', 'round', 'min', 'max', 'sum']
-            }
-            allowed_names.update({
-                'sin': np.sin, 'cos': np.cos, 'tan': np.tan,
-                'sqrt': np.sqrt, 'log': np.log, 'exp': np.exp,
-                'pi': np.pi, 'e': np.e
-            })
-            
-            result = eval(expression, {"__builtins__": {}}, allowed_names)
-            return {"result": result, "expression": expression}
-            
-        except Exception as e:
-            return {"error": f"计算错误: {str(e)}"}
-
-class MockLLMClient:
-    """模拟的 LLM 客户端（用于演示）"""
-    
-    def chat(self, messages: List[Dict[str, str]], **kwargs) -> str:
-        """模拟 LLM 响应"""
-        user_message = messages[-1]["content"] if messages else ""
+    @staticmethod
+    def solve_linear_system(equations: List[str], variables: List[str]) -> Dict[str, Any]:
+        """
+        求解线性方程组
         
-        # 简单的规则匹配来模拟 LLM 响应
-        if "导数" in user_message or "求导" in user_message:
-            return '''
-我需要求导数。让我使用 SymPy 工具来计算。
+        Args:
+            equations: 方程列表，如 ["x + y = 5", "2*x - y = 1"]
+            variables: 变量列表，如 ["x", "y"]
+        
+        Returns:
+            求解结果字典
+        """
+        try:
+            # 将变量字符串转换为 sympy 符号
+            var_symbols = [sp.Symbol(var) for var in variables]
+            
+            # 解析方程
+            parsed_equations = []
+            for eq in equations:
+                # 分割等号两边
+                left, right = eq.split('=')
+                # 创建方程对象
+                equation = sp.Eq(sp.sympify(left.strip()), sp.sympify(right.strip()))
+                parsed_equations.append(equation)
+            
+            # 求解方程组
+            solution = sp.solve(parsed_equations, var_symbols)
+            
+            # 格式化结果
+            if isinstance(solution, dict):
+                result = {str(var): float(solution[var]) if solution[var].is_number else str(solution[var]) 
+                         for var in solution}
+            elif isinstance(solution, list) and len(solution) > 0:
+                # 多个解的情况
+                result = []
+                for sol in solution:
+                    if isinstance(sol, dict):
+                        sol_dict = {str(var): float(sol[var]) if sol[var].is_number else str(sol[var]) 
+                                   for var in sol}
+                        result.append(sol_dict)
+                    else:
+                        result.append(str(sol))
+            else:
+                result = {"message": "无解或解的形式复杂", "raw_solution": str(solution)}
+            
+            return {
+                "success": True,
+                "solution": result,
+                "equations": equations,
+                "variables": variables
+            }
+            
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "equations": equations,
+                "variables": variables
+            }
+    
+    @staticmethod
+    def solve_nonlinear_system(equations: List[str], variables: List[str]) -> Dict[str, Any]:
+        """
+        求解非线性方程组
+        
+        Args:
+            equations: 方程列表
+            variables: 变量列表
+        
+        Returns:
+            求解结果字典
+        """
+        try:
+            var_symbols = [sp.Symbol(var) for var in variables]
+            
+            parsed_equations = []
+            for eq in equations:
+                left, right = eq.split('=')
+                equation = sp.Eq(sp.sympify(left.strip()), sp.sympify(right.strip()))
+                parsed_equations.append(equation)
+            
+            solution = sp.solve(parsed_equations, var_symbols)
+            
+            if isinstance(solution, list):
+                result = []
+                for sol in solution:
+                    if isinstance(sol, tuple):
+                        sol_dict = {str(variables[i]): float(sol[i]) if sol[i].is_number else str(sol[i]) 
+                                   for i in range(len(variables))}
+                        result.append(sol_dict)
+                    elif isinstance(sol, dict):
+                        sol_dict = {str(var): float(sol[var]) if sol[var].is_number else str(sol[var]) 
+                                   for var in sol}
+                        result.append(sol_dict)
+                    else:
+                        result.append(str(sol))
+            else:
+                result = {"message": "解的形式复杂", "raw_solution": str(solution)}
+            
+            return {
+                "success": True,
+                "solution": result,
+                "equations": equations,
+                "variables": variables
+            }
+            
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "equations": equations,
+                "variables": variables
+            }
 
-```json
-{
-    "action": "use_tool",
-    "tool_name": "sympy_calculator",
-    "parameters": {
-        "operation": "differentiate",
-        "expression": "x**3 - 3*x**2 + 2*x - 1",
-        "variable": "x"
-    }
-}
-```
-'''
-        elif "积分" in user_message:
-            return '''
-我需要计算积分。让我使用 SymPy 工具。
-
-```json
-{
-    "action": "use_tool",
-    "tool_name": "sympy_calculator",
-    "parameters": {
-        "operation": "integrate",
-        "expression": "x**3 - 3*x**2 + 2*x - 1",
-        "variable": "x"
-    }
-}
-```
-'''
-        elif "求解" in user_message or "方程" in user_message:
-            return '''
-我需要求解方程。让我使用 SymPy 工具。
-
-```json
-{
-    "action": "use_tool",
-    "tool_name": "sympy_calculator",
-    "parameters": {
-        "operation": "solve",
-        "expression": "x**2 - 4",
-        "variable": "x"
-    }
-}
-```
-'''
-        else:
-            return '''
-让我分析这个数学问题并提供解答。
-
-```json
-{
-    "action": "complete",
-    "result": "我已经分析了这个数学问题。根据问题的性质，我建议使用相应的数学工具来求解。"
-}
-```
-'''
 
 class MathAgent:
-    """数学求解 Agent"""
+    """数学代理 - 通过 LLM Function Calling 处理自然语言数学问题"""
     
-    def __init__(self, llm_client=None):
-        self.name = "MathSolver"
-        self.llm_client = llm_client or MockLLMClient()
-        self.tools: Dict[str, Tool] = {}
-        self.memory: List[Dict[str, Any]] = []
+    def __init__(self, api_key: str = None, base_url: str = None):
+        """初始化数学代理"""
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
+        self.base_url = base_url or os.getenv("OPENAI_BASE_URL")
+        self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
+        self.solver = MathSolver()
         
-        # 添加数学工具
-        self.add_tool(SymPyTool())
-        self.add_tool(CalculatorTool())
-        
-        self.system_prompt = """
-你是一个专业的数学问题求解助手，具备以下能力：
-
-1. 符号计算：使用 SymPy 进行精确的符号数学计算
-2. 数值计算：进行基础的数值计算
-3. 问题分析：理解数学问题的本质和求解策略
-
-工作流程：
-1. 分析问题类型和要求
-2. 选择合适的数学工具
-3. 逐步求解并验证结果
-4. 提供清晰的解释
-
-请始终保持数学严谨性，提供详细的求解过程。
-"""
-    
-    def add_tool(self, tool: Tool):
-        """添加工具"""
-        self.tools[tool.name] = tool
-    
-    def execute_task(self, task: Task) -> Dict[str, Any]:
-        """执行任务"""
-        try:
-            result = self._execute_task_internal(task)
-            task.status = "completed"
-            task.result = result
-            return result
-        except Exception as e:
-            task.status = "error"
-            task.result = {"error": str(e)}
-            raise e
-    
-    def _execute_task_internal(self, task: Task) -> Dict[str, Any]:
-        """内部任务执行逻辑"""
-        # 构建包含工具信息的 prompt
-        tools_info = self._format_tools_info()
-        
-        prompt = f"""
-任务: {task.description}
-
-可用工具:
-{tools_info}
-
-请分析任务并制定执行计划。如果需要使用工具，请按照以下格式：
-
-```json
-{{
-    "action": "use_tool",
-    "tool_name": "工具名称",
-    "parameters": {{
-        "参数名": "参数值"
-    }}
-}}
-```
-
-如果任务完成，请按照以下格式：
-
-```json
-{{
-    "action": "complete",
-    "result": "任务结果"
-}}
-```
-"""
-        
-        # 执行决策循环
-        return self._decision_loop(prompt)
-    
-    def _format_tools_info(self) -> str:
-        """格式化工具信息"""
-        if not self.tools:
-            return "无可用工具"
-        
-        tools_info = []
-        for tool in self.tools.values():
-            tools_info.append(f"- {tool.name}: {tool.description}")
-        
-        return "\n".join(tools_info)
-    
-    def _decision_loop(self, initial_prompt: str, max_iterations: int = 5) -> Dict[str, Any]:
-        """决策循环"""
-        messages = [
-            {"role": "system", "content": self.system_prompt},
-            {"role": "user", "content": initial_prompt}
+        # 定义可用的工具
+        self.tools = [
+            {
+                "type": "function",
+                "function": {
+                    "name": "solve_linear_system",
+                    "description": "求解线性方程组。适用于形如 ax + by = c 的方程组。",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "equations": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                                "description": "方程列表，每个方程是一个 sympy 格式的字符串"
+                            },
+                            "variables": {
+                                "type": "array", 
+                                "items": {"type": "string"},
+                                "description": "变量列表，如 ['x', 'y']"
+                            }
+                        },
+                        "required": ["equations", "variables"]
+                    }
+                }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "solve_nonlinear_system",
+                    "description": "求解非线性方程组。适用于包含平方、立方等非线性项的方程组。",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "equations": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                                "description": "方程列表，每个方程是一个 sympy 格式的字符串"
+                            },
+                            "variables": {
+                                "type": "array",
+                                "items": {"type": "string"}, 
+                                "description": "变量列表"
+                            }
+                        },
+                        "required": ["equations", "variables"]
+                    }
+                }
+            }
         ]
+    
+    def solve_math_problem(self, problem: str) -> Dict[str, Any]:
+        """
+        解决数学问题
         
-        for iteration in range(max_iterations):
-            # 获取 LLM 响应
-            response = self.llm_client.chat(messages)
+        Args:
+            problem: 自然语言描述的数学问题
             
-            # 解析响应
-            action = self._parse_action(response)
+        Returns:
+            包含解答的字典
+        """
+        try:
+            # 构建系统提示
+            system_prompt = """你是一个专业的数学助手。用户会用自然语言描述数学问题，你需要：
+
+1. 理解问题中的数学关系
+2. 识别变量和方程
+3. 选择合适的工具来求解
+4. 调用相应的函数来获得答案
+
+请注意：
+- 对于线性方程组，使用 solve_linear_system 函数
+- 对于非线性方程组，使用 solve_nonlinear_system 函数
+- 方程格式要标准化，如 "x + y = 5" 而不是 "x加y等于5"
+- 确保正确识别所有变量
+"""
             
-            if action["action"] == "complete":
-                return action["result"]
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": problem}
+            ]
             
-            elif action["action"] == "use_tool":
-                # 执行工具
-                tool_result = self._execute_tool(
-                    action["tool_name"], 
-                    action.get("parameters", {})
+            # 第一次调用 - 让 LLM 决定使用什么工具
+            response = self.client.chat.completions.create(
+                model="gpt-5-mini",
+                messages=messages,
+                tools=self.tools,
+                tool_choice="auto"
+            )
+            
+            response_message = response.choices[0].message
+            
+            # 检查是否有工具调用
+            if response_message.tool_calls:
+                # 执行工具调用
+                # 将assistant的消息添加到对话历史中
+                messages.append({
+                    "role": "assistant",
+                    "content": response_message.content,
+                    "tool_calls": [
+                        {
+                            "id": tc.id,
+                            "type": tc.type,
+                            "function": {
+                                "name": tc.function.name,
+                                "arguments": tc.function.arguments
+                            }
+                        }
+                        for tc in response_message.tool_calls
+                    ]
+                })
+                
+                for tool_call in response_message.tool_calls:
+                    function_name = tool_call.function.name
+                    function_args = json.loads(tool_call.function.arguments)
+                    
+                    print(f"🔧 调用工具: {function_name}")
+                    print(f"📋 参数: {function_args}")
+                    
+                    # 执行相应的求解函数
+                    if function_name == "solve_linear_system":
+                        result = self.solver.solve_linear_system(
+                            function_args["equations"],
+                            function_args["variables"]
+                        )
+                    elif function_name == "solve_nonlinear_system":
+                        result = self.solver.solve_nonlinear_system(
+                            function_args["equations"],
+                            function_args["variables"]
+                        )
+                    else:
+                        result = {"success": False, "error": f"未知的函数: {function_name}"}
+                    
+                    # 将结果添加到对话中
+                    messages.append({
+                        "tool_call_id": tool_call.id,
+                        "role": "tool",
+                        "name": function_name,
+                        "content": json.dumps(result, ensure_ascii=False)
+                    })
+                
+                # 第二次调用 - 让 LLM 解释结果
+                final_response = self.client.chat.completions.create(
+                    model="gpt-5-mini",
+                    messages=messages
                 )
                 
-                # 添加工具执行结果到对话
-                messages.append({"role": "assistant", "content": response})
-                messages.append({
-                    "role": "user", 
-                    "content": f"工具执行结果: {json.dumps(tool_result, ensure_ascii=False)}"
-                })
+                return {
+                    "success": True,
+                    "problem": problem,
+                    "tool_calls": [{
+                        "function": tc.function.name,
+                        "arguments": json.loads(tc.function.arguments)
+                    } for tc in response_message.tool_calls],
+                    "raw_results": [json.loads(msg["content"]) for msg in messages if msg["role"] == "tool"],
+                    "explanation": final_response.choices[0].message.content
+                }
+            else:
+                # 没有工具调用，直接返回 LLM 的回答
+                return {
+                    "success": True,
+                    "problem": problem,
+                    "explanation": response_message.content,
+                    "note": "LLM 没有使用工具，可能问题描述不够清晰或不是方程组求解问题"
+                }
                 
-                # 记录到内存
-                self.memory.append({
-                    "iteration": iteration,
-                    "action": action,
-                    "result": tool_result
-                })
-            
-            else:
-                # 继续思考
-                messages.append({"role": "assistant", "content": response})
-        
-        return {"result": "达到最大迭代次数，任务未完成"}
-    
-    def _parse_action(self, response: str) -> Dict[str, Any]:
-        """解析 LLM 响应中的动作"""
-        try:
-            # 寻找 JSON 代码块
-            if "```json" in response:
-                start = response.find("```json") + 7
-                end = response.find("```", start)
-                json_str = response[start:end].strip()
-            else:
-                # 寻找花括号
-                start = response.find("{")
-                end = response.rfind("}") + 1
-                if start != -1 and end != 0:
-                    json_str = response[start:end]
-                else:
-                    # 如果没有找到 JSON，返回继续思考的动作
-                    return {"action": "think", "content": response}
-            
-            return json.loads(json_str)
-            
-        except json.JSONDecodeError:
-            return {"action": "think", "content": response}
-    
-    def _execute_tool(self, tool_name: str, parameters: Dict[str, Any]) -> Dict[str, Any]:
-        """执行工具"""
-        if tool_name not in self.tools:
-            return {"error": f"工具 '{tool_name}' 不存在"}
-        
-        try:
-            return self.tools[tool_name].execute(**parameters)
         except Exception as e:
-            return {"error": f"工具执行失败: {str(e)}"}
+            return {
+                "success": False,
+                "problem": problem,
+                "error": str(e)
+            }
 
-def demo_basic_math_problems():
-    """演示基础数学问题求解"""
-    print("=== 基础数学问题求解演示 ===")
+
+def demo():
+    """演示函数"""
+    print("🧮 数学代理演示")
+    print("=" * 50)
     
     agent = MathAgent()
     
-    # 测试问题列表
-    problems = [
-        "求函数 f(x) = x³ - 3x² + 2x - 1 的导数",
-        "计算 x² - 4 = 0 的解",
-        "求 x³ - 3x² + 2x - 1 的不定积分",
-        "化简表达式 (x² + 2x + 1)/(x + 1)"
+    # 测试用例
+    test_problems = [
+        "求解方程组：x + y = 5，2x - y = 1",
+        "小明买了3个苹果和2个橙子，总共花了13元。小红买了1个苹果和4个橙子，总共花了11元。请问苹果和橙子各多少钱一个？",
+        "求解二次方程组：x^2 + y^2 = 25，x + y = 7",
+        "有两个数，它们的和是10，它们的差是4，求这两个数。"
     ]
     
-    for i, problem in enumerate(problems, 1):
-        print(f"\n问题 {i}: {problem}")
+    for i, problem in enumerate(test_problems, 1):
+        print(f"\n📝 测试问题 {i}:")
+        print(f"问题: {problem}")
+        print("-" * 30)
         
-        task = Task(
-            id=f"math_problem_{i}",
-            description=problem,
-            priority=1
-        )
+        result = agent.solve_math_problem(problem)
         
-        try:
-            result = agent.execute_task(task)
-            print(f"结果: {result}")
+        if result["success"]:
+            print("✅ 求解成功!")
             
-            # 显示执行过程
-            if agent.memory:
-                print("执行过程:")
-                for step in agent.memory:
-                    print(f"  - 工具: {step['action']['tool_name']}")
-                    print(f"    结果: {step['result']}")
-                agent.memory.clear()  # 清理内存
+            if "tool_calls" in result:
+                print(f"🔧 使用的工具: {[tc['function'] for tc in result['tool_calls']]}")
                 
-        except Exception as e:
-            print(f"执行失败: {e}")
-
-def demo_sympy_tools():
-    """演示 SymPy 工具的直接使用"""
-    print("\n=== SymPy 工具直接使用演示 ===")
-    
-    sympy_tool = SymPyTool()
-    
-    # 测试不同的数学操作
-    operations = [
-        {
-            "operation": "differentiate",
-            "expression": "x**3 + 2*x**2 - x + 5",
-            "variable": "x"
-        },
-        {
-            "operation": "integrate",
-            "expression": "3*x**2 + 4*x - 1",
-            "variable": "x"
-        },
-        {
-            "operation": "solve",
-            "expression": "x**2 - 5*x + 6",
-            "variable": "x"
-        },
-        {
-            "operation": "simplify",
-            "expression": "(x**2 - 1)/(x - 1)"
-        }
-    ]
-    
-    for op in operations:
-        print(f"\n操作: {op['operation']}")
-        print(f"表达式: {op['expression']}")
-        
-        result = sympy_tool.execute(**op)
-        
-        if "error" in result:
-            print(f"错误: {result['error']}")
-        else:
-            print(f"结果: {result}")
-
-def demo_calculator_tool():
-    """演示计算器工具"""
-    print("\n=== 计算器工具演示 ===")
-    
-    calc_tool = CalculatorTool()
-    
-    expressions = [
-        "2 + 3 * 4",
-        "sqrt(16) + 2**3",
-        "sin(pi/2) + cos(0)",
-        "log(e) + exp(1)"
-    ]
-    
-    for expr in expressions:
-        print(f"\n表达式: {expr}")
-        result = calc_tool.execute(expr)
-        
-        if "error" in result:
-            print(f"错误: {result['error']}")
-        else:
-            print(f"结果: {result['result']}")
-
-class AdvancedMathAgent(MathAgent):
-    """高级数学 Agent，支持更复杂的问题"""
-    
-    def __init__(self, llm_client=None):
-        super().__init__(llm_client)
-        self.name = "AdvancedMathSolver"
-    
-    def solve_calculus_problem(self, function_expr: str, problem_type: str) -> Dict[str, Any]:
-        """求解微积分问题"""
-        results = {}
-        
-        if problem_type in ["derivative", "all"]:
-            # 求导数
-            derivative_result = self.tools["sympy_calculator"].execute(
-                operation="differentiate",
-                expression=function_expr,
-                variable="x"
-            )
-            results["derivative"] = derivative_result
-        
-        if problem_type in ["integral", "all"]:
-            # 求积分
-            integral_result = self.tools["sympy_calculator"].execute(
-                operation="integrate",
-                expression=function_expr,
-                variable="x"
-            )
-            results["integral"] = integral_result
-        
-        if problem_type in ["critical_points", "all"]:
-            # 求临界点（导数为0的点）
-            derivative_result = self.tools["sympy_calculator"].execute(
-                operation="differentiate",
-                expression=function_expr,
-                variable="x"
-            )
+                if "raw_results" in result:
+                    for j, raw_result in enumerate(result["raw_results"]):
+                        if raw_result.get("success", False):
+                            print(f"📊 工具 {j+1} 结果: {raw_result['solution']}")
+                        else:
+                            print(f"❌ 工具 {j+1} 错误: {raw_result['error']}")
             
-            if "result" in derivative_result:
-                critical_points = self.tools["sympy_calculator"].execute(
-                    operation="solve",
-                    expression=derivative_result["result"],
-                    variable="x"
-                )
-                results["critical_points"] = critical_points
+            print(f"💡 解释:\n{result['explanation']}")
+            
+        else:
+            print(f"❌ 求解失败: {result['error']}")
         
-        return results
-    
-    def analyze_function(self, function_expr: str) -> Dict[str, Any]:
-        """全面分析函数"""
-        print(f"正在分析函数: f(x) = {function_expr}")
-        
-        analysis = self.solve_calculus_problem(function_expr, "all")
-        
-        # 添加函数简化
-        simplified = self.tools["sympy_calculator"].execute(
-            operation="simplify",
-            expression=function_expr
-        )
-        analysis["simplified"] = simplified
-        
-        return analysis
+        print("=" * 50)
 
-def demo_advanced_math_agent():
-    """演示高级数学 Agent"""
-    print("\n=== 高级数学 Agent 演示 ===")
-    
-    agent = AdvancedMathAgent()
-    
-    # 分析一个复杂函数
-    function = "x**3 - 6*x**2 + 9*x + 1"
-    analysis = agent.analyze_function(function)
-    
-    print(f"\n函数分析结果:")
-    for key, value in analysis.items():
-        print(f"{key}: {value}")
 
 if __name__ == "__main__":
-    # 运行所有演示
-    demo_basic_math_problems()
-    demo_sympy_tools()
-    demo_calculator_tool()
-    demo_advanced_math_agent()
-    
-    print("\n=== 演示完成 ===")
-    print("这个示例展示了如何构建专门用于数学问题求解的 LLM Agent。")
-    print("你可以根据需要扩展更多的数学工具和功能。")
+    demo()

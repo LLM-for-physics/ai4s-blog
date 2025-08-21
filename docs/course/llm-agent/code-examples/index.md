@@ -74,7 +74,7 @@
 
 ## 🔧 环境要求
 
-- Python 3.8+
+- Python 3.12+
 - 相关 LLM API 密钥（OpenAI、Anthropic 等）
 - 必要的 Python 包（见 requirements.txt）
 
