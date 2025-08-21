@@ -11,6 +11,12 @@
   language="text"
 />
 
+<CodeFileViewer
+  src="/course/llm-agent/code-examples/.env.example"
+  filename=".env"
+  language="text"
+/> 
+
 ### Python 代码示例
 
 <CodeFileViewer 

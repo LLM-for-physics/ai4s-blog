@@ -56,8 +56,8 @@ export default defineConfig({
             { text: '概述', link: '/course/llm-agent/overview' },
             { text: '基础 API 调用', link: '/course/llm-agent/api-basics' },
             { text: '高级用法', link: '/course/llm-agent/advanced-usage' },
-            { text: '数学问题求解', link: '/course/llm-agent/math-solver' },
-            { text: '智能体构建', link: '/course/llm-agent/agent-building' }
+            { text: '工具调用', link: '/course/llm-agent/tool-calling' },
+            { text: 'MCP Server', link: '/course/llm-agent/mcp-server' },
           ]
         }
       ],
