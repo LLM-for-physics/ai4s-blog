@@ -5,36 +5,23 @@ hero:
   name: "AI x Physics"
   text: "课程知识库"
   tagline: "人工智能与物理学交叉学科学习平台"
-  image:
-    src: /image.svg
-    alt: AI x Physics
   actions:
     - theme: brand
-      text: 开始学习
+      text: 课程介绍
       link: /course/introduction
     - theme: alt
       text: 环境配置
       link: /setup/overview
+    - theme: alt
+      text: 计算机基础
+      link: /computer-basic/overview
+    - theme: alt
+      text: 作业指南
+      link: /assignments/overview
+    - theme: alt
+      text: 资源
+      link: /resources/links
 
-# features:
-#   - icon: 🎓
-#     title: 系统化课程
-#     details: 从基础概念到高级应用，循序渐进的学习路径
-#   - icon: 🖥️
-#     title: 实践导向
-#     details: 丰富的编程实践和项目案例，理论与实践相结合
-#   - icon: 🔬
-#     title: 前沿技术
-#     details: 涵盖最新的AI技术在物理学研究中的应用
-#   - icon: 🤝
-#     title: 协作学习
-#     details: 完善的作业提交和反馈机制，促进师生互动
-#   - icon: 📚
-#     title: 丰富资源
-#     details: 精选的学习资料、工具软件和参考文献
-#   - icon: 💡
-#     title: 创新思维
-#     details: 培养跨学科思维，探索AI与物理学的无限可能
 ---
 
 ## 🚀 快速开始

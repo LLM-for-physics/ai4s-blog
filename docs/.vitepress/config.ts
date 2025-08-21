@@ -81,7 +81,16 @@ export default defineConfig({
             { text: 'git 基础', link: '/computer-basic/git-usage' },
             { text: 'SSH 使用指南', link: '/computer-basic/ssh' },
             { text: 'Python 基础', link: '/computer-basic/python' },
-            { text: 'VS Code 介绍', links: '/computer-basic/vscode' }
+            { text: 'VS Code 介绍', link: '/computer-basic/vscode' },
+            { text: 'Linux 系统', link: '/computer-basic/linux' }
+          ]
+        },
+        {
+          text: 'AI 基础',
+          items: [
+            { text: '神经网络', link: '/computer-basic/ai/neural-network' },
+            { text: 'PyTorch 与深度学习', link: '/computer-basic/ai/torch' },
+            { text: 'LLM 简介和使用', link: '/computer-basic/ai/llm' }
           ]
         }
       ],
@@ -99,11 +108,9 @@ export default defineConfig({
       ],
       '/resources/': [
         {
-          text: '学习资源',
+          text: '资源',
           items: [
             { text: '相关链接', link: '/resources/links' },
-            { text: '推荐书籍', link: '/resources/books' },
-            { text: '工具软件', link: '/resources/tools' },
             { text: 'FAQ', link: '/resources/faq' }
           ]
         }
