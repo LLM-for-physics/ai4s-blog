@@ -12,7 +12,7 @@
 />
 
 <CodeFileViewer
-  src="/course/llm-agent/code-examples/.env.example"
+  src="/course/llm-agent/code-examples/env.example.txt"
   filename=".env"
   language="text"
 /> 

@@ -125,14 +125,67 @@ function formatFileSize(bytes) {
 
 async function copyCode() {
   try {
-    await navigator.clipboard.writeText(codeContent.value)
+    // 检查是否支持现代剪贴板 API
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(codeContent.value)
+    } else {
+      // 降级到传统方法
+      await fallbackCopyTextToClipboard(codeContent.value)
+    }
+    
     copied.value = true
     setTimeout(() => {
       copied.value = false
     }, 2000)
   } catch (err) {
     console.error('复制失败:', err)
+    // 显示用户友好的错误提示
+    showCopyError()
   }
+}
+
+// 降级复制方法
+function fallbackCopyTextToClipboard(text) {
+  return new Promise((resolve, reject) => {
+    const textArea = document.createElement('textarea')
+    textArea.value = text
+    
+    // 避免在 iOS 上出现缩放
+    textArea.style.top = '0'
+    textArea.style.left = '0'
+    textArea.style.position = 'fixed'
+    textArea.style.width = '2em'
+    textArea.style.height = '2em'
+    textArea.style.padding = '0'
+    textArea.style.border = 'none'
+    textArea.style.outline = 'none'
+    textArea.style.boxShadow = 'none'
+    textArea.style.background = 'transparent'
+    
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+    
+    try {
+      const successful = document.execCommand('copy')
+      document.body.removeChild(textArea)
+      
+      if (successful) {
+        resolve()
+      } else {
+        reject(new Error('execCommand failed'))
+      }
+    } catch (err) {
+      document.body.removeChild(textArea)
+      reject(err)
+    }
+  })
+}
+
+// 显示复制错误提示
+function showCopyError() {
+  // 可以在这里添加更友好的错误提示
+  alert('复制失败，请手动选择并复制代码内容')
 }
 
 function downloadFile() {
