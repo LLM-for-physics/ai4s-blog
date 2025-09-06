@@ -14,4 +14,4 @@ sudo chown -R www-data:www-data /var/www/ai4s-blog
 sudo chmod -R 755 /var/www/ai4s-blog
 
 echo "部署完成！网站已更新。"
-echo "访问地址: http://aislab.pku.edu.cn"
+echo "访问地址: http://aiphy.pku.edu.cn"

@@ -59,6 +59,13 @@ export default defineConfig({
             { text: '工具调用', link: '/course/llm-agent/tool-calling' },
             { text: 'MCP Server', link: '/course/llm-agent/mcp-server' },
           ]
+        },
+        {
+          text: 'AI 基础',
+          items: [
+            { text: '神经网络', link: '/course/ai/neural-network' },
+            { text: 'PyTorch 与深度学习', link: '/course/ai/torch' },
+          ]
         }
       ],
       '/setup/': [
@@ -85,23 +92,15 @@ export default defineConfig({
             { text: 'Linux 系统', link: '/computer-basic/linux' }
           ]
         },
-        {
-          text: 'AI 基础',
-          items: [
-            { text: '神经网络', link: '/computer-basic/ai/neural-network' },
-            { text: 'PyTorch 与深度学习', link: '/computer-basic/ai/torch' },
-            { text: 'LLM 简介和使用', link: '/computer-basic/ai/llm' }
-          ]
-        }
       ],
       '/assignments/': [
         {
           text: '作业指南',
           items: [
             { text: '作业概述', link: '/assignments/overview' },
-            { text: '作业1: 基础概念', link: '/assignments/assignment-1' },
-            { text: '作业2: 数据分析', link: '/assignments/assignment-2' },
-            { text: '作业3: 机器学习', link: '/assignments/assignment-3' },
+            { text: '作业1: 编写一个 LLM 多轮对话的 Python 程序', link: '/assignments/assignment-1' },
+            { text: '作业2: LLM Agent 项目实践', link: '/assignments/assignment-2' },
+            { text: '作业3: 待定', link: '/assignments/assignment-3' },
             { text: '提交方式', link: '/assignments/submission' }
           ]
         }
