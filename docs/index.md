@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: "AI x Physics"
-  text: "课程知识库（2025 年秋）"
+  text: "2025 年秋"
   tagline: "人工智能与物理学交叉学科学习平台"
   actions:
     - theme: brand
@@ -37,6 +37,12 @@ hero:
 
 ### 4. 获取帮助
 遇到问题时可以查看 [FAQ](./resources/faq) 或联系助教。
+
+## 加入课程群
+
+扫描下方二维码加入课程群：
+
+<img src="./wechat.jpg" alt="课程群二维码" width="300" />
 
 ## 🎯 课程亮点
 
