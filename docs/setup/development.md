@@ -133,16 +133,7 @@ print("✅ 开发环境配置验证完成")
 
 **Q: 激活环境时提示找不到 conda 命令**
 
-有两种解决方案，根据您的需求选择：
-
-**方案一：临时激活（推荐用于测试）**
-```bash
-# 临时加载 conda 环境，仅在当前会话有效
-source ~/miniconda3/etc/profile.d/conda.sh
-conda activate pubpy
-```
-
-**方案二：永久配置（推荐用于日常使用）**
+修改您的 shell 配置文件（如 `~/.bashrc`），以后每次打开终端都可以直接使用 conda 命令
 ```bash
 # 永久配置 conda，修改 shell 配置文件
 eval "$(/opt/miniconda/bin/conda shell.bash hook)"
@@ -151,10 +142,6 @@ conda init
 source ~/.bashrc
 conda activate pubpy
 ```
-
-**区别说明：**
-- 方案一只在当前终端会话中生效，关闭终端后需要重新执行
-- 方案二会永久修改您的 shell 配置文件（如 `~/.bashrc`），以后每次打开终端都可以直接使用 conda 命令
 
 **Q: 导入包时出现 ModuleNotFoundError**
 ```bash
