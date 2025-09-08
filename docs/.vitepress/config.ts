@@ -12,10 +12,6 @@ export default defineConfig({
   
   // 确保客户端水合正常工作
   appearance: true,
-  ignoreDeadLinks: [
-    // 忽略对代码文件的死链接检查
-    /\/.*\.(py|txt)$/,
-  ],
   
   // 头部配置
   head: [
@@ -47,6 +43,7 @@ export default defineConfig({
           items: [
             { text: '课程概述', link: '/course/introduction' },
             { text: '课程大纲', link: '/course/syllabus' },
+            { text: '课程讲义', link: '/course/slides' },
             { text: '评分标准', link: '/course/grading' },
           ]
         },
@@ -84,7 +81,7 @@ export default defineConfig({
           text: '计算机基础',
           items: [
             { text: '概述', link: '/computer-basic/overview' },
-            { text: '科学上网', link: '/computer-basic/vpn' },
+            // { text: '科学上网', link: '/computer-basic/vpn' },
             { text: 'git 基础', link: '/computer-basic/git-usage' },
             { text: 'SSH 使用指南', link: '/computer-basic/ssh' },
             { text: 'Python 基础', link: '/computer-basic/python' },
@@ -177,7 +174,7 @@ export default defineConfig({
   // Vite 配置
   vite: {
     // 将 .py 和 .txt 文件作为静态资源处理
-    assetsInclude: ['**/*.py', '**/*.txt'],
+    assetsInclude: ['**/*.py', '**/*.txt', '**/*.xlsx', '**/*.pdf'],
     server: {
       fs: {
         allow: ['..']

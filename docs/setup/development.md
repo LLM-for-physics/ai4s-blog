@@ -11,7 +11,17 @@
 - **管理工具**: Conda
 - **适用场景**: AI 开发、科学计算、数据分析
 
-## 快速开始
+### 快速开始
+
+通过以下命令来配置 conda；以后每次打开终端都可以直接使用 conda 命令
+```bash
+# 永久配置 conda，修改 shell 配置文件
+eval "$(/opt/miniconda/bin/conda shell.bash hook)"
+conda init
+# 重新加载 shell 配置或重启终端
+source ~/.bashrc
+conda activate pubpy
+```
 
 ### 激活虚拟环境
 
@@ -61,6 +71,7 @@ python -c "import numpy, matplotlib, openai, anthropic; print('环境配置正�
 | ipykernel | 6.29.5 | Jupyter 内核支持 |
 | flask | 3.1.2 | Web 应用框架 |
 | aiohttp | 3.12.15 | 异步 HTTP 客户端/服务器 |
+| python-dotenv | >= 1.1.0 | 环境变量加载工具 |
 
 ## 使用指南
 
@@ -126,30 +137,6 @@ print("✅ 开发环境配置验证完成")
 2. **代码管理**: 将个人代码保存在自己的用户目录下
 3. **资源使用**: 合理使用计算资源，避免长时间占用
 4. **版本兼容**: 编写代码时注意包版本兼容性
-
-## 故障排除
-
-### 常见问题
-
-**Q: 激活环境时提示找不到 conda 命令**
-
-修改您的 shell 配置文件（如 `~/.bashrc`），以后每次打开终端都可以直接使用 conda 命令
-```bash
-# 永久配置 conda，修改 shell 配置文件
-eval "$(/opt/miniconda/bin/conda shell.bash hook)"
-conda init
-# 重新加载 shell 配置或重启终端
-source ~/.bashrc
-conda activate pubpy
-```
-
-**Q: 导入包时出现 ModuleNotFoundError**
-```bash
-# 检查是否正确激活了环境
-conda info --envs
-# 确认当前环境
-which python
-```
 
 ### 获取帮助
 

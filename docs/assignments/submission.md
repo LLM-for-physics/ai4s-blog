@@ -2,6 +2,11 @@
 
 本页面说明课程作业的提交方式和要求。
 
+## 相关资源
+
+- 我们为每位同学在服务器上创建了用户，学号与服务器 IP 地址对应表格： 
+<a href="/students_server_assignment.xlsx" download="students_server_assignment.xlsx">点此下载 Excel 表格</a>。如果你选了这门课但你的学号没有出现在表格中，请联系助教。
+
 ## 提交目录结构
 
 在服务器自己的用户目录下创建作业文件夹（可以参考以下的结构）：
