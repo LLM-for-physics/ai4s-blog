@@ -45,8 +45,8 @@ passwd
 随后会提示输入当前密码，输入你的密码（默认还是学号）并按回车键确认。然后即可设置新密码了。
 服务器上已经安装了公共的conda虚拟环境，但用户首次登录时还未激活（如果上面登陆后`username`前没有`(base)`的字样），需要依次输入以下两条命令激活：
 ```bash
-    eval "$(/opt/miniconda/bin/conda shell.bash hook)"
-    conda init
+eval "$(/opt/miniconda/bin/conda shell.bash hook)"
+conda init
 ```
 随后就会看到`(username)`前面多了`(base)`字样，表示已经激活成功。以后再登录就无需手动激活了。输入`conda env list`可以看到已经安装的虚拟环境，其中`pubpy`就是其中之一，里面已经安装了一些常用的python库。要进入这个虚拟环境，需输入：
 ```bash
@@ -110,6 +110,13 @@ mkdir test
    - 在界面右下角点击选择python环境，选择pubpy。选择完成后可以看到右下角发生的变化；
 ![alt text](images/python-interpreter-select.jpg) ![alt text](images/python-interpreter-pubpy.jpg) ![alt text](images/python-interpreter-selected.jpg)
    - 在hello_world.py中输入以下代码：
+```python
+import numpy as np
+print("Hello World!")
+```
+在终端输入 `python hello_world.py` 来运行这个代码，可以看到 `Hello World!` 的输出。python 开发环境的介绍和使用见 [开发环境](./development)。
+
+注：torch 暂时还没有在虚拟环境 pubpy 中安装，等第三、四周课程涉及神经网络后，助教会在虚拟环境中安装。
 ```python
 import torch
 

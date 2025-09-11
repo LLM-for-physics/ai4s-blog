@@ -4,8 +4,24 @@
 
 ## 相关资源
 
+- 点此查看或下载[课件](../course/slides)。
+
 - 我们为每位同学在服务器上创建了用户，学号与服务器 IP 地址对应表格： 
-<a href="/students_server_assignment.xlsx" download="students_server_assignment.xlsx">点此下载 Excel 表格</a>。如果你选了这门课但你的学号没有出现在表格中，请联系助教。
+<a href="/students_server_assignment.xlsx" download="students_server_assignment.xlsx">点此下载 Excel 表格</a> （最近更新：9月10日 11:43）。如果你选了这门课但你的学号没有出现在表格中，请联系助教。
+
+- 服务器连接使用、python 开发环境配置方法见 [server](../setup/server) 和 [development](../setup/development) 。推荐用公共的 conda 环境（pubpy），如果需要安装什么新的 python 库或者遇到什么 bug 可以联系助教；也可以用自定义的 conda 环境，但请务必在作业目录中新建 requirements.txt 来记录项目依赖或者在 README.md 中说清楚。
+
+- <a href="https://www.aliyun.com/benefit/">阿里云权益中心</a> 可以点击“高校师生权益”领取高校学生通用权益（代金券），头几次课程作业可以使用阿里云提供的 `base url` 和 `api key`（阿里云提供的 api 调用规范满足 openai 规范，所以可以用 python 的 `openai` 库来编程）。代金券余额和消费记录可以看 <a href="https://billing-cost.console.aliyun.com/">费用与成本控制台</a>。课程今后可能会大家分发新的 api 账户。
+
+- cline 扩展（ai 编程助手）可以不登陆使用，在 Cline 界面下方拉起模型配置菜单，设置 API Provider 为 OpenAI Compatible，填写阿里云提供的 `base url` 和 `api key`，在 Model ID 栏填写你希望调用的大模型名称（阿里云平台上找到规范的名称格式），即可开始使用 cline。
+
+- **重要提醒**：完成作业时请不要过于依赖 LLM（AI 编程工具），如果在某些关键地方的实现借助了 AI 编程工具，**请在 README 中说明**。
+    虽然 AI 工具可以提供帮助，但是：
+
+  - 重要的是理解解决问题的思路和方法
+  - 建议先尝试独立解决，遇到困难时再寻求 AI 辅助
+  - 使用 AI 帮助后，务必确保你理解了解决方案的原理
+
 
 ## 提交目录结构
 
@@ -49,13 +65,3 @@
 - 跟踪代码的修改历史
 - 在尝试新想法时保存代码的"存档点"
 - 更好地组织和管理你的项目文件
-
-## 学习建议
-
-**重要提醒**：完成作业时请不要过于依赖 LLM（AI 编程工具），如果在某些关键地方的实现借助了 AI 编程工具，请在 README 中说明。
-
-虽然 AI 工具可以提供帮助，但是：
-
-- 重要的是理解解决问题的思路和方法
-- 建议先尝试独立解决，遇到困难时再寻求 AI 辅助
-- 使用 AI 帮助后，务必确保你理解了解决方案的原理
