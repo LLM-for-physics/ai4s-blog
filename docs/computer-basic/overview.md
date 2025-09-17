@@ -8,7 +8,7 @@
 
 1.  **LCPU Getting Started 计算机入门系列课程**: 由北京大学Linux俱乐部（LCPU）编写的综合性计算机基础教程。
     -   链接: [https://missing.lcpu.dev/](https://missing.lcpu.dev/)
-2.  **北京大学计算机科学与开发入门手册**: 由LCPU与PKUHub社区成员共同撰写的入门手册，内容丰富。
-    -   链接: [https.com/ZangXuanyi/getting-started-handout](https://github.com/ZangXuanyi/getting-started-handout)
+2.  **北京大学计算机基础能力手册**: 由LCPU与PKUHub社区成员共同撰写的入门手册，内容丰富。
+    -   链接: [https://github.com/ZangXuanyi/getting-started-handout](https://github.com/ZangXuanyi/getting-started-handout)
 
 此外，部分内容的撰写也获得了 AI 编程助手 **GitHub Copilot** （**gemini-2.5-pro** 与 **Claude Sonnet 4** 模型） 的帮助。在此对所有贡献者表示感谢。

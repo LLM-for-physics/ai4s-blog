@@ -7,7 +7,7 @@
 - 点此查看或下载[课件](../course/slides)。
 
 - 我们为每位同学在服务器上创建了用户，学号与服务器 IP 地址对应表格： 
-<a href="/students_server_assignment.xlsx" download="students_server_assignment.xlsx">点此下载 Excel 表格</a> （最近更新：9月10日 11:43）。如果你选了这门课但你的学号没有出现在表格中，请联系助教。
+<a href="/students_server_assignment.xlsx" download="students_server_assignment.xlsx">点此下载 Excel 表格</a> （最近更新：9月15日 19:31）。如果你选了这门课但你的学号没有出现在表格中，请联系助教。
 
 - 服务器连接使用、python 开发环境配置方法见 [server](../setup/server) 和 [development](../setup/development) 。推荐用公共的 conda 环境（pubpy），如果需要安装什么新的 python 库或者遇到什么 bug 可以联系助教；也可以用自定义的 conda 环境，但请务必在作业目录中新建 requirements.txt 来记录项目依赖或者在 README.md 中说清楚。
 

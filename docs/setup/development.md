@@ -63,6 +63,11 @@ python -c "import numpy, matplotlib, openai, anthropic; print('环境配置正�
 |------|------|------|
 | openai | 1.106.1 | OpenAI API 客户端 |
 | anthropic | 0.66.0 | Anthropic API 客户端 |
+| langchain | 0.3.27 | LangChain 核心框架 |
+| langchain_openai | 0.3.33 | LangChain OpenAI 集成 |
+| langchain_anthropic | 0.3.20 | LangChain Anthropic 集成 |
+| langgraph | 0.6.7 | LangChain 图形化工作流 |
+| chainlit | 2.8.0 | 对话式 AI 应用框架 |
 
 ### 开发工具
 

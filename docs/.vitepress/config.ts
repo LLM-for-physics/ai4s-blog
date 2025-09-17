@@ -45,6 +45,7 @@ export default defineConfig({
             { text: '课程大纲', link: '/course/syllabus' },
             { text: '课程讲义', link: '/course/slides' },
             { text: '评分标准', link: '/course/grading' },
+            { text: 'LLM 网关', link: '/course/llm-gateway' }
           ]
         },
         {
