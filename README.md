@@ -1,4 +1,4 @@
-# AI x Physics 课程知识库
+# AI x Physics 课程主页
 
 这是一个基于 VitePress 构建的AI与物理学交叉课程的知识库网站。
 

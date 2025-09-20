@@ -1,7 +1,7 @@
 {
   "name": "ai4s-course-docs",
   "version": "1.0.0",
-  "description": "AI x Physics 课程知识库网站",
+  "description": "AI x Physics 课程主页",
   "type": "module",
   "scripts": {
     "docs:dev": "vitepress dev docs",

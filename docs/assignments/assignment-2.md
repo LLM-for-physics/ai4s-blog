@@ -14,20 +14,23 @@
 
 <!-- 请从以下5个主题中选择一个进行实现：
 
-### 1. 数据预处理 Agent 工作流
-构建一个 agent 工作流来执行数据清洗和段落切割预处理任务。
+### 1. 物理学语料清洗工作流
+构建一个工作流来执行数据清洗和段落预处理任务，语料数据来源可以是任何教材或者互联网，目标是清除语料中的格式错误、typo、简单的计算错误等。
 
 ### 2. RAG 问答系统
-以 RAG（Retrieval-Augmented Generation）为核心，构建一个完整的提问+检索+答题的 agent 系统。
+以 RAG（Retrieval-Augmented Generation）为核心，构建一个完整的提问+检索+答题的工作流
 
-### 3. MCP Server Coding Agent
-基于 Model Context Protocol (MCP) Server 实现一个编程助手 agent。
+### 3. 联网搜索功能实现
+实现一个带联网搜索选项的问答 agent。
+可以用 MCP server 或者 OpenAI SDK 内置的 tool calling 功能，连接互联网搜索服务，
 
-### 4. OpenAI SDK Tool Calling Agent
-使用 OpenAI SDK 内置的 tool calling 功能实现一个编程助手 agent。
+### 4. 科学计算 Agent
+实现一个简易的科学计算 agent，通过调用外部科学计算工具（比如 python 的 sympy、scipy 库或其他符号计算、数值计算工具），来增强 agent 的推理能力。
+可以用 MCP server 或者 OpenAI SDK 内置的 tool calling 功能实现。
 
 ### 5. 物理问题 Benchmark 构建
-构造一个包含5-10道题目的小型物理问题基准测试集。 -->
+构造一个包含5-10道题目的小型物理问题基准测试集，需要有清晰的问题描述和格式规范的标准答案，并实现评测不同类型 LLM 在数据集上的表现，实现自动化打分。
+-->
 
 ## 📚 参考资源
 

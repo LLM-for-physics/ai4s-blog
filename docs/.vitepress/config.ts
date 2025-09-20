@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'AI x Physics 课程知识库',
+  title: 'AI x Physics 课程主页',
   description: '人工智能与物理学交叉学科课程文档',
   lang: 'zh-CN',
   
@@ -19,7 +19,7 @@ export default defineConfig({
     ['meta', { name: 'theme-color', content: '#3c82f6' }],
     ['meta', { name: 'og:type', content: 'website' }],
     ['meta', { name: 'og:locale', content: 'zh-CN' }],
-    ['meta', { name: 'og:title', content: 'AI x Physics 课程知识库' }],
+    ['meta', { name: 'og:title', content: 'AI x Physics 课程主页' }],
     ['meta', { name: 'og:description', content: '人工智能与物理学交叉学科课程文档' }]
   ],
 
