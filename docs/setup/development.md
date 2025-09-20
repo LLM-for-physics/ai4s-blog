@@ -46,6 +46,17 @@ conda list
 python -c "import numpy, matplotlib, openai, anthropic; print('环境配置正确')"
 ```
 
+测试 torch 是否已安装以及 cuda 是否可用
+```bash
+python3 -c "import torch; print(f'PyTorch版本: {torch.__version__}'); print(f'CUDA可用: {torch.cuda.is_available()}'); print(f'CUDA设备数量: {torch.cuda.device_count()}' if torch.cuda.is_available() else 'CUDA不可用')"
+```
+期待输出
+```
+PyTorch版本: 2.6.0+cu124
+CUDA可用: True
+CUDA设备数量: 10
+```
+
 ## 预装软件包
 
 ### 核心计算库
@@ -68,6 +79,7 @@ python -c "import numpy, matplotlib, openai, anthropic; print('环境配置正�
 | langchain_anthropic | 0.3.20 | LangChain Anthropic 集成 |
 | langgraph | 0.6.7 | LangChain 图形化工作流 |
 | chainlit | 2.8.0 | 对话式 AI 应用框架 |
+| pytorch | 2.6.0+cu124 | 深度学习库 |
 
 ### 开发工具
 
