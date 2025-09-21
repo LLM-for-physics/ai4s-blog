@@ -1,4 +1,4 @@
-# 模块一：LLM API 调用基础
+# LLM API 调用基础
 
 ## 📖 概述
 
@@ -198,7 +198,7 @@ import random
 from typing import Optional
 
 def call_llm_with_retry(client: LLMClient, messages: List[Dict[str, str]], 
-                       max_retries: int = 3, backoff_factor: float = 1.0) -> Optional[str]:
+                        max_retries: int = 3, backoff_factor: float = 1.0) -> Optional[str]:
     """带重试机制的 LLM 调用"""
     
     for attempt in range(max_retries):

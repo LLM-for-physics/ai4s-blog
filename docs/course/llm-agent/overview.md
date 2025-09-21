@@ -4,21 +4,21 @@
 
 本课程将带领同学们深入了解大语言模型（LLM）的 API 调用机制，并学习如何构建智能的 LLM Agent 来解决实际问题。我们将从基础的 API 调用开始，逐步探索高级用法，最终构建能够与外部工具协同工作的智能代理。
 
-## 📚 课程模块
+## 📚 技术文档
 
-### [模块一：API 调用基础](./api-basics.md)
+### 1. [API 调用基础](./api-basics.md)
 - LLM API 调用原理
 - 主流供应商对比（OpenAI、Anthropic、国内厂商）
 
-### [模块二：高级用法探索](./advanced-usage.md)
+### 2. [高级用法探索](./advanced-usage.md)
 - Prompt 工程与模板设计
 - 多轮对话管理策略
 
-### [模块三：工具调用](./tool-calling.md)
+### 3.[工具调用](./tool-calling.md)
 
-### [模块四：MCP Server](./mcp-server.md)
+### 4. [MCP Server](./mcp-server.md)
 
-### [模块五：RAG](./rag.md)
+### 5. [检索增强生成 RAG](./rag.md)
 
 ## 💻 代码示例
 
