@@ -32,7 +32,8 @@ export default defineConfig({
       { text: '环境配置', link: '/setup/overview' },
       { text: '计算机基础', link: '/computer-basic/overview' },
       { text: '作业', link: '/assignments/overview' },
-      { text: '资源', link: '/resources/links' }
+      { text: '资源', link: '/resources/links' },
+      { text: 'LLM 网关', link: '/course/llm-gateway' }
     ],
 
     // 侧边栏
@@ -107,6 +108,7 @@ export default defineConfig({
         {
           text: '资源',
           items: [
+            { text: 'LLM 网关', link: '/course/llm-gateway' },
             { text: '相关链接', link: '/resources/links' },
             { text: 'FAQ', link: '/resources/faq' }
           ]
