@@ -57,6 +57,7 @@ export default defineConfig({
             { text: '高级用法', link: '/course/llm-agent/advanced-usage' },
             { text: '工具调用', link: '/course/llm-agent/tool-calling' },
             { text: 'MCP Server', link: '/course/llm-agent/mcp-server' },
+            { text: 'RAG', link: '/course/llm-agent/rag' }
           ]
         },
         {
