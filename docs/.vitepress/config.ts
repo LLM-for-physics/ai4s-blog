@@ -100,7 +100,8 @@ export default defineConfig({
             { text: '作业1: 编写一个 LLM 多轮对话的 Python 程序', link: '/assignments/assignment-1' },
             { text: '作业2: LLM Agent 项目实践', link: '/assignments/assignment-2' },
             { text: '作业3: 待定', link: '/assignments/assignment-3' },
-            { text: '提交方式', link: '/assignments/submission' }
+            { text: '提交方式', link: '/assignments/submission' },
+            { text: 'cline 指南', link: '/assignments/cline' }
           ]
         }
       ],
