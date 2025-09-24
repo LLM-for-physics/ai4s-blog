@@ -221,26 +221,10 @@ result = rag_agent.query("深度学习和机器学习有什么区别？")
 print("回答:", result["answer"])
 ```
 
-## 🧪 实践验证
-
-本文档的所有代码都经过了完整测试验证。你可以参考 `test_rag` 项目中的测试文件：
-
-- `test_basic_setup.py` - 验证基础环境配置
-- `test_collection.py` - 验证集合创建和文档添加
-- `test_search.py` - 验证检索功能
-- `test_rag_agent.py` - 验证完整 RAG Agent
-
-运行测试：
-```bash
-cd test_rag
-python run_all_tests.py
-```
-
 ## 🔗 相关资源
 
 - [Chroma 官方文档](https://docs.trychroma.com/)
 - [OpenAI Embeddings API](https://platform.openai.com/docs/guides/embeddings)
-- [完整测试项目](../../../test_rag/)
 
 ---
 
