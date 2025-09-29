@@ -37,11 +37,18 @@
   language="python"
 />
 
+<CodeFileViewer
+  src="/course/llm-agent/code-examples/function_calling_demo.py" 
+  filename="function_calling_demo.py"
+  language="python"
+/>
+
 ::: tip 使用说明
 - 点击 **预览代码** 按钮可以直接在页面中查看代码内容
 - 点击 **复制代码** 按钮可以将代码复制到剪贴板
 - 点击 **下载文件** 按钮可以下载文件到本地
 - 所有文件都可以独立运行，建议按顺序学习
+- **以下代码仅供参考，如果遇到报错，请仔细检查 base url 和 api key 是否填写正确、base url 对应的网关是否支持你调用的 model**
 :::
 
 

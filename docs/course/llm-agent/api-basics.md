@@ -25,7 +25,7 @@ headers = {
     "Content-Type": "application/json"
 }
 data = {
-    "model": "gpt-3.5-turbo",
+    "model": "gpt-5",
     "messages": [{"role": "user", "content": "Hello, world!"}]
 }
 
@@ -131,7 +131,7 @@ from openai import OpenAI
 client = OpenAI(api_key="your-api-key")
 
 response = client.chat.completions.create(
-    model="gpt-3.5-turbo",
+    model="gpt-5",
     messages=[
         {"role": "system", "content": "你是一个有用的助手。"},
         {"role": "user", "content": "解释什么是机器学习？"}
