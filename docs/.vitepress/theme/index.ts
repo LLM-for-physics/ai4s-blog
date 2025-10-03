@@ -1,5 +1,6 @@
 import DefaultTheme from 'vitepress/theme'
 import CodeFileViewer from '../components/CodeFileViewer.vue'
+import ScoreQuery from '../components/ScoreQuery.vue'
 import './custom.css'
 
 export default {
@@ -7,5 +8,6 @@ export default {
   enhanceApp({ app }) {
     // 注册全局组件
     app.component('CodeFileViewer', CodeFileViewer)
+    app.component('ScoreQuery', ScoreQuery)
   }
 }

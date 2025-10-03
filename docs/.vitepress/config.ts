@@ -32,6 +32,7 @@ export default defineConfig({
       { text: '环境配置', link: '/setup/overview' },
       { text: '计算机基础', link: '/computer-basic/overview' },
       { text: '作业', link: '/assignments/overview' },
+      { text: '成绩查询', link: '/score-query' },
       { text: '资源', link: '/resources/links' },
       { text: 'LLM 网关', link: '/course/llm-gateway' }
     ],
