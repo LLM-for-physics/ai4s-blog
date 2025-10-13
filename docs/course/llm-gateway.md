@@ -29,7 +29,7 @@
 部分大模型支持多模态功能（比如图片理解）：
 ![图片理解](./llm-gateway/6.png)
 
-### 3. API 调用
+### 3. API 调用 （OpenAI 格式）
 如需通过程序调用 LLM API：
 
 1. 在左侧"令牌管理"处点击"添加令牌"获取 API Key
@@ -37,7 +37,7 @@
 2. 在程序中设置环境变量：
    ```bash
    OPENAI_BASE_URL=http://162.105.151.181/v1
-   OPENAI_API_KEY=sk-YOUR_API_KEY
+   OPENAI_API_KEY=sk-{YOUR_API_KEY}
    ```
 3. 使用 Python 的 openai 库调用大模型：
    ```python
@@ -45,9 +45,92 @@
    
    client = openai.OpenAI(
        base_url="http://162.105.151.181/v1",
-       api_key="sk-YOUR_API_KEY"
+       api_key="sk-{YOUR_API_KEY}"
    )
    ```
+4. 或者用 curl 发起请求（`"stream": true` 表示流式输出）：
+   ```bash
+   curl -X POST http://162.105.151.181/v1/chat/completions \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer sk-{YOUR_API_KEY}" \
+   -d '{
+      "model": "deepseek-v3-250324",
+      "messages": [{"role": "user", "content": "hello"}],
+      "stream": true
+   }'
+   ```
+
+### 4. API 调用 （Anthropic 格式）
+如需通过程序调用 LLM API：
+
+1. 在左侧"令牌管理"处点击"添加令牌"获取 API Key，并设置 `VIP 分组`
+2. 在程序中设置环境变量：
+   ```bash
+   ANTHROPIC_BASE_URL=http://162.105.151.181
+   ANTHROPIC_API_KEY=sk-{YOUR_API_KEY}
+   ```
+3. 使用 Python 的 anthropic 库调用大模型：
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic(
+       base_url="http://162.105.151.181",
+       api_key="sk-{YOUR_API_KEY}"
+   )
+
+   response = client.messages.create(
+       model="claude-sonnet-4-5-20250929",
+       max_tokens=1024,
+       messages=[
+           {"role": "user", "content": "Hello, Claude!"}
+       ]
+   )
+   print(response.content[0].text)
+   ```
+4. 或者用 curl 发起请求（`"stream": true` 表示流式输出）：
+   ```bash
+   curl -X POST http://162.105.151.181/v1/messages \
+   -H "Content-Type: application/json" \
+   -H "anthropic-version: 2023-06-01" \
+   -H "x-api-key: sk-{YOUR_API_KEY}" \
+   -d '{
+      "model": "claude-sonnet-4-5-20250929",
+      "stream": true,
+      "messages": [{"role": "user", "content": "Hello"}]
+   }'
+   ```
+
+### 5. API 调用 （Google Gemini 格式）
+1. 在左侧"令牌管理"处点击"添加令牌"获取 API Key，并设置 `VIP 分组`
+2. 在程序中设置环境变量：
+   ```bash
+   GEMINI_BASE_URL=http://162.105.151.181
+   GEMINI_API_KEY=sk-{YOUR_API_KEY}
+   ```
+3. 使用 Python 的 google-generativeai 库调用大模型：
+   ```python
+   import google.generativeai as genai
+
+   genai.configure(
+       api_key="sk-{YOUR_API_KEY}",
+       transport="rest",
+       client_options={"api_endpoint": "http://162.105.151.181"}
+   )
+
+   model = genai.GenerativeModel("gemini-2.5-flash")
+   response = model.generate_content("Who are you?")
+   print(response.text)
+   ```
+4. 或者用 curl 发起请求（`:streamGenerateContent` 表示流式输出）：
+   ```bash
+   curl -N "http://162.105.151.181/v1beta/models/gemini-2.5-pro:streamGenerateContent" \
+   -H "Content-Type: application/json" \
+   -H "Authorization: Bearer sk-{YOUR_API_KEY}" \
+   -d '{
+      "contents": [{"parts":[{"text": "Who are you?"}]}]
+   }'
+   ```
+
 
 ## 内测群与 Bug 反馈
 

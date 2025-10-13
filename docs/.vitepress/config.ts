@@ -32,9 +32,9 @@ export default defineConfig({
       { text: '环境配置', link: '/setup/overview' },
       { text: '计算机基础', link: '/computer-basic/overview' },
       { text: '作业', link: '/assignments/overview' },
-      { text: '成绩查询', link: '/score-query' },
       { text: '资源', link: '/resources/links' },
-      { text: 'LLM 网关', link: '/course/llm-gateway' }
+      { text: 'LLM 网关', link: '/course/llm-gateway' },
+      { text: '成绩查询', link: '/score-query' },
     ],
 
     // 侧边栏
@@ -47,7 +47,8 @@ export default defineConfig({
             { text: '课程大纲', link: '/course/syllabus' },
             { text: '课程讲义', link: '/course/slides' },
             { text: '评分标准', link: '/course/grading' },
-            { text: 'LLM 网关', link: '/course/llm-gateway' }
+            { text: 'LLM 网关', link: '/course/llm-gateway' },
+            { text: '成绩查询', link: '/score-query' },
           ]
         },
         {

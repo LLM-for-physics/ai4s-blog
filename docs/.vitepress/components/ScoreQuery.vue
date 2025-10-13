@@ -34,7 +34,7 @@
             <tr>
               <th>作业编号</th>
               <th>作业状态</th>
-              <th>收取时间</th>
+              <th>内容修改时间</th>
               <th>检查时间</th>
               <th>分数</th>
               <th>评语</th>
@@ -92,7 +92,10 @@ const servers = ['58', '132', '213']
 
 async function fetchCSV(url) {
   try {
-    const response = await fetch(url)
+    // 添加时间戳参数防止浏览器缓存
+    const cacheBuster = Date.now()
+    const urlWithCache = `${url}?v=${cacheBuster}`
+    const response = await fetch(urlWithCache)
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`)
     }
@@ -125,7 +128,10 @@ function parseCSV(text) {
 
 async function fetchTextFile(url) {
   try {
-    const response = await fetch(url)
+    // 添加时间戳参数防止浏览器缓存
+    const cacheBuster = Date.now()
+    const urlWithCache = `${url}?v=${cacheBuster}`
+    const response = await fetch(urlWithCache)
     if (!response.ok) {
       return null
     }
