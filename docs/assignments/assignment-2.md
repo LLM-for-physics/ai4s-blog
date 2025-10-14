@@ -34,8 +34,9 @@
 ### 相关文档
 - [LLM Agent 课程资料](../course/llm-agent/overview)
 - [API 基础教程](../course/llm-agent/api-basics)
-- TODO [MCP Server 实现指南](../course/llm-agent/mcp-server)
-- TODO [Tool Calling 高级用法](../course/llm-agent/tool-calling)
+- [RAG（检索增强生成）](../course/llm-agent/rag)
+- [MCP Server 实现指南](../course/llm-agent/mcp-server)
+- [Tool Calling 高级用法](../course/llm-agent/tool-calling)
 
 ### 技术工具
 - OpenAI API

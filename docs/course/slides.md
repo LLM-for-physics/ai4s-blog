@@ -18,5 +18,13 @@
 
 <a href="/slides/4-7.决策树与随机森林.pdf" download="4-7.决策树与随机森林.pdf">4-7.决策树与随机森林.pdf</a>
 
+<a href="/slides/5-8.神经网络与反向传播.pdf" download="5-8.神经网络与反向传播.pdf">5-8.神经网络与反向传播.pdf</a>
+
+<a href="/slides/5-9.举例-卷积神经网络.pdf" download="5-9.举例-卷积神经网络.pdf">5-9.举例-卷积神经网络.pdf</a>
+
+<a href="/slides/5-10.举例-生成对抗网络.pdf" download="5-10.举例-生成对抗网络.pdf">5-10.举例-生成对抗网络.pdf</a>
+
+<a href="/slides/5-11.扩散模型.pdf" download="5-11.扩散模型.pdf">5-11.扩散模型.pdf</a>
+
 如果您对课件内容有任何建议、疑问或勘误，欢迎通过邮件联系马滟青老师 (yqma@pku.edu.cn)。
 
