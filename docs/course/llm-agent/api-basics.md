@@ -2,7 +2,7 @@
 
 ## 📖 概述
 
-本模块将深入介绍大语言模型 API 的调用原理，帮助同学们理解如何与不同的 LLM 供应商进行交互。我们将从最基础的概念开始，逐步掌握实际的编程技能。
+本模块将介绍大语言模型 API 的调用方法，帮助同学们理解如何通过程序与 LLM 进行交互。我们将学习基础概念，并重点掌握北大物理学院 LLM 网关的使用方法。
 
 ## 🔍 LLM API 调用原理
 
@@ -16,17 +16,15 @@ LLM API 基于 HTTP 协议工作，主要使用 POST 方法：
 
 ```python
 import requests
-import json
 
-# 基本的 HTTP POST 请求结构
-url = "https://api.openai.com/v1/chat/completions"
+url = "http://api-endpoint.com/v1/chat/completions"
 headers = {
     "Authorization": "Bearer YOUR_API_KEY",
     "Content-Type": "application/json"
 }
 data = {
-    "model": "gpt-5",
-    "messages": [{"role": "user", "content": "Hello, world!"}]
+    "model": "model-name",
+    "messages": [{"role": "user", "content": "Hello!"}]
 }
 
 response = requests.post(url, headers=headers, json=data)
@@ -39,99 +37,78 @@ LLM API 支持两种响应模式：
 
 **批量响应**：等待完整回答后一次性返回
 ```python
-# 批量响应示例
 response = requests.post(url, headers=headers, json=data)
 result = response.json()
 print(result['choices'][0]['message']['content'])
 ```
 
-**流式响应**：实时返回生成的内容
+**流式响应**：实时返回生成的内容（逐字输出）
 ```python
-# 流式响应示例
 data["stream"] = True
 response = requests.post(url, headers=headers, json=data, stream=True)
 
 for line in response.iter_lines():
     if line:
-        chunk = json.loads(line.decode('utf-8').split('data: ')[1])
-        if chunk['choices'][0]['delta'].get('content'):
-            print(chunk['choices'][0]['delta']['content'], end='')
+        # 处理流式数据
+        print(line.decode('utf-8'))
 ```
 
 ## 🔑 核心组件详解
 
 ### Base URL（基础 URL）
 
-Base URL 是 API 服务的根地址，不同供应商有不同的端点：
+Base URL 是 API 服务的根地址，不同供应商或部署有不同的端点：
 
 ```python
-# 不同供应商的 Base URL
+# 官方 API 示例
 OPENAI_BASE_URL = "https://api.openai.com/v1"
 ANTHROPIC_BASE_URL = "https://api.anthropic.com/v1"
-AZURE_BASE_URL = "https://your-resource.openai.azure.com"
 
-# 自定义部署示例
-CUSTOM_BASE_URL = "https://your-custom-deployment.com/v1"
+# 自定义部署或网关
+CUSTOM_BASE_URL = "http://162.105.151.181/v1"
 ```
-
-**使用场景**：
-- 官方 API 服务
-- 私有化部署
-- 代理服务
-- 镜像服务
 
 ### API Key（API 密钥）
 
 API Key 是身份认证的凭证，确保只有授权用户才能访问服务。
 
-#### 安全最佳实践
+**安全最佳实践**：使用环境变量存储 API Key
 
-1. **环境变量存储**
 ```python
 import os
 from dotenv import load_dotenv
 
-# 加载环境变量
-load_dotenv()
-
-# 从环境变量获取 API Key
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+load_dotenv()  # 从 .env 文件加载环境变量
+API_KEY = os.getenv("API_KEY")
 ```
 
-2. **创建 .env 文件**
-```bash
-# .env 文件内容
-OPENAI_API_KEY=sk-your-openai-key-here
-ANTHROPIC_API_KEY=sk-ant-your-anthropic-key-here
-ZHIPU_API_KEY=your-zhipu-key-here
-```
+## 🎓 北大物理学院 LLM 网关使用
 
-3. **配置 .gitignore**
-```gitignore
-# 确保不提交敏感信息
-.env
-*.key
-config/secrets.json
-```
+我们在服务器上部署了 LLM 网关服务：http://162.105.151.181/
 
-## 🏢 主流 LLM 供应商对比
+该网关支持多种 API 格式，方便同学们使用不同的客户端库进行调用。详细的网关说明请查看 [LLM 网关文档](../llm-gateway.md)。
 
-### OpenAI
+### 获取 API Key
 
-**特点**：
-- 最成熟的 API 生态
-- 模型种类丰富（GPT-3.5, GPT-4, GPT-4 Turbo）
-- 支持函数调用、图像理解等高级功能
+1. 在 [LLM 网关](http://162.105.151.181/) 注册账号（用户名设置为学号）
+2. 在左侧"令牌管理"处点击"添加令牌"获取 API Key
+3. 根据需要选择不同的分组（普通用户使用 default 分组，VIP 分组可访问 Claude、Gemini 等模型）
 
-**API 示例**：
+### OpenAI 格式调用
+
+网关兼容 OpenAI API 格式，这是最常用的调用方式。
+
+**Python 示例**：
 ```python
-from openai import OpenAI
+import openai
 
-client = OpenAI(api_key="your-api-key")
+client = openai.OpenAI(
+    base_url="http://162.105.151.181/v1",
+    api_key="sk-{YOUR_API_KEY}"
+)
 
 response = client.chat.completions.create(
-    model="gpt-5",
+    model="deepseek-v3-250324",
     messages=[
         {"role": "system", "content": "你是一个有用的助手。"},
         {"role": "user", "content": "解释什么是机器学习？"}
@@ -143,98 +120,127 @@ response = client.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
-**定价模式**：按 token 计费，输入和输出 token 价格不同
+**环境变量配置**：
+```bash
+OPENAI_BASE_URL=http://162.105.151.181/v1
+OPENAI_API_KEY=sk-{YOUR_API_KEY}
+```
 
-### Anthropic (Claude)
+**curl 示例**（`"stream": true` 表示流式输出）：
+```bash
+curl -X POST http://162.105.151.181/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-{YOUR_API_KEY}" \
+  -d '{
+    "model": "deepseek-v3-250324",
+    "messages": [{"role": "user", "content": "hello"}],
+    "stream": true
+  }'
+```
 
-**特点**：
-- Constitutional AI 技术，更安全可靠
-- 长上下文支持（Claude-2 支持 100K tokens）
-- 优秀的推理和分析能力
+### Anthropic 格式调用
 
-**API 示例**：
+如需使用 Claude 系列模型，需要设置 **VIP 分组**的 API Key。
+
+**Python 示例**：
 ```python
 import anthropic
 
-client = anthropic.Anthropic(api_key="your-api-key")
+client = anthropic.Anthropic(
+    base_url="http://162.105.151.181",
+    api_key="sk-{YOUR_API_KEY}"
+)
 
-message = client.messages.create(
-    model="claude-3-sonnet-20240229",
-    max_tokens=1000,
-    temperature=0.7,
+response = client.messages.create(
+    model="claude-sonnet-4-5-20250929",
+    max_tokens=1024,
     messages=[
-        {"role": "user", "content": "解释量子计算的基本原理"}
+        {"role": "user", "content": "Hello, Claude!"}
     ]
 )
 
-print(message.content[0].text)
+print(response.content[0].text)
 ```
 
-### Google (Gemini)
+**环境变量配置**：
+```bash
+ANTHROPIC_BASE_URL=http://162.105.151.181
+ANTHROPIC_API_KEY=sk-{YOUR_API_KEY}
+```
 
-**特点**：
-- 多模态能力强（文本、图像、音频）
-- 与 Google 生态系统深度集成
-- 免费额度相对较高
+**curl 示例**：
+```bash
+curl -X POST http://162.105.151.181/v1/messages \
+  -H "Content-Type: application/json" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "x-api-key: sk-{YOUR_API_KEY}" \
+  -d '{
+    "model": "claude-sonnet-4-5-20250929",
+    "stream": true,
+    "messages": [{"role": "user", "content": "Hello"}]
+  }'
+```
 
-**API 示例**：
+### Google Gemini 格式调用
+
+如需使用 Gemini 系列模型，需要设置 **VIP 分组**的 API Key。
+
+**Python 示例**（支持多模态输入，如图片理解）：
 ```python
 import google.generativeai as genai
+import PIL.Image
 
-genai.configure(api_key="your-api-key")
-model = genai.GenerativeModel('gemini-pro')
+genai.configure(
+    api_key="sk-{YOUR_API_KEY}",
+    transport="rest",
+    client_options={"api_endpoint": "http://162.105.151.181"}
+)
 
-response = model.generate_content("解释深度学习的工作原理")
+model = genai.GenerativeModel("gemini-2.5-flash")
+
+# 文本输入
+response = model.generate_content("Who are you?")
+print(response.text)
+
+# 多模态输入（图片 + 文本）
+response = model.generate_content(
+    [{'role': 'user', 'parts': ['阅读下面这张图', PIL.Image.open("test.jpg")]}]
+)
 print(response.text)
 ```
 
-## 🛠️ 错误处理和最佳实践
-
-### 常见错误处理
-
-```python
-import time
-import random
-from typing import Optional
-
-def call_llm_with_retry(client: LLMClient, messages: List[Dict[str, str]], 
-                        max_retries: int = 3, backoff_factor: float = 1.0) -> Optional[str]:
-    """带重试机制的 LLM 调用"""
-    
-    for attempt in range(max_retries):
-        try:
-            return client.chat(messages)
-            
-        except requests.exceptions.RequestException as e:
-            if "rate limit" in str(e).lower():
-                # 速率限制，使用指数退避
-                wait_time = backoff_factor * (2 ** attempt) + random.uniform(0, 1)
-                print(f"遇到速率限制，等待 {wait_time:.2f} 秒后重试...")
-                time.sleep(wait_time)
-                
-            elif attempt == max_retries - 1:
-                print(f"达到最大重试次数，调用失败: {e}")
-                return None
-                
-            else:
-                print(f"请求失败，第 {attempt + 1} 次重试: {e}")
-                time.sleep(1)
-                
-        except Exception as e:
-            print(f"未知错误: {e}")
-            return None
-    
-    return None
+**环境变量配置**：
+```bash
+GEMINI_BASE_URL=http://162.105.151.181
+GEMINI_API_KEY=sk-{YOUR_API_KEY}
 ```
+
+**curl 示例**（`:streamGenerateContent` 表示流式输出）：
+```bash
+curl -N "http://162.105.151.181/v1beta/models/gemini-2.5-pro:streamGenerateContent" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-{YOUR_API_KEY}" \
+  -d '{
+    "contents": [{"parts":[{"text": "Who are you?"}]}]
+  }'
+```
+
+### 可用模型
+
+- **default 分组**：通义千问系列、DeepSeek 系列
+- **VIP 分组**：Claude 系列、Gemini 系列
+
+您可以在网关的"模型广场"界面查看所有可用模型。部分模型（如 qwen "vl" 系列）支持多模态功能（图片理解）。
 
 ## 📝 练习作业
 
-1. 使用不同的 LLM 供应商 API 实现相同的对话功能
-2. 实现一个支持多供应商的统一 LLM 客户端
-3. 添加错误处理、重试机制
+1. 使用 OpenAI 格式调用网关，实现一个简单的对话功能
+2. 尝试使用不同的模型（DeepSeek、Claude、Gemini），比较它们的输出特点
+3. 实现流式输出功能，观察实时生成的效果
 
 ## 🔗 相关资源
 
+- [北大物理学院 LLM 网关文档](../llm-gateway.md)
 - [OpenAI API 文档](https://platform.openai.com/docs)
 - [Anthropic API 文档](https://docs.anthropic.com/)
 - [Google AI Studio](https://makersuite.google.com/)
