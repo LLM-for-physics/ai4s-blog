@@ -88,7 +88,7 @@ const error = ref('')
 const results = ref([])
 const hasSearched = ref(false)
 
-const servers = ['58', '132', '213']
+const servers = ['58', '132', '197']
 
 async function fetchCSV(url) {
   try {
