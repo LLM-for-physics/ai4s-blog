@@ -102,7 +102,7 @@ export default defineConfig({
             { text: '作业概述', link: '/assignments/overview' },
             { text: '作业1: 编写一个 LLM 多轮对话的 Python 程序', link: '/assignments/assignment-1' },
             { text: '作业2: LLM Agent 项目实践', link: '/assignments/assignment-2' },
-            { text: '作业3: 待定', link: '/assignments/assignment-3' },
+            { text: '作业3: 使用 PINN 求解泊松方程', link: '/assignments/assignment-3' },
             { text: '提交方式', link: '/assignments/submission' },
             { text: 'cline 指南', link: '/assignments/cline' }
           ]
@@ -181,7 +181,7 @@ export default defineConfig({
   // Vite 配置
   vite: {
     // 将 .py 和 .txt 文件作为静态资源处理
-    assetsInclude: ['**/*.py', '**/*.txt', '**/*.xlsx', '**/*.pdf'],
+    assetsInclude: ['**/*.py', '**/*.txt', '**/*.xlsx', '**/*.pdf', '**/*.zip', '**/*.ipynb'],
     server: {
       fs: {
         allow: ['..']

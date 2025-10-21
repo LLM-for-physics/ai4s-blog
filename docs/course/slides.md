@@ -26,5 +26,9 @@
 
 <a href="/slides/5-11.扩散模型.pdf" download="5-11.扩散模型.pdf">5-11.扩散模型.pdf</a>
 
+<a href="/slides/6-12.词表示与递归神经网络.pdf" download="6-12.词表示与递归神经网络.pdf">6-12.词表示与递归神经网络.pdf</a>
+
+<a href="/slides/6-13.注意力机制与Transformer.pdf" download="6-13.注意力机制与Transformer.pdf"> 6-13.注意力机制与Transformer.pdf</a>
+
 如果您对课件内容有任何建议、疑问或勘误，欢迎通过邮件联系马滟青老师 (yqma@pku.edu.cn)。
 

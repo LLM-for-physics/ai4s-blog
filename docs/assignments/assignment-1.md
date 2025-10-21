@@ -40,5 +40,3 @@ A: 使用环境变量或配置文件存储，不要将 API Key 硬编码到代�
 - 助教答疑时间
 - [常见问题文档](../resources/faq)
 - [API 基础教程](../course/llm-agent/api-basics)
-
-## 📋 作业概述
