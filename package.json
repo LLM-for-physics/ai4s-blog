@@ -28,6 +28,7 @@
   },
   "packageManager": "yarn@4.9.2",
   "dependencies": {
+    "@leelaa/vitepress-plugin-extended": "^1.0.7",
     "markdown-it-mathjax3": "^4.3.2",
     "terser": "^5.43.1",
     "vue": "^3.5.18"

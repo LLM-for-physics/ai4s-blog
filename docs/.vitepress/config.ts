@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { MermaidPlugin } from '@leelaa/vitepress-plugin-extended'
 
 export default defineConfig({
   title: 'AI x Physics 课程主页',
@@ -175,7 +176,10 @@ export default defineConfig({
   // Markdown 配置
   markdown: {
     lineNumbers: true,
-    math: true
+    math: true,
+    config: (md) => {
+      MermaidPlugin(md)
+    }
   },
 
   // Vite 配置

@@ -27,7 +27,7 @@
     </div>
 
     <div v-if="results.length > 0" class="results">
-      <h3>{{ studentName }} ({{ studentId }}) 的成绩信息</h3>
+      <h3>{{ studentName }} ({{ queriedStudentId }}) 的成绩信息</h3>
       <div class="results-table">
         <table>
           <thead>
@@ -72,7 +72,7 @@
     </div>
 
     <div v-if="!loading && !error && results.length === 0 && hasSearched" class="no-results">
-      <p>未找到学号 "{{ studentId }}" 的成绩信息</p>
+      <p>未找到学号 "{{ queriedStudentId }}" 的成绩信息</p>
       <p>请检查学号是否正确，或联系助教确认。</p>
     </div>
   </div>
@@ -83,12 +83,14 @@ import { ref, reactive } from 'vue'
 
 const studentId = ref('')
 const studentName = ref('')
+const queriedStudentId = ref('')  // 保存查询时的学号快照
 const loading = ref(false)
 const error = ref('')
 const results = ref([])
 const hasSearched = ref(false)
 
 const servers = ['58', '132', '197']
+const MAX_ASSIGNMENTS = 2  // 作业数量配置，将来增加作业时只需修改这个数字
 
 async function fetchCSV(url) {
   try {
@@ -153,43 +155,47 @@ async function queryScore() {
   results.value = []
   hasSearched.value = true
   studentName.value = ''
+  queriedStudentId.value = studentId.value  // 保存查询时的学号
 
   try {
     const allResults = []
 
     for (const server of servers) {
-      // 获取作业1的信息
-      const csvUrl = `/score/${server}/assignment1_update_log.csv`
-      const csvData = await fetchCSV(csvUrl)
-      
-      // 查找学生信息
-      const studentRecord = csvData.find(row => row['学号'] === studentId.value)
-      
-      if (studentRecord) {
-        if (!studentName.value) {
-          studentName.value = studentRecord['姓名']
-        }
-
-        // 获取分数和评语
-        const scoreUrl = `/score/${server}/stu${studentId.value}/1-score.txt`
-        const feedbackUrl = `/score/${server}/stu${studentId.value}/1-feedback.txt`
+      // 遍历所有作业
+      for (let assignmentNum = 1; assignmentNum <= MAX_ASSIGNMENTS; assignmentNum++) {
+        // 获取作业信息
+        const csvUrl = `/score/${server}/assignment${assignmentNum}_update_log.csv`
+        const csvData = await fetchCSV(csvUrl)
         
-        const [scoreText, feedbackText] = await Promise.all([
-          fetchTextFile(scoreUrl),
-          fetchTextFile(feedbackUrl)
-        ])
+        // 查找学生信息
+        const studentRecord = csvData.find(row => row['学号'] === studentId.value)
+        
+        if (studentRecord) {
+          if (!studentName.value) {
+            studentName.value = studentRecord['姓名']
+          }
 
-        const result = {
-          server,
-          assignment: 1,
-          status: studentRecord['作业状态'],
-          submitTime: studentRecord['最后修改时间'],
-          checkTime: studentRecord['检查时间'],
-          score: scoreText ? parseFloat(scoreText.trim()) : null,
-          feedback: feedbackText ? feedbackText.trim() : null
+          // 获取分数和评语
+          const scoreUrl = `/score/${server}/stu${studentId.value}/${assignmentNum}-score.txt`
+          const feedbackUrl = `/score/${server}/stu${studentId.value}/${assignmentNum}-feedback.txt`
+          
+          const [scoreText, feedbackText] = await Promise.all([
+            fetchTextFile(scoreUrl),
+            fetchTextFile(feedbackUrl)
+          ])
+
+          const result = {
+            server,
+            assignment: assignmentNum,
+            status: studentRecord['作业状态'],
+            submitTime: studentRecord['最后修改时间'],
+            checkTime: studentRecord['检查时间'],
+            score: scoreText ? parseFloat(scoreText.trim()) : null,
+            feedback: feedbackText ? feedbackText.trim() : null
+          }
+
+          allResults.push(result)
         }
-
-        allResults.push(result)
       }
     }
 
