@@ -28,46 +28,69 @@
 
     <div v-if="results.length > 0" class="results">
       <h3>{{ studentName }} ({{ queriedStudentId }}) 的成绩信息</h3>
-      <div class="results-table">
-        <table>
-          <thead>
-            <tr>
-              <th>作业编号</th>
-              <th>作业状态</th>
-              <th>内容修改时间</th>
-              <th>检查时间</th>
-              <th>分数</th>
-              <th>评语</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="result in results" :key="`${result.server}-${result.assignment}`">
-              <td>作业{{ result.assignment }}</td>
-              <td>
-                <span :class="['status', result.status === '已提交' ? 'submitted' : 'not-submitted']">
-                  {{ result.status }}
-                </span>
-              </td>
-              <td>{{ result.submitTime || '未提交' }}</td>
-              <td>{{ result.checkTime || '-' }}</td>
-              <td>
-                <span v-if="result.status === '未提交'" class="no-score">无</span>
-                <span v-else-if="result.score !== null" class="score">{{ result.score }}</span>
+      <div class="results-grid">
+        <div 
+          v-for="result in results" 
+          :key="`${result.server}-${result.assignment}`"
+          class="result-card"
+        >
+          <div class="card-header">
+            <div class="header-row">
+              <h4>作业 {{ result.assignment }}</h4>
+              <span :class="['status-badge', result.status === '已提交' ? 'submitted' : 'not-submitted']">
+                {{ result.status }}
+              </span>
+              <div class="score-display">
+                <span v-if="result.status === '未提交'" class="no-score">未提交</span>
+                <span v-else-if="result.score !== null" class="score">{{ result.score }} 分</span>
                 <span v-else class="no-score">未评分</span>
-              </td>
-              <td>
-                <span v-if="result.status === '未提交'" class="no-feedback">无</span>
-                <div v-else-if="result.feedback" class="feedback">
-                  <details>
-                    <summary>查看评语</summary>
-                    <pre>{{ result.feedback }}</pre>
-                  </details>
-                </div>
-                <span v-else class="no-feedback">暂无评语</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="info-row">
+              <span class="label">内容修改时间：</span>
+              <span class="value">{{ result.submitTime || '未提交' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">检查时间：</span>
+              <span class="value">{{ result.checkTime || '-' }}</span>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div v-if="result.status === '未提交'" class="no-feedback-hint">
+              暂无评语
+            </div>
+            <div v-else-if="result.feedback" class="feedback-section">
+              <button 
+                class="feedback-toggle"
+                @click="toggleFeedback(result)"
+              >
+                <span>{{ result.showFeedback ? '收起评语' : '查看评语' }}</span>
+                <svg 
+                  class="toggle-icon"
+                  :class="{ expanded: result.showFeedback }"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div v-show="result.showFeedback" class="feedback-content">
+                <pre>{{ result.feedback }}</pre>
+              </div>
+            </div>
+            <div v-else class="no-feedback-hint">
+              暂无评语
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -83,18 +106,17 @@ import { ref, reactive } from 'vue'
 
 const studentId = ref('')
 const studentName = ref('')
-const queriedStudentId = ref('')  // 保存查询时的学号快照
+const queriedStudentId = ref('')
 const loading = ref(false)
 const error = ref('')
 const results = ref([])
 const hasSearched = ref(false)
 
 const servers = ['58', '132', '197']
-const MAX_ASSIGNMENTS = 2  // 作业数量配置，将来增加作业时只需修改这个数字
+const MAX_ASSIGNMENTS = 2
 
 async function fetchCSV(url) {
   try {
-    // 添加时间戳参数防止浏览器缓存
     const cacheBuster = Date.now()
     const urlWithCache = `${url}?v=${cacheBuster}`
     const response = await fetch(urlWithCache)
@@ -130,7 +152,6 @@ function parseCSV(text) {
 
 async function fetchTextFile(url) {
   try {
-    // 添加时间戳参数防止浏览器缓存
     const cacheBuster = Date.now()
     const urlWithCache = `${url}?v=${cacheBuster}`
     const response = await fetch(urlWithCache)
@@ -144,6 +165,10 @@ async function fetchTextFile(url) {
   }
 }
 
+function toggleFeedback(result) {
+  result.showFeedback = !result.showFeedback
+}
+
 async function queryScore() {
   if (!studentId.value.trim()) {
     error.value = '请输入学号'
@@ -155,19 +180,16 @@ async function queryScore() {
   results.value = []
   hasSearched.value = true
   studentName.value = ''
-  queriedStudentId.value = studentId.value  // 保存查询时的学号
+  queriedStudentId.value = studentId.value
 
   try {
     const allResults = []
 
     for (const server of servers) {
-      // 遍历所有作业
       for (let assignmentNum = 1; assignmentNum <= MAX_ASSIGNMENTS; assignmentNum++) {
-        // 获取作业信息
         const csvUrl = `/score/${server}/assignment${assignmentNum}_update_log.csv`
         const csvData = await fetchCSV(csvUrl)
         
-        // 查找学生信息
         const studentRecord = csvData.find(row => row['学号'] === studentId.value)
         
         if (studentRecord) {
@@ -175,7 +197,6 @@ async function queryScore() {
             studentName.value = studentRecord['姓名']
           }
 
-          // 获取分数和评语
           const scoreUrl = `/score/${server}/stu${studentId.value}/${assignmentNum}-score.txt`
           const feedbackUrl = `/score/${server}/stu${studentId.value}/${assignmentNum}-feedback.txt`
           
@@ -191,7 +212,8 @@ async function queryScore() {
             submitTime: studentRecord['最后修改时间'],
             checkTime: studentRecord['检查时间'],
             score: scoreText ? parseFloat(scoreText.trim()) : null,
-            feedback: feedbackText ? feedbackText.trim() : null
+            feedback: feedbackText ? feedbackText.trim() : null,
+            showFeedback: false
           }
 
           allResults.push(result)
@@ -216,7 +238,7 @@ async function queryScore() {
 
 <style scoped>
 .score-query {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -226,6 +248,7 @@ async function queryScore() {
   padding: 24px;
   border-radius: 8px;
   margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .query-form h2 {
@@ -251,12 +274,13 @@ async function queryScore() {
   font-size: 16px;
   background: var(--vp-c-bg);
   color: var(--vp-c-text-1);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input-group input:focus {
   outline: none;
   border-color: var(--vp-c-brand-1);
-  box-shadow: 0 0 0 2px var(--vp-c-brand-soft);
+  box-shadow: 0 0 0 3px var(--vp-c-brand-soft);
 }
 
 .input-group button {
@@ -266,17 +290,24 @@ async function queryScore() {
   border: none;
   border-radius: 6px;
   font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.1s;
 }
 
 .input-group button:hover:not(:disabled) {
   background: var(--vp-c-brand-2);
+  transform: translateY(-1px);
+}
+
+.input-group button:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .input-group button:disabled {
   background: var(--vp-c-gray-2);
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .error-message {
@@ -285,6 +316,7 @@ async function queryScore() {
   padding: 16px;
   border-radius: 6px;
   margin-bottom: 24px;
+  border-left: 4px solid var(--vp-c-danger-1);
 }
 
 .loading {
@@ -294,80 +326,179 @@ async function queryScore() {
 }
 
 .results h3 {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   color: var(--vp-c-text-1);
+  font-size: 20px;
 }
 
-.results-table {
-  overflow-x: auto;
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
 }
 
-.results-table table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--vp-c-bg);
+.result-card {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s, transform 0.2s;
 }
 
-.results-table th,
-.results-table td {
-  padding: 12px;
-  text-align: left;
+.result-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  padding: 10px 12px;
+  background: var(--vp-c-bg);
   border-bottom: 1px solid var(--vp-c-divider);
 }
 
-.results-table th {
-  background: var(--vp-c-bg-soft);
-  font-weight: 600;
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-row h4 {
+  margin: 0;
   color: var(--vp-c-text-1);
+  font-size: 16px;
+  flex-shrink: 0;
 }
 
-.results-table td {
-  color: var(--vp-c-text-2);
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.status.submitted {
+.status-badge.submitted {
+  background: var(--vp-c-success-soft);
   color: var(--vp-c-success-1);
-  font-weight: 500;
 }
 
-.status.not-submitted {
+.status-badge.not-submitted {
+  background: var(--vp-c-danger-soft);
   color: var(--vp-c-danger-1);
-  font-weight: 500;
 }
 
-.score {
+.score-display {
+  text-align: right;
+  flex-shrink: 0;
+  min-width: 60px;
+}
+
+.score-display .score {
+  font-size: 18px;
   font-weight: 600;
   color: var(--vp-c-brand-1);
-  font-size: 16px;
+  line-height: 1;
 }
 
-.no-score,
-.no-feedback {
+.score-display .no-score {
+  font-size: 13px;
   color: var(--vp-c-text-3);
   font-style: italic;
 }
 
-.feedback details {
-  cursor: pointer;
+.card-body {
+  padding: 8px 12px;
 }
 
-.feedback summary {
-  color: var(--vp-c-brand-1);
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 4px 0;
+  gap: 8px;
+}
+
+.info-row .label {
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.info-row .value {
+  color: var(--vp-c-text-1);
+  font-size: 13px;
   font-weight: 500;
+  text-align: right;
+  word-break: break-all;
 }
 
-.feedback pre {
-  margin-top: 8px;
-  padding: 12px;
+.card-footer {
+  padding: 8px 12px;
+  background: var(--vp-c-bg);
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.no-feedback-hint {
+  text-align: center;
+  color: var(--vp-c-text-3);
+  font-size: 13px;
+  font-style: italic;
+  padding: 4px 0;
+}
+
+.feedback-section {
+  width: 100%;
+}
+
+.feedback-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
   background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
   border-radius: 4px;
+  color: var(--vp-c-brand-1);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.feedback-toggle:hover {
+  background: var(--vp-c-brand-soft);
+  border-color: var(--vp-c-brand-1);
+}
+
+.toggle-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s;
+}
+
+.toggle-icon.expanded {
+  transform: rotate(180deg);
+}
+
+.feedback-content {
+  margin-top: 8px;
+  padding: 10px;
+  background: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.feedback-content pre {
+  margin: 0;
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.5;
+  color: var(--vp-c-text-1);
+  font-family: var(--vp-font-family-mono);
 }
 
 .no-results {
@@ -378,18 +509,46 @@ async function queryScore() {
   border-radius: 8px;
 }
 
+.no-results p {
+  margin: 8px 0;
+}
+
 @media (max-width: 768px) {
-  .input-group {
-    gap: 16px;
+  .results-grid {
+    grid-template-columns: 1fr;
   }
   
-  .results-table {
-    font-size: 14px;
+  .header-row {
+    flex-wrap: wrap;
   }
   
-  .results-table th,
-  .results-table td {
-    padding: 8px;
+  .score-display {
+    flex-basis: 100%;
+    text-align: left;
+    margin-top: 4px;
   }
+  
+  .score-display .score {
+    font-size: 20px;
+  }
+}
+
+/* 滚动条样式 */
+.feedback-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.feedback-content::-webkit-scrollbar-track {
+  background: var(--vp-c-bg-soft);
+  border-radius: 4px;
+}
+
+.feedback-content::-webkit-scrollbar-thumb {
+  background: var(--vp-c-divider);
+  border-radius: 4px;
+}
+
+.feedback-content::-webkit-scrollbar-thumb:hover {
+  background: var(--vp-c-text-3);
 }
 </style>
