@@ -104,6 +104,7 @@ export default defineConfig({
             { text: '作业1: 编写一个 LLM 多轮对话的 Python 程序', link: '/assignments/assignment-1' },
             { text: '作业2: LLM Agent 项目实践', link: '/assignments/assignment-2' },
             { text: '作业3: 使用 PINN 求解泊松方程', link: '/assignments/assignment-3' },
+            { text: '作业4: 极小极大搜索求解博弈问题', link: '/assignments/assignment-4' },
             { text: '提交方式', link: '/assignments/submission' },
             { text: 'cline 指南', link: '/assignments/cline' }
           ]
