@@ -1,5 +1,7 @@
 # 课件
 
+## AI 基础课件
+
 <a href="/slides/1-1.人工智能概览.pdf" download="1-1.人工智能概览.pdf">1-1.人工智能概览.pdf</a>
 
 <a href="/slides/1-1.python基础.pdf" download="1-1.python基础.pdf">1-1.python基础.pdf</a>
@@ -40,3 +42,8 @@
 
 如果您对课件内容有任何建议、疑问或勘误，欢迎通过邮件联系马滟青老师 (yqma@pku.edu.cn)。
 
+# 讲座 ppt
+
+<a href="/slides/AI与凝聚态物理课件-2025-JiChen.pdf" download="AI与凝聚态物理课件-2025-JiChen.pdf">AI与凝聚态物理课件-2025-JiChen.pdf</a>
+
+如果您对课件内容有任何建议、疑问或勘误，欢迎联系宋慧超、林晨、马滟青、冯旭、陈基、张亿、王力乐、朱华星老师。
