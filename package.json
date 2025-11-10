@@ -29,7 +29,14 @@
   "packageManager": "yarn@4.9.2",
   "dependencies": {
     "@leelaa/vitepress-plugin-extended": "^1.0.7",
+    "@types/dompurify": "^3.2.0",
+    "dompurify": "^3.3.0",
+    "highlight.js": "^11.11.1",
+    "katex": "^0.16.25",
     "markdown-it-mathjax3": "^4.3.2",
+    "marked": "^17.0.0",
+    "marked-highlight": "^2.2.3",
+    "marked-katex-extension": "^5.1.6",
     "terser": "^5.43.1",
     "vue": "^3.5.18"
   }
