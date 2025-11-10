@@ -12,8 +12,8 @@
 
     <!-- 聊天窗口 -->
     <transition name="chat-slide">
-      <div v-if="isOpen" class="chat-window">
-        <div class="chat-header">
+      <div v-if="isOpen" class="chat-window" :style="windowStyle">
+        <div class="chat-header" @mousedown="startDrag">
           <h3>AI 助手</h3>
           <button @click="clearHistory" class="clear-btn" title="清空对话历史">
             🗑️
@@ -44,13 +44,16 @@
             发送
           </button>
         </div>
+        
+        <!-- 调整大小手柄 -->
+        <div class="resize-handle" @mousedown.stop="startResize"></div>
       </div>
     </transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useData } from 'vitepress'
 import { marked } from 'marked'
 import markedKatex from 'marked-katex-extension'
@@ -73,17 +76,25 @@ const messages = ref<Message[]>([])
 const loading = ref(false)
 const messagesContainer = ref<HTMLElement | null>(null)
 
-// 窗口位置和大小
-const windowPosition = ref({ x: 24, y: 90 })
-const windowSize = ref({ width: 500, height: 600 })
+// 窗口位置和大小（初始值不依赖 window 对象，避免 SSR 错误）
+const windowPosition = ref({ x: 0, y: 90 })
+const windowSize = ref({ width: 380, height: 500 })
 const isDragging = ref(false)
 const isResizing = ref(false)
 const dragStart = ref({ x: 0, y: 0 })
-const resizeDirection = ref('')
 
-const API_KEY = import.meta.env.VITE_OPENAI_API_KEY || ''
-const BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL || ''
-const MODEL = import.meta.env.VITE_MODEL || 'qwen-plus'
+// 计算窗口样式
+const windowStyle = computed(() => ({
+  left: `${windowPosition.value.x}px`,
+  top: `${windowPosition.value.y}px`,
+  width: `${windowSize.value.width}px`,
+  height: `${windowSize.value.height}px`
+}))
+
+// API 配置：使用相对路径调用本站的反向代理
+// API Key 保存在服务器端的 Nginx 配置中，不暴露给客户端
+const BASE_URL = '/api/llm'
+const MODEL = import.meta.env.VITE_MODEL || 'qwen3-max'
 
 // 配置 marked
 marked.use(markedHighlight({
@@ -99,16 +110,11 @@ marked.use(markedKatex({
   output: 'html'
 }))
 
-// 调试信息
-if (!API_KEY || !BASE_URL) {
-  console.warn('AI Assistant: 环境变量未正确配置')
-  console.warn('API_KEY:', API_KEY ? '已设置' : '未设置')
-  console.warn('BASE_URL:', BASE_URL || '未设置')
-  console.warn('MODEL:', MODEL)
-}
-
 // 从 localStorage 加载历史和窗口状态
 onMounted(() => {
+  // 设置默认位置（在客户端访问 window 对象）
+  windowPosition.value.x = window.innerWidth - 404
+  
   const saved = localStorage.getItem('ai-assistant-messages')
   if (saved) {
     try {
@@ -182,15 +188,14 @@ const sendMessage = async () => {
     const response = await fetch(`${BASE_URL}/chat/completions`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: MODEL,
         messages: [
           {
             role: 'system',
-            content: `你是一个专业的 AI 助手，擅长物理学、编程和技术问题，正在协助用户理解和学习课程内容。
+            content: `你是一个专业的 AI 助手，擅长物理学、编程和技术问题，正在担任物理与人工智能课的助教，协助用户理解和学习课程内容（课程内容涉及的编程语言主要是 python）。
 
 当前页面上下文：
 ${getPageContext()}
@@ -200,7 +205,7 @@ ${getPageContext()}
 2. 必须使用 Markdown 格式组织内容：
    - 使用标题（# ## ###）划分章节层次
    - 使用列表（- 或 1.）列举要点
-   - 使用代码块（\`\`\`语言名）展示代码，务必标注语言（如 python, javascript, bash, typescript 等）
+   - 使用代码块（\`\`\`语言名）展示代码，务必标注语言（如 python, bash 等）
    - 使用行内代码（\`code\`）标注变量名、函数名、命令、文件路径等
    - 使用加粗（**文本**）和斜体（*文本*）强调重点
    - 使用引用块（> 文本）引用重要内容
@@ -290,48 +295,42 @@ const formatMessage = (content: string) => {
   }
 }
 
-// 鼠标事件处理
+// 开始拖拽
+const startDrag = (e: MouseEvent) => {
+  isDragging.value = true
+  dragStart.value = { x: e.clientX, y: e.clientY }
+  e.preventDefault()
+}
+
+// 开始调整大小
+const startResize = (e: MouseEvent) => {
+  isResizing.value = true
+  dragStart.value = { x: e.clientX, y: e.clientY }
+  e.preventDefault()
+}
+
+// 鼠标移动处理
 const handleMouseMove = (e: MouseEvent) => {
   if (isDragging.value) {
     const deltaX = e.clientX - dragStart.value.x
     const deltaY = e.clientY - dragStart.value.y
     windowPosition.value.x += deltaX
-    windowPosition.value.y -= deltaY
+    windowPosition.value.y += deltaY
     dragStart.value = { x: e.clientX, y: e.clientY }
     saveWindowState()
   } else if (isResizing.value) {
-    handleResize(e)
+    const deltaX = e.clientX - dragStart.value.x
+    const deltaY = e.clientY - dragStart.value.y
+    windowSize.value.width = Math.max(300, windowSize.value.width + deltaX)
+    windowSize.value.height = Math.max(300, windowSize.value.height + deltaY)
+    dragStart.value = { x: e.clientX, y: e.clientY }
+    saveWindowState()
   }
 }
 
 const handleMouseUp = () => {
   isDragging.value = false
   isResizing.value = false
-  resizeDirection.value = ''
-}
-
-const handleResize = (e: MouseEvent) => {
-  const direction = resizeDirection.value
-  if (!direction) return
-
-  if (direction.includes('e')) {
-    windowSize.value.width = Math.max(300, e.clientX - (window.innerWidth - windowPosition.value.x - windowSize.value.width))
-  }
-  if (direction.includes('w')) {
-    const newWidth = Math.max(300, windowSize.value.width + (window.innerWidth - windowPosition.value.x - windowSize.value.width - e.clientX))
-    windowPosition.value.x -= newWidth - windowSize.value.width
-    windowSize.value.width = newWidth
-  }
-  if (direction.includes('s')) {
-    windowSize.value.height = Math.max(300, window.innerHeight - windowPosition.value.y - e.clientY)
-  }
-  if (direction.includes('n')) {
-    const newHeight = Math.max(300, windowSize.value.height + (window.innerHeight - windowPosition.value.y - windowSize.value.height - e.clientY))
-    windowPosition.value.y -= newHeight - windowSize.value.height
-    windowSize.value.height = newHeight
-  }
-  
-  saveWindowState()
 }
 
 const saveWindowState = () => {
@@ -373,10 +372,6 @@ const saveWindowState = () => {
 
 .chat-window {
   position: fixed;
-  bottom: 90px;
-  right: 24px;
-  width: 380px;
-  height: 500px;
   background: var(--vp-c-bg);
   border: 1px solid var(--vp-c-divider);
   border-radius: 12px;
@@ -393,6 +388,8 @@ const saveWindowState = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: move;
+  user-select: none;
 }
 
 .chat-header h3 {
@@ -673,6 +670,21 @@ const saveWindowState = () => {
 .chat-input button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* 调整大小手柄 */
+.resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 0%, transparent 40%, var(--vp-c-divider) 40%, var(--vp-c-divider) 60%, transparent 60%);
+}
+
+.resize-handle:hover {
+  background: linear-gradient(135deg, transparent 0%, transparent 40%, var(--vp-c-brand-1) 40%, var(--vp-c-brand-1) 60%, transparent 60%);
 }
 
 .chat-slide-enter-active,

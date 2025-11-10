@@ -197,17 +197,37 @@ export default defineConfig({
     },
     build: {
       minify: 'terser',
+      chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
-          manualChunks: {
-            'vue-vendor': ['vue']
+          manualChunks: (id) => {
+            // 将大型依赖分离到单独的 chunk
+            if (id.includes('node_modules')) {
+              if (id.includes('vue')) {
+                return 'vue-vendor'
+              }
+              if (id.includes('highlight.js')) {
+                return 'highlight'
+              }
+              if (id.includes('katex')) {
+                return 'katex'
+              }
+              if (id.includes('marked')) {
+                return 'marked'
+              }
+              if (id.includes('mermaid')) {
+                return 'mermaid'
+              }
+              // 其他 node_modules 依赖
+              return 'vendor'
+            }
           }
         }
       },
       terserOptions: {
         compress: {
-          drop_console: false,
-          drop_debugger: false
+          drop_console: true,
+          drop_debugger: true
         }
       }
     },
