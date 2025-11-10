@@ -185,8 +185,9 @@ export default defineConfig({
 
   // Vite 配置
   vite: {
-    // 将 .py 和 .txt 文件作为静态资源处理
-    assetsInclude: ['**/*.py', '**/*.txt', '**/*.xlsx', '**/*.pdf', '**/*.zip', '**/*.ipynb'],
+    // 简化配置：大型静态文件已移至 .vitepress/public/ 目录
+    // 只保留可能在组件中直接引用的小型文件类型
+    assetsInclude: ['**/*.py', '**/*.txt'],
     server: {
       fs: {
         allow: ['..']
@@ -198,32 +199,6 @@ export default defineConfig({
     build: {
       minify: 'terser',
       chunkSizeWarningLimit: 1000,
-      rollupOptions: {
-        output: {
-          manualChunks: (id) => {
-            // 将大型依赖分离到单独的 chunk
-            if (id.includes('node_modules')) {
-              if (id.includes('vue')) {
-                return 'vue-vendor'
-              }
-              if (id.includes('highlight.js')) {
-                return 'highlight'
-              }
-              if (id.includes('katex')) {
-                return 'katex'
-              }
-              if (id.includes('marked')) {
-                return 'marked'
-              }
-              if (id.includes('mermaid')) {
-                return 'mermaid'
-              }
-              // 其他 node_modules 依赖
-              return 'vendor'
-            }
-          }
-        }
-      },
       terserOptions: {
         compress: {
           drop_console: true,
