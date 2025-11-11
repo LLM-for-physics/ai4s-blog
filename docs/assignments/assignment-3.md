@@ -85,6 +85,11 @@ for i in range(3):  # 遍历 x, y, z
 ## 📊 评分标准
 
 - **代码运行** (80%)：代码能正确运行并生成结果
+  根据
+  $$
+  \text{error} = \sum_i \frac{(\phi^{\text{predicted}}_i - \phi^\text{true}_i)^2}{\sum_i (\phi^\text{true}_i)^2}
+  $$
+  来计算相对均方误差的大小，并分级给分。
 - **README.md** (20%)：实验说明、结果展示和分析
 
 ## 📚 参考资源
