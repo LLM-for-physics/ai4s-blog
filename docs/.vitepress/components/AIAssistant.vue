@@ -185,26 +185,31 @@ const clearHistory = () => {
   }
 }
 
-const pageContent = ref<string>('')
-
-const getPageContext = async () => {
+const getPageContext = () => {
   // 获取当前页面内容作为上下文
   const pageTitle = page.value.title || '未命名页面'
   const pagePath = page.value.relativePath || ''
   
-  // 尝试从 API 获取页面原始内容
-  let content = pageContent.value
-  if (!content && pagePath) {
-    try {
-      const response = await fetch(`/api/page-content?path=${encodeURIComponent(pagePath)}`)
-      if (response.ok) {
-        const data = await response.json()
-        content = data.content || ''
-        pageContent.value = content
+  // 从 DOM 中提取页面主体内容
+  let content = ''
+  try {
+    // VitePress 的主内容区域通常在这些选择器中
+    const contentElement = document.querySelector('.vp-doc') || 
+                          document.querySelector('.VPDoc') ||
+                          document.querySelector('main .content') ||
+                          document.querySelector('article')
+    
+    if (contentElement) {
+      // 获取文本内容，自动处理换行和空格
+      content = contentElement.textContent?.trim() || ''
+      
+      // 限制内容长度，避免上下文过长（保留前 3000 字符）
+      if (content.length > 3000) {
+        content = content.substring(0, 3000) + '\n\n...(内容过长，已截断)'
       }
-    } catch (error) {
-      console.error('Failed to fetch page content:', error)
     }
+  } catch (error) {
+    console.error('Failed to extract page content:', error)
   }
   
   return `当前页面信息：\n\n页面标题：${pageTitle}\n文件路径：${pagePath}\n页面内容：${content ? '\n' + content : '（为空）'}`
