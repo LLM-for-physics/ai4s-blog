@@ -1,10 +1,14 @@
 import { defineConfig } from 'vitepress'
 import { MermaidPlugin } from '@leelaa/vitepress-plugin-extended'
+import { pageContentApiPlugin } from './plugins/pageContentApi'
 
 export default defineConfig({
   title: 'AI x Physics 课程主页',
   description: '人工智能与物理学交叉学科课程文档',
   lang: 'zh-CN',
+  
+  // 指定源文件目录
+  srcDir: '.',
   
   // 网站基础配置
   base: '/',
@@ -185,12 +189,29 @@ export default defineConfig({
 
   // Vite 配置
   vite: {
-    // 简化配置：大型静态文件已移至 .vitepress/public/ 目录
-    // 只保留可能在组件中直接引用的小型文件类型
-    assetsInclude: ['**/*.py', '**/*.txt'],
+    plugins: [
+      pageContentApiPlugin()
+    ],
     server: {
       fs: {
         allow: ['..']
+      },
+      // 开发环境代理配置：将 /api/llm/ 转发到环境变量配置的 API 地址
+      proxy: {
+        '/api/llm': {
+          target: process.env.VITE_OPENAI_BASE_URL || 'https://api.openai.com/v1',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/llm/, ''),
+          configure: (proxy, _options) => {
+            proxy.on('proxyReq', (proxyReq, req, _res) => {
+              // 添加 Authorization header
+              const apiKey = process.env.VITE_OPENAI_API_KEY
+              if (apiKey) {
+                proxyReq.setHeader('Authorization', `Bearer ${apiKey}`)
+              }
+            })
+          }
+        }
       }
     },
     define: {

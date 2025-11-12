@@ -26,10 +26,27 @@
             :key="index"
             :class="['message', msg.role]"
           >
-            <div class="message-content" v-html="formatMessage(msg.content)"></div>
+            <div class="message-content">
+              <div class="vue-markdown-wrapper">
+                <VueMarkdownRenderer
+                  :source="msg.content"
+                  :theme="isDark ? 'github-dark' : 'github-light'"
+                  :remark-plugins="[remarkMath]"
+                  :rehype-plugins="[rehypeKatex]"
+                />
+              </div>
+            </div>
           </div>
           <div v-if="loading" class="message assistant">
             <div class="message-content loading-dots">思考中...</div>
+          </div>
+          <!-- 对话长度警告 -->
+          <div v-if="isConversationTooLong" class="conversation-warning">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-text">
+              <strong>对话过长提示</strong>
+              <p>当前对话已超过 20 条消息，为保证回复质量，请点击右上角 🗑️ 按钮清空对话历史后继续。</p>
+            </div>
           </div>
         </div>
 
@@ -37,10 +54,10 @@
           <textarea
             v-model="userInput"
             @keydown.enter.prevent="handleEnter"
-            placeholder="输入消息... (Enter 发送，Shift+Enter 换行)"
-            :disabled="loading"
+            :placeholder="isConversationTooLong ? '对话过长，请清空历史后继续' : '输入消息... (Enter 发送，Shift+Enter 换行)'"
+            :disabled="loading || isConversationTooLong"
           ></textarea>
-          <button @click="sendMessage" :disabled="loading || !userInput.trim()">
+          <button @click="sendMessage" :disabled="loading || !userInput.trim() || isConversationTooLong">
             发送
           </button>
         </div>
@@ -55,13 +72,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useData } from 'vitepress'
-import { marked } from 'marked'
-import markedKatex from 'marked-katex-extension'
-import { markedHighlight } from 'marked-highlight'
-import hljs from 'highlight.js'
-import DOMPurify from 'dompurify'
+import { VueMarkdownRenderer } from 'vue-mdr'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
-import 'highlight.js/styles/github-dark.css'
 
 const { page } = useData()
 
@@ -83,6 +97,13 @@ const isDragging = ref(false)
 const isResizing = ref(false)
 const dragStart = ref({ x: 0, y: 0 })
 
+// 深色模式检测
+const isDark = ref(false)
+
+// 对话长度限制
+const MAX_MESSAGES = 20
+const isConversationTooLong = computed(() => messages.value.length >= MAX_MESSAGES)
+
 // 计算窗口样式
 const windowStyle = computed(() => ({
   left: `${windowPosition.value.x}px`,
@@ -96,19 +117,10 @@ const windowStyle = computed(() => ({
 const BASE_URL = '/api/llm'
 const MODEL = import.meta.env.VITE_MODEL || 'qwen3-max'
 
-// 配置 marked
-marked.use(markedHighlight({
-  langPrefix: 'hljs language-',
-  highlight(code, lang) {
-    const language = hljs.getLanguage(lang) ? lang : 'plaintext'
-    return hljs.highlight(code, { language }).value
-  }
-}))
-
-marked.use(markedKatex({
-  throwOnError: false,
-  output: 'html'
-}))
+// 更新深色模式状态
+const updateDarkMode = () => {
+  isDark.value = document.documentElement.classList.contains('dark')
+}
 
 // 从 localStorage 加载历史和窗口状态
 onMounted(() => {
@@ -139,6 +151,16 @@ onMounted(() => {
   // 添加全局事件监听
   document.addEventListener('mousemove', handleMouseMove)
   document.addEventListener('mouseup', handleMouseUp)
+  
+  // 初始化深色模式
+  updateDarkMode()
+  
+  // 监听深色模式变化
+  const observer = new MutationObserver(updateDarkMode)
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class']
+  })
 })
 
 // 组件卸载时清理
@@ -163,13 +185,29 @@ const clearHistory = () => {
   }
 }
 
-const getPageContext = () => {
+const pageContent = ref<string>('')
+
+const getPageContext = async () => {
   // 获取当前页面内容作为上下文
   const pageTitle = page.value.title || '未命名页面'
   const pagePath = page.value.relativePath || ''
-  const pageContent = page.value.content || ''
   
-  return `当前页面：${pageTitle}\n路径：${pagePath}\n\n页面内容：\n${pageContent}`
+  // 尝试从 API 获取页面原始内容
+  let content = pageContent.value
+  if (!content && pagePath) {
+    try {
+      const response = await fetch(`/api/page-content?path=${encodeURIComponent(pagePath)}`)
+      if (response.ok) {
+        const data = await response.json()
+        content = data.content || ''
+        pageContent.value = content
+      }
+    } catch (error) {
+      console.error('Failed to fetch page content:', error)
+    }
+  }
+  
+  return `当前页面信息：\n\n页面标题：${pageTitle}\n文件路径：${pagePath}\n页面内容：${content ? '\n' + content : '（为空）'}`
 }
 
 const sendMessage = async () => {
@@ -184,7 +222,14 @@ const sendMessage = async () => {
   await nextTick()
   scrollToBottom()
 
+  // 创建一个空的 assistant 消息用于流式更新
+  const assistantMsgIndex = messages.value.length
+  messages.value.push({ role: 'assistant', content: '' })
+
   try {
+    // 获取页面上下文
+    const contextInfo = await getPageContext()
+    
     const response = await fetch(`${BASE_URL}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -195,10 +240,11 @@ const sendMessage = async () => {
         messages: [
           {
             role: 'system',
-            content: `你是一个专业的 AI 助手，擅长物理学、编程和技术问题，正在担任物理与人工智能课的助教，协助用户理解和学习课程内容（课程内容涉及的编程语言主要是 python）。
+            content: `角色设定：你是一个专业的 AI 助手，擅长物理学、编程和技术问题，正在担任物理与人工智能课的助教，协助用户理解和学习课程内容（课程内容涉及的编程语言主要是 Python）。
 
-当前页面上下文：
-${getPageContext()}
+当前上下文如下：
+
+${contextInfo}
 
 回答要求：
 1. 必须使用中文回答
@@ -235,10 +281,11 @@ ${getPageContext()}
 
 请基于当前页面上下文精准回答问题。对于物理问题，确保科学性和准确性；对于编程问题，提供清晰的代码示例和解释。如果问题与当前页面无关，也可以提供一般性帮助。`
           },
-          ...messages.value
+          ...messages.value.slice(0, assistantMsgIndex)
         ],
         temperature: 0.7,
-        max_tokens: 2000
+        max_tokens: 2000,
+        stream: true  // 启用流式响应
       })
     })
 
@@ -246,19 +293,53 @@ ${getPageContext()}
       throw new Error(`API 请求失败: ${response.status}`)
     }
 
-    const data = await response.json()
-    const assistantMessage = data.choices[0]?.message?.content || '抱歉，我没有收到回复。'
+    // 处理流式响应
+    const reader = response.body?.getReader()
+    if (!reader) {
+      throw new Error('无法获取响应流')
+    }
 
-    messages.value.push({ role: 'assistant', content: assistantMessage })
-    
-    await nextTick()
-    scrollToBottom()
+    const decoder = new TextDecoder()
+    let buffer = ''
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      
+      // 保留最后一个不完整的行
+      buffer = lines.pop() || ''
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim()
+          if (data === '[DONE]') continue
+          
+          try {
+            const parsed = JSON.parse(data)
+            const content = parsed.choices[0]?.delta?.content
+            if (content) {
+              messages.value[assistantMsgIndex].content += content
+              await nextTick()
+              scrollToBottom()
+            }
+          } catch (e) {
+            // 忽略 JSON 解析错误
+            console.debug('JSON parse error:', e)
+          }
+        }
+      }
+    }
+
+    // 如果消息为空，添加默认错误消息
+    if (!messages.value[assistantMsgIndex].content) {
+      messages.value[assistantMsgIndex].content = '抱歉，我没有收到回复。'
+    }
   } catch (error) {
     console.error('Error calling API:', error)
-    messages.value.push({ 
-      role: 'assistant', 
-      content: '抱歉，发生了错误。请检查网络连接或稍后重试。' 
-    })
+    messages.value[assistantMsgIndex].content = '抱歉，发生了错误。请检查网络连接或稍后重试。'
   } finally {
     loading.value = false
   }
@@ -276,22 +357,6 @@ const handleEnter = (e: KeyboardEvent) => {
 const scrollToBottom = () => {
   if (messagesContainer.value) {
     messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
-  }
-}
-
-const formatMessage = (content: string) => {
-  try {
-    // 使用 marked 解析 markdown
-    const html = marked.parse(content) as string
-    // 使用 DOMPurify 清理 HTML，防止 XSS 攻击
-    return DOMPurify.sanitize(html, {
-      ADD_TAGS: ['iframe'],
-      ADD_ATTR: ['target', 'rel', 'class']
-    })
-  } catch (error) {
-    console.error('Markdown parsing error:', error)
-    // 降级处理：简单替换换行符
-    return content.replace(/\n/g, '<br>')
   }
 }
 
@@ -452,30 +517,56 @@ const saveWindowState = () => {
   color: var(--vp-c-text-1);
 }
 
-/* Markdown 渲染样式 */
-.message-content :deep(h1),
-.message-content :deep(h2),
-.message-content :deep(h3),
-.message-content :deep(h4) {
+/* 流式渲染动画 */
+.vue-markdown-wrapper > *,
+.vue-markdown-wrapper :deep(.text-segmenter) {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Vue Markdown Renderer 样式覆盖 */
+.vue-markdown-wrapper :deep(h1),
+.vue-markdown-wrapper :deep(h2),
+.vue-markdown-wrapper :deep(h3),
+.vue-markdown-wrapper :deep(h4) {
   margin-top: 16px;
   margin-bottom: 8px;
   font-weight: 600;
   line-height: 1.3;
 }
 
-.message-content :deep(h1) { font-size: 1.5em; }
-.message-content :deep(h2) { font-size: 1.3em; }
-.message-content :deep(h3) { font-size: 1.1em; }
-.message-content :deep(h4) { font-size: 1em; }
+.vue-markdown-wrapper :deep(h1) { font-size: 1.5em; }
+.vue-markdown-wrapper :deep(h2) { font-size: 1.3em; }
+.vue-markdown-wrapper :deep(h3) { font-size: 1.1em; }
+.vue-markdown-wrapper :deep(h4) { font-size: 1em; }
 
-.message-content :deep(h1:first-child),
-.message-content :deep(h2:first-child),
-.message-content :deep(h3:first-child) {
+.vue-markdown-wrapper :deep(h1:first-child),
+.vue-markdown-wrapper :deep(h2:first-child),
+.vue-markdown-wrapper :deep(h3:first-child) {
   margin-top: 0;
 }
 
-/* 代码样式 */
-.message-content :deep(code) {
+.vue-markdown-wrapper :deep(p) {
+  margin: 8px 0;
+}
+
+.vue-markdown-wrapper :deep(p:first-child) {
+  margin-top: 0;
+}
+
+.vue-markdown-wrapper :deep(p:last-child) {
+  margin-bottom: 0;
+}
+
+.vue-markdown-wrapper :deep(code) {
   background: rgba(0, 0, 0, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
@@ -483,43 +574,31 @@ const saveWindowState = () => {
   font-size: 0.9em;
 }
 
-.message-content :deep(pre) {
+.vue-markdown-wrapper :deep(pre) {
   margin: 12px 0;
   padding: 12px;
   border-radius: 6px;
   overflow-x: auto;
-  background: var(--vp-code-block-bg, #1e1e1e);
-  line-height: 1.4;
 }
 
-.message-content :deep(pre code) {
+.vue-markdown-wrapper :deep(pre code) {
   background: none;
   padding: 0;
   border-radius: 0;
-  color: inherit;
   font-size: 0.9em;
 }
 
-/* 列表样式 */
-.message-content :deep(ul),
-.message-content :deep(ol) {
+.vue-markdown-wrapper :deep(ul),
+.vue-markdown-wrapper :deep(ol) {
   margin: 8px 0;
   padding-left: 24px;
 }
 
-.message-content :deep(li) {
+.vue-markdown-wrapper :deep(li) {
   margin: 4px 0;
 }
 
-.message-content :deep(ul ul),
-.message-content :deep(ol ol),
-.message-content :deep(ul ol),
-.message-content :deep(ol ul) {
-  margin: 2px 0;
-}
-
-/* 引用块样式 */
-.message-content :deep(blockquote) {
+.vue-markdown-wrapper :deep(blockquote) {
   margin: 12px 0;
   padding: 8px 16px;
   border-left: 3px solid var(--vp-c-brand-1);
@@ -527,98 +606,123 @@ const saveWindowState = () => {
   border-radius: 4px;
 }
 
-.message-content :deep(blockquote p) {
-  margin: 4px 0;
-}
-
-/* 表格样式 */
-.message-content :deep(table) {
+.vue-markdown-wrapper :deep(table) {
   margin: 12px 0;
   border-collapse: collapse;
   width: 100%;
   font-size: 0.9em;
 }
 
-.message-content :deep(th),
-.message-content :deep(td) {
+.vue-markdown-wrapper :deep(th),
+.vue-markdown-wrapper :deep(td) {
   border: 1px solid var(--vp-c-divider);
   padding: 6px 12px;
   text-align: left;
 }
 
-.message-content :deep(th) {
+.vue-markdown-wrapper :deep(th) {
   background: var(--vp-c-bg-soft);
   font-weight: 600;
 }
 
-.message-content :deep(tr:nth-child(even)) {
-  background: var(--vp-c-bg-soft);
-}
-
-/* 链接样式 */
-.message-content :deep(a) {
+.vue-markdown-wrapper :deep(a) {
   color: var(--vp-c-brand-1);
   text-decoration: none;
   font-weight: 500;
 }
 
-.message-content :deep(a:hover) {
+.vue-markdown-wrapper :deep(a:hover) {
   text-decoration: underline;
 }
 
-/* 段落和间距 */
-.message-content :deep(p) {
-  margin: 8px 0;
-}
-
-.message-content :deep(p:first-child) {
-  margin-top: 0;
-}
-
-.message-content :deep(p:last-child) {
-  margin-bottom: 0;
-}
-
-/* 水平线 */
-.message-content :deep(hr) {
+.vue-markdown-wrapper :deep(hr) {
   margin: 16px 0;
   border: none;
   border-top: 1px solid var(--vp-c-divider);
 }
 
-/* KaTeX 数学公式样式 */
-.message-content :deep(.katex) {
-  font-size: 1.05em;
-}
-
-.message-content :deep(.katex-display) {
-  margin: 16px 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  text-align: center;
-}
-
-.message-content :deep(.katex-display > .katex) {
-  text-align: left;
-  display: inline-block;
-}
-
-/* 强调样式 */
-.message-content :deep(strong) {
+.vue-markdown-wrapper :deep(strong) {
   font-weight: 600;
   color: var(--vp-c-text-1);
 }
 
-.message-content :deep(em) {
+.vue-markdown-wrapper :deep(em) {
   font-style: italic;
 }
 
-/* 图片样式 */
-.message-content :deep(img) {
+.vue-markdown-wrapper :deep(img) {
   max-width: 100%;
   height: auto;
   border-radius: 4px;
   margin: 8px 0;
+}
+
+/* KaTeX 样式 */
+.vue-markdown-wrapper :deep(.katex) {
+  font-size: 1.05em;
+}
+
+.vue-markdown-wrapper :deep(.katex-display) {
+  margin: 16px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* 对话长度警告样式 */
+.conversation-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  margin: 8px 0;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  animation: slideIn 0.3s ease;
+}
+
+.dark .conversation-warning {
+  background: rgba(255, 193, 7, 0.15);
+  border-color: rgba(255, 193, 7, 0.3);
+}
+
+.conversation-warning .warning-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.conversation-warning .warning-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--vp-c-text-1);
+}
+
+.conversation-warning .warning-text strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #856404;
+  font-size: 15px;
+}
+
+.dark .conversation-warning .warning-text strong {
+  color: #ffc107;
+}
+
+.conversation-warning .warning-text p {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--vp-c-text-2);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .loading-dots {
@@ -698,24 +802,13 @@ const saveWindowState = () => {
   transform: translateY(20px);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* 响应式设计 */
 @media (max-width: 768px) {
   .chat-window {
-    width: calc(100vw - 32px);
-    height: calc(100vh - 140px);
-    right: 16px;
-    bottom: 76px;
+    width: calc(100vw - 32px) !important;
+    height: calc(100vh - 140px) !important;
+    right: 16px !important;
+    bottom: 76px !important;
   }
   
   .assistant-button {

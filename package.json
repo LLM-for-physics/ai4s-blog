@@ -37,7 +37,10 @@
     "marked": "^17.0.0",
     "marked-highlight": "^2.2.3",
     "marked-katex-extension": "^5.1.6",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "terser": "^5.43.1",
-    "vue": "^3.5.18"
+    "vue": "^3.5.18",
+    "vue-mdr": "^0.0.13"
   }
 }

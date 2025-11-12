@@ -1,0 +1,12 @@
+[project]
+name = "test-rag"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "chromadb>=1.1.0",
+    "openai>=1.109.0",
+    "python-dotenv>=1.1.1",
+    "requests>=2.32.5",
+]
