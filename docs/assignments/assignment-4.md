@@ -4,6 +4,9 @@
 **截止时间**: 11月23日 23:59  
 **权重**: 10%
 
+最终评测数据：
+<a href="/assignment4_test_cases.zip" download="assignment4_test_cases.zip">assignment4_test_cases.zip</a>
+
 ## 📋 作业概述
 
 本次作业要求实现极小极大（Minimax）搜索算法，求解一个双人博弈问题。
