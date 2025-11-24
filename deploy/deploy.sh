@@ -26,35 +26,26 @@ if grep -v '^[[:space:]]*#' deploy/aiphy.conf | grep -q "YOUR_API_ENDPOINT_HERE\
     fi
 fi
 
-# 检查 Nginx 配置文件语法
-echo ""
-echo "2. 验证 Nginx 配置语法..."
-if ! sudo nginx -t -c /etc/nginx/nginx.conf 2>&1 | grep -q "syntax is ok"; then
-    echo "❌ Nginx 配置语法错误，请检查配置文件"
-    exit 1
-fi
-echo "✓ Nginx 配置语法正确"
-
 # 构建站点
 echo ""
-echo "3. 构建 VitePress 站点..."
+echo "2. 构建 VitePress 站点..."
 yarn docs:build
 
 # 同步文件
 echo ""
-echo "4. 同步文件到 nginx 目录..."
+echo "3. 同步文件到 nginx 目录..."
 sudo rm -rf /var/www/ai4s-blog/*
 sudo cp -r "${PWD}/docs/.vitepress/dist/"* /var/www/ai4s-blog/
 
 # 设置权限
 echo ""
-echo "5. 设置正确的权限..."
+echo "4. 设置正确的权限..."
 sudo chown -R www-data:www-data /var/www/ai4s-blog
 sudo chmod -R 755 /var/www/ai4s-blog
 
 # 更新 Nginx 配置（如果需要）
 echo ""
-echo "6. 更新 Nginx 配置..."
+echo "5. 更新 Nginx 配置..."
 if ! sudo diff -q deploy/aiphy.conf /etc/nginx/sites-available/aiphy.conf > /dev/null 2>&1; then
     echo "检测到配置文件变化，更新 Nginx 配置..."
     sudo cp deploy/aiphy.conf /etc/nginx/sites-available/aiphy.conf
@@ -69,6 +60,15 @@ else
     echo "✓ Nginx 配置无变化"
 fi
 
+# 检查 Nginx 配置文件语法
+echo ""
+echo "6. 验证 Nginx 配置语法..."
+if ! sudo nginx -t -c /etc/nginx/nginx.conf 2>&1 | grep -q "syntax is ok"; then
+    echo "❌ Nginx 配置语法错误，请检查配置文件"
+    exit 1
+fi
+echo "✓ Nginx 配置语法正确"
+
 # 重新加载 Nginx
 echo ""
 echo "7. 重新加载 Nginx..."
@@ -80,7 +80,7 @@ echo "======================================"
 echo "  ✅ 部署完成！"
 echo "======================================"
 echo ""
-echo "访问地址: http://aiphy.pku.edu.cn"
+echo "访问地址: https://aiphy.pku.edu.cn"
 echo ""
 echo "📝 提醒："
 echo "  - 如果是首次部署，请确保已在 deploy/aiphy.conf 中配置 API 密钥"
