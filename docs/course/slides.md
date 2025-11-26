@@ -46,4 +46,13 @@
 
 <a href="/slides/AI与凝聚态物理课件-2025-JiChen.pdf" download="AI与凝聚态物理课件-2025-JiChen.pdf">AI与凝聚态物理课件-2025-JiChen.pdf</a>
 
+<a href="/slides/AI与天体物理应用-2025-王力乐.pdf" download="AI与天体物理应用-2025-王力乐.pdf">AI与天体物理应用-2025-王力乐.pdf</a>
+
+<a href="/slides/人工智能在核技术领域的应用-V1-1-焦毅.pdf" download="人工智能在核技术领域的应用-V1-1-焦毅.pdf">人工智能在核技术领域的应用-V1-1-焦毅.pdf</a>
+
+<a href="/slides/人工智能在核技术领域的应用-V1-2-焦毅.pdf" download="人工智能在核技术领域的应用-V1-2-焦毅.pdf">人工智能在核技术领域的应用-V1-2-焦毅.pdf</a>
+
+<a href="/slides/AI与量子多体物理-2025-张亿.pdf" download="AI与量子多体物理-2025-张亿.pdf">AI与量子多体物理-2025-张亿.pdf</a>
+
+
 如果您对课件内容有任何建议、疑问或勘误，欢迎联系宋慧超、林晨、马滟青、冯旭、陈基、张亿、王力乐、朱华星老师。

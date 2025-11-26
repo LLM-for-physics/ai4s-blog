@@ -109,6 +109,7 @@ export default defineConfig({
             { text: '作业2: LLM Agent 项目实践', link: '/assignments/assignment-2' },
             { text: '作业3: 使用 PINN 求解泊松方程', link: '/assignments/assignment-3' },
             { text: '作业4: 极小极大搜索求解博弈问题', link: '/assignments/assignment-4' },
+            { text: '讲座课小作业：Monte Carlo 方法采样 Ising 模型', link: '/assignments/assignment-5' },
             { text: '提交方式', link: '/assignments/submission' },
             { text: 'cline 指南', link: '/assignments/cline' }
           ]
