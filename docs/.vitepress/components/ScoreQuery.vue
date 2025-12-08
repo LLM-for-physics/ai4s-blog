@@ -34,9 +34,12 @@
           :key="`${result.server}-${result.assignment}`"
           class="result-card"
         >
+          <div v-if="result.status === '未提交'" class="warning-banner">
+            ⚠️ 此作业尚未提交，请尽快完成提交
+          </div>
           <div class="card-header">
             <div class="header-row">
-              <h4>作业 {{ result.assignment }}</h4>
+              <h4>{{ getAssignmentTitle(result.assignment) }}</h4>
               <span :class="['status-badge', result.status === '已提交' ? 'submitted' : 'not-submitted']">
                 {{ result.status }}
               </span>
@@ -114,6 +117,13 @@ const hasSearched = ref(false)
 
 const servers = ['58', '132', '197']
 const MAX_ASSIGNMENTS = 5
+
+function getAssignmentTitle(assignmentNum) {
+  if (assignmentNum === 5) {
+    return '讲座课小作业：Monte Carlo 方法采样 Ising 模型'
+  }
+  return `作业 ${assignmentNum}`
+}
 
 async function fetchCSV(url) {
   try {
@@ -197,13 +207,22 @@ async function queryScore() {
             studentName.value = studentRecord['姓名']
           }
 
-          const scoreUrl = `/score/${server}/stu${studentId.value}/${assignmentNum}-score.txt`
-          const feedbackUrl = `/score/${server}/stu${studentId.value}/${assignmentNum}-feedback.txt`
+          // 尝试两种文件命名格式：横线和下划线
+          const scoreUrl1 = `/score/${server}/stu${studentId.value}/${assignmentNum}-score.txt`
+          const scoreUrl2 = `/score/${server}/stu${studentId.value}/${assignmentNum}_score.txt`
+          const feedbackUrl1 = `/score/${server}/stu${studentId.value}/${assignmentNum}-feedback.txt`
+          const feedbackUrl2 = `/score/${server}/stu${studentId.value}/${assignmentNum}_feedback.txt`
           
-          const [scoreText, feedbackText] = await Promise.all([
-            fetchTextFile(scoreUrl),
-            fetchTextFile(feedbackUrl)
-          ])
+          // 先尝试横线格式，失败则尝试下划线格式
+          let scoreText = await fetchTextFile(scoreUrl1)
+          if (!scoreText) {
+            scoreText = await fetchTextFile(scoreUrl2)
+          }
+          
+          let feedbackText = await fetchTextFile(feedbackUrl1)
+          if (!feedbackText) {
+            feedbackText = await fetchTextFile(feedbackUrl2)
+          }
 
           const result = {
             server,
@@ -350,6 +369,16 @@ async function queryScore() {
   transform: translateY(-2px);
 }
 
+.warning-banner {
+  padding: 10px 12px;
+  background: var(--vp-c-warning-soft);
+  color: var(--vp-c-warning-1);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  border-bottom: 2px solid var(--vp-c-warning-1);
+}
+
 .card-header {
   padding: 10px 12px;
   background: var(--vp-c-bg);
@@ -366,8 +395,12 @@ async function queryScore() {
 .header-row h4 {
   margin: 0;
   color: var(--vp-c-text-1);
-  font-size: 16px;
-  flex-shrink: 0;
+  font-size: 14px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .status-badge {
