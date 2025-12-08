@@ -113,7 +113,7 @@ const results = ref([])
 const hasSearched = ref(false)
 
 const servers = ['58', '132', '197']
-const MAX_ASSIGNMENTS = 4
+const MAX_ASSIGNMENTS = 5
 
 async function fetchCSV(url) {
   try {
