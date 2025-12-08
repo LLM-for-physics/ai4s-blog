@@ -111,7 +111,9 @@ export default defineConfig({
             { text: '作业4: 极小极大搜索求解博弈问题', link: '/assignments/assignment-4' },
             { text: '讲座课小作业：Monte Carlo 方法采样 Ising 模型', link: '/assignments/assignment-5' },
             { text: '提交方式', link: '/assignments/submission' },
-            { text: 'cline 指南', link: '/assignments/cline' }
+            { text: 'cline 指南', link: '/assignments/cline' },
+            { text: '作业3: 参考题解', link: '/assignments/assignment-3-solution/index' },
+            { text: '作业4: 参考题解', link: '/assignments/assignment-4-solution/index' }
           ]
         }
       ],

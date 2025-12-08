@@ -12,9 +12,18 @@
 
 [第四次作业](./assignment-4)
 
-大作业：TODO
+[讲座课小作业：Monte Carlo 方法采样 Ising 模型](./assignment-5.md)
 
 讲座课作业内容由八位老师决定
 
+大作业：TODO
+
+
 
 [作业提交方法](./submission)
+
+# 参考题解
+
+[第三次作业-参考题解](./assignment-3-solution/index.md)
+
+[第四次作业-参考题解](./assignment-4-solution.md)

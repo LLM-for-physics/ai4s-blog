@@ -200,7 +200,7 @@ bash deploy/deploy.sh
 
 #### 3. 验证部署
 
-访问 `http://aiphy.pku.edu.cn`，点击右下角的 💬 按钮测试 AI 助手功能。
+访问 `https://aiphy.pku.edu.cn`，点击右下角的 💬 按钮测试 AI 助手功能。
 
 ### 安全最佳实践
 

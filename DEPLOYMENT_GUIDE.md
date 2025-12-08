@@ -30,7 +30,7 @@
 
 3. **验证**
    
-   访问 http://aiphy.pku.edu.cn，测试 AI 助手功能
+   访问 https://aiphy.pku.edu.cn，测试 AI 助手功能
 
 ### 日常更新部署
 

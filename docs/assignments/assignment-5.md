@@ -68,7 +68,7 @@
 ## 💻 参考代码
 
 <CodeFileViewer 
-  src="/IsingModel.py" 
+  src="/IsingModel(改).py" 
   filename="IsingModel.py"
   language="python"
 />

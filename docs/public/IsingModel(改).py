@@ -357,7 +357,7 @@ def generate_Ising_data(count, T=1, L=28, autocorr=4*28*28):
                 conf[x][y]*=-1
         if(icount > 9):
             """ The first 10 samples are skipped to ensure a throughout raffle from the initial configuration."""
-            training_data.append(np.reshape(conf, (L**2, 1)))
+            training_data.append(np.reshape(conf.copy(), (L**2, 1)))
     return training_data
 
 def modpbc(x, L=28):
