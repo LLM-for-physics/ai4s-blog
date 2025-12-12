@@ -45,7 +45,7 @@
               </span>
               <div class="score-display">
                 <span v-if="result.status === '未提交'" class="no-score">未提交</span>
-                <span v-else-if="result.score !== null" class="score">{{ result.score }} 分</span>
+                <span v-else-if="result.score !== null" class="score">{{ result.score }}/{{ getFullScore(result.assignment) }} 分</span>
                 <span v-else class="no-score">未评分</span>
               </div>
             </div>
@@ -123,6 +123,13 @@ function getAssignmentTitle(assignmentNum) {
     return '讲座课小作业：Monte Carlo 方法采样 Ising 模型'
   }
   return `作业 ${assignmentNum}`
+}
+
+function getFullScore(assignmentNum) {
+  if (assignmentNum === 5) {
+    return 5
+  }
+  return 10
 }
 
 async function fetchCSV(url) {

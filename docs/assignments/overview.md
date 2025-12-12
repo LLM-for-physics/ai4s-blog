@@ -16,9 +16,7 @@
 
 讲座课作业内容由八位老师决定
 
-大作业：TODO
-
-
+[大作业](./final-project)
 
 [作业提交方法](./submission)
 

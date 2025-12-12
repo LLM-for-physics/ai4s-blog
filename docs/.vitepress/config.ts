@@ -113,7 +113,8 @@ export default defineConfig({
             { text: '提交方式', link: '/assignments/submission' },
             { text: 'cline 指南', link: '/assignments/cline' },
             { text: '作业3: 参考题解', link: '/assignments/assignment-3-solution/index' },
-            { text: '作业4: 参考题解', link: '/assignments/assignment-4-solution/index' }
+            { text: '作业4: 参考题解', link: '/assignments/assignment-4-solution/index' },
+            { text: '大作业: ai for science 应用探索', link: '/assignments/final-project' }
           ]
         }
       ],
