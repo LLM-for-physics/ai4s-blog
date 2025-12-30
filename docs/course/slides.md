@@ -54,5 +54,10 @@
 
 <a href="/slides/AI与量子多体物理-2025-张亿.pdf" download="AI与量子多体物理-2025-张亿.pdf">AI与量子多体物理-2025-张亿.pdf</a>
 
+<a href="/slides/Generative-Diffusion-Model-2025-朱华星.pptx" download="Generative-Diffusion-Model-2025-朱华星.pptx">Generative-Diffusion-Model-2025-朱华星.pptx</a>
+
+<a href="/slides/Statistical-Physics-And-AI-PKU-2025-尹伊.pdf" download="Statistical-Physics-And-AI-PKU-2025-尹伊.pdf">Statistical-Physics-And-AI-PKU-2025-尹伊.pdf</a>
+
+<a href="/slides/AI与大规模数值模拟-2025-冯旭.pdf" download="AI与大规模数值模拟-2025-冯旭.pdf">AI与大规模数值模拟-2025-冯旭.pdf</a>
 
 如果您对课件内容有任何建议、疑问或勘误，欢迎联系宋慧超、林晨、马滟青、冯旭、陈基、张亿、王力乐、朱华星老师。

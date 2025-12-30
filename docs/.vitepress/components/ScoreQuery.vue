@@ -116,17 +116,23 @@ const results = ref([])
 const hasSearched = ref(false)
 
 const servers = ['58', '132', '197']
-const MAX_ASSIGNMENTS = 5
+const MAX_ASSIGNMENTS = 6
 
 function getAssignmentTitle(assignmentNum) {
   if (assignmentNum === 5) {
     return '讲座课小作业：Monte Carlo 方法采样 Ising 模型'
+  }
+  if (assignmentNum === 6) {
+    return '陈基老师课堂小测'
   }
   return `作业 ${assignmentNum}`
 }
 
 function getFullScore(assignmentNum) {
   if (assignmentNum === 5) {
+    return 5
+  }
+  if (assignmentNum === 6) {
     return 5
   }
   return 10
