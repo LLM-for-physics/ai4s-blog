@@ -19,6 +19,7 @@
   "author": "AI4S Course Team",
   "license": "MIT",
   "devDependencies": {
+    "@types/js-yaml": "^4",
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0",
     "vitepress": "^1.6.4"
@@ -32,6 +33,7 @@
     "@types/dompurify": "^3.2.0",
     "dompurify": "^3.3.0",
     "highlight.js": "^11.11.1",
+    "js-yaml": "^4.1.1",
     "katex": "^0.16.25",
     "markdown-it-mathjax3": "^4.3.2",
     "marked": "^17.0.0",

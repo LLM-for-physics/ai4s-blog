@@ -28,6 +28,30 @@
 
     <div v-if="results.length > 0" class="results">
       <h3>{{ studentName }} ({{ queriedStudentId }}) 的成绩信息</h3>
+      
+      <!-- 图书馆 agent 比赛项目提示框 -->
+      <div v-if="agentProject" class="agent-project-banner">
+        <div class="banner-icon">🎉</div>
+        <div class="banner-content">
+          <h4>图书馆 Agent 比赛项目</h4>
+          <div class="project-info">
+            <div class="info-item">
+              <span class="info-label">项目得分：</span>
+              <span class="info-value highlight">{{ agentProject.score }} 分</span>
+            </div>
+            <div class="info-item substitute-hint">
+              <span class="info-label">📌 此分数可替代</span>
+              <span class="info-value highlight">第 {{ agentProject.substituteHomework }} 次作业</span>
+              <span class="info-label">的成绩</span>
+            </div>
+            <div class="info-item" v-if="agentProject.feedback">
+              <span class="info-label">评语：</span>
+              <span class="info-value">{{ agentProject.feedback }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="results-grid">
         <div 
           v-for="result in results" 
@@ -106,6 +130,7 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
+import yaml from 'js-yaml'
 
 const studentId = ref('')
 const studentName = ref('')
@@ -114,6 +139,9 @@ const loading = ref(false)
 const error = ref('')
 const results = ref([])
 const hasSearched = ref(false)
+
+// 图书馆 agent 比赛项目信息
+const agentProject = ref(null)
 
 const servers = ['58', '132', '197']
 const MAX_ASSIGNMENTS = 6
@@ -188,6 +216,41 @@ async function fetchTextFile(url) {
   }
 }
 
+async function fetchExtraYaml() {
+  try {
+    const cacheBuster = Date.now()
+    const url = `/score/extra.yaml?v=${cacheBuster}`
+    const response = await fetch(url)
+    if (!response.ok) {
+      return null
+    }
+    const text = await response.text()
+    return yaml.load(text)
+  } catch (err) {
+    console.warn('Failed to fetch extra.yaml:', err)
+    return null
+  }
+}
+
+function checkAgentProject(extraData, studentIdValue) {
+  if (!extraData || !extraData['图书馆 agent 比赛']) {
+    return null
+  }
+  
+  const agentData = extraData['图书馆 agent 比赛']
+  const studentKey = `stu${studentIdValue}`
+  
+  if (agentData[studentKey]) {
+    return {
+      score: agentData[studentKey].score,
+      feedback: agentData[studentKey].feedback,
+      substituteHomework: agentData[studentKey].substitute_homework
+    }
+  }
+  
+  return null
+}
+
 function toggleFeedback(result) {
   result.showFeedback = !result.showFeedback
 }
@@ -204,8 +267,13 @@ async function queryScore() {
   hasSearched.value = true
   studentName.value = ''
   queriedStudentId.value = studentId.value
+  agentProject.value = null
 
   try {
+    // 查询图书馆 agent 比赛项目信息
+    const extraData = await fetchExtraYaml()
+    agentProject.value = checkAgentProject(extraData, studentId.value)
+
     const allResults = []
 
     for (const server of servers) {
@@ -361,6 +429,87 @@ async function queryScore() {
   margin-bottom: 24px;
   color: var(--vp-c-text-1);
   font-size: 20px;
+}
+
+/* 图书馆 agent 比赛项目提示框样式 */
+.agent-project-banner {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, var(--vp-c-success-soft) 0%, rgba(16, 185, 129, 0.1) 100%);
+  border: 1px solid var(--vp-c-success-1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+
+.banner-icon {
+  font-size: 36px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.banner-content {
+  flex: 1;
+}
+
+.banner-content h4 {
+  margin: 0 0 12px 0;
+  color: var(--vp-c-success-1);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.project-info .info-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.project-info .info-label {
+  color: var(--vp-c-text-2);
+}
+
+.project-info .info-value {
+  color: var(--vp-c-text-1);
+  font-weight: 500;
+}
+
+.project-info .info-value.highlight {
+  color: var(--vp-c-success-1);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.project-info .substitute-hint {
+  background: rgba(16, 185, 129, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+  .agent-project-banner {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .banner-icon {
+    font-size: 28px;
+  }
+  
+  .banner-content h4 {
+    font-size: 16px;
+  }
 }
 
 .results-grid {
