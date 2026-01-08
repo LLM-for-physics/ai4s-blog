@@ -90,3 +90,91 @@
   transform: scale(3) translateX(-20%);
   transform-origin: center;
 }
+
+/* 首页紧凑布局样式 */
+.compact-home {
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-top: -4rem;
+}
+
+.compact-home h2 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.compact-home > p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.info-card {
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  border-color: var(--vp-c-brand);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.info-card h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  border: none;
+  padding: 0;
+}
+
+.info-card p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.info-card ul {
+  margin: 0.5rem 0;
+  padding-left: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.info-card li {
+  margin: 0.3rem 0;
+}
+
+.info-card img {
+  display: block;
+  margin: 0.5rem auto;
+  border-radius: 4px;
+}
+
+.info-card strong {
+  color: var(--vp-c-brand);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .info-card {
+    padding: 1rem;
+  }
+
+  .compact-home > p {
+    font-size: 1rem;
+  }
+}
