@@ -118,6 +118,39 @@ graph TD
 - 在网站导航栏点击"成绩查询"
 - 或直接访问 `/score-query` 页面
 
+### 课程反馈问卷
+网站集成了自动弹出的问卷调查功能，用于收集学生对课程的反馈意见。
+
+**功能特点：**
+- 📋 自动弹出问卷（页面加载 3 秒后）
+- 💾 本地存储已填写状态，避免重复打扰
+- 🔒 防误触设计，只能通过关闭按钮或"暂不填写"按钮关闭
+- 📝 收集满意度、难度、有帮助的内容、建议等信息
+- 💿 反馈数据本地保存，保护用户隐私
+
+**数据保存位置：**
+- 反馈数据保存在 `docs/public/feedback/` 目录
+- 每份反馈独立保存为 JSON 文件（按时间戳命名）
+- 同时追加到 `feedback-summary.jsonl` 汇总文件
+
+**管理反馈：**
+```bash
+# 查看所有反馈文件
+ls docs/public/feedback/
+
+# 查看单个反馈
+cat docs/public/feedback/feedback-2026-01-08T12-30-45-123Z.json
+
+# 查看汇总文件（每行一条 JSON 记录）
+cat docs/public/feedback/feedback-summary.jsonl
+```
+
+**重新启用问卷：**
+如需让所有用户重新填写问卷，可以修改 `docs/.vitepress/components/FeedbackSurvey.vue` 中的 `SURVEY_VERSION` 常量：
+```typescript
+const SURVEY_VERSION = 'v2'  // 从 'v1' 改为 'v2'
+```
+
 ## 🎨 主题定制
 
 主题配置在 `docs/.vitepress/config.ts` 中，包括：

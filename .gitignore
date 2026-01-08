@@ -2,6 +2,9 @@ students_server_assignment.xlsx
 chroma_db
 score
 
+# Feedback data - 不提交用户反馈数据到仓库
+docs/public/feedback/
+
 node_modules/
 .DS_Store
 .vitepress/dist/

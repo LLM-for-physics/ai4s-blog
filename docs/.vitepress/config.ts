@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { MermaidPlugin } from '@leelaa/vitepress-plugin-extended'
 import { pageContentApiPlugin } from './plugins/pageContentApi'
+import { feedbackApiPlugin } from './plugins/feedbackApi'
 
 export default defineConfig({
   title: 'AI x Physics 课程主页',
@@ -194,7 +195,8 @@ export default defineConfig({
   // Vite 配置
   vite: {
     plugins: [
-      pageContentApiPlugin()
+      pageContentApiPlugin(),
+      feedbackApiPlugin()
     ],
     server: {
       fs: {
