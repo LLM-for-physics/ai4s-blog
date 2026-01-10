@@ -65,7 +65,7 @@ OPENAI_BASE_URL = "https://api.openai.com/v1"
 ANTHROPIC_BASE_URL = "https://api.anthropic.com/v1"
 
 # 自定义部署或网关
-CUSTOM_BASE_URL = "http://162.105.151.181/v1"
+CUSTOM_BASE_URL = "http://llmapi.aiphys.cn/v1"
 ```
 
 ### API Key（API 密钥）
@@ -84,13 +84,13 @@ API_KEY = os.getenv("API_KEY")
 
 ## 🎓 北大物理学院 LLM 网关使用
 
-我们在服务器上部署了 LLM 网关服务：http://162.105.151.181/
+我们在服务器上部署了 LLM 网关服务：http://llmapi.aiphys.cn/
 
 该网关支持多种 API 格式，方便同学们使用不同的客户端库进行调用。详细的网关说明请查看 [LLM 网关文档](../llm-gateway.md)。
 
 ### 获取 API Key
 
-1. 在 [LLM 网关](http://162.105.151.181/) 注册账号（用户名设置为学号）
+1. 在 [LLM 网关](http://llmapi.aiphys.cn/) 注册账号（用户名设置为学号）
 2. 在左侧"令牌管理"处点击"添加令牌"获取 API Key
 3. 根据需要选择不同的分组（普通用户使用 default 分组，VIP 分组可访问 Claude、Gemini 等模型）
 
@@ -103,7 +103,7 @@ API_KEY = os.getenv("API_KEY")
 import openai
 
 client = openai.OpenAI(
-    base_url="http://162.105.151.181/v1",
+    base_url="http://llmapi.aiphys.cn/v1",
     api_key="sk-{YOUR_API_KEY}"
 )
 
@@ -122,13 +122,13 @@ print(response.choices[0].message.content)
 
 **环境变量配置**：
 ```bash
-OPENAI_BASE_URL=http://162.105.151.181/v1
+OPENAI_BASE_URL=http://llmapi.aiphys.cn/v1
 OPENAI_API_KEY=sk-{YOUR_API_KEY}
 ```
 
 **curl 示例**（`"stream": true` 表示流式输出）：
 ```bash
-curl -X POST http://162.105.151.181/v1/chat/completions \
+curl -X POST http://llmapi.aiphys.cn/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-{YOUR_API_KEY}" \
   -d '{
@@ -147,7 +147,7 @@ curl -X POST http://162.105.151.181/v1/chat/completions \
 import anthropic
 
 client = anthropic.Anthropic(
-    base_url="http://162.105.151.181",
+    base_url="http://llmapi.aiphys.cn",
     api_key="sk-{YOUR_API_KEY}"
 )
 
@@ -164,13 +164,13 @@ print(response.content[0].text)
 
 **环境变量配置**：
 ```bash
-ANTHROPIC_BASE_URL=http://162.105.151.181
+ANTHROPIC_BASE_URL=http://llmapi.aiphys.cn
 ANTHROPIC_API_KEY=sk-{YOUR_API_KEY}
 ```
 
 **curl 示例**：
 ```bash
-curl -X POST http://162.105.151.181/v1/messages \
+curl -X POST http://llmapi.aiphys.cn/v1/messages \
   -H "Content-Type: application/json" \
   -H "anthropic-version: 2023-06-01" \
   -H "x-api-key: sk-{YOUR_API_KEY}" \
@@ -193,7 +193,7 @@ import PIL.Image
 genai.configure(
     api_key="sk-{YOUR_API_KEY}",
     transport="rest",
-    client_options={"api_endpoint": "http://162.105.151.181"}
+    client_options={"api_endpoint": "http://llmapi.aiphys.cn"}
 )
 
 model = genai.GenerativeModel("gemini-2.5-flash")
@@ -211,13 +211,13 @@ print(response.text)
 
 **环境变量配置**：
 ```bash
-GEMINI_BASE_URL=http://162.105.151.181
+GEMINI_BASE_URL=http://llmapi.aiphys.cn
 GEMINI_API_KEY=sk-{YOUR_API_KEY}
 ```
 
 **curl 示例**（`:streamGenerateContent` 表示流式输出）：
 ```bash
-curl -N "http://162.105.151.181/v1beta/models/gemini-2.5-pro:streamGenerateContent" \
+curl -N "http://llmapi.aiphys.cn/v1beta/models/gemini-2.5-pro:streamGenerateContent" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer sk-{YOUR_API_KEY}" \
   -d '{
@@ -247,7 +247,7 @@ Cherry Studio 是一个本地的大语言模型对话客户端,支持添加各�
 ![Cherry Studio 基础配置](./cherry.png)
 
 配置要点:
-- **Base URL**: 填写 `http://162.105.151.181/v1`
+- **Base URL**: 填写 `http://llmapi.aiphys.cn/v1`
 - **API Key**: 填写您在网关获取的 API Key (格式为 `sk-{YOUR_API_KEY}`)
 - **模型选择**: 根据您的分组权限选择可用模型
 

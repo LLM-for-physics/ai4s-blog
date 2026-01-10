@@ -3,15 +3,16 @@
     <div class="query-form">
       <h2>成绩查询</h2>
       <div class="input-group">
-        <label for="student-id">请输入学号：</label>
-        <input
-          id="student-id"
-          v-model="studentId"
-          type="text"
-          placeholder="例如：2401110097"
-          @keyup.enter="queryScore"
-          :disabled="loading"
-        />
+        <label class="input-label">
+          <span class="label-text">请输入学号：</span>
+          <input
+            v-model="studentId"
+            type="text"
+            placeholder="例如：2401110097"
+            @keyup.enter="queryScore"
+            :disabled="loading"
+          />
+        </label>
         <button @click="queryScore" :disabled="loading || !studentId.trim()">
           {{ loading ? '查询中...' : '查询成绩' }}
         </button>
@@ -38,6 +39,7 @@
             <div class="info-item">
               <span class="info-label">项目得分：</span>
               <span class="info-value highlight">{{ agentProject.score }} 分</span>
+              <span class="info-label"> （如果收到决赛通知，请联系助教可以有额外加分）</span>
             </div>
             <div class="info-item substitute-hint">
               <span class="info-label">📌 此分数可替代</span>
@@ -115,6 +117,20 @@
             </div>
             <div v-else class="no-feedback-hint">
               暂无评语
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 讲座课成绩板块 -->
+      <div class="lecture-course-banner">
+        <div class="banner-icon">📚</div>
+        <div class="banner-content">
+          <h4>其余的6次讲座课</h4>
+          <div class="lecture-info">
+            <div class="info-item">
+              <span class="info-label">总分：</span>
+              <span class="info-value highlight">30 分</span>
             </div>
           </div>
         </div>
@@ -362,7 +378,13 @@ async function queryScore() {
   gap: 12px;
 }
 
-.input-group label {
+.input-group .input-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group .label-text {
   font-weight: 500;
   color: var(--vp-c-text-1);
 }
@@ -508,6 +530,73 @@ async function queryScore() {
   }
   
   .banner-content h4 {
+    font-size: 16px;
+  }
+}
+
+/* 讲座课成绩板块样式 */
+.lecture-course-banner {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  margin-top: 24px;
+  background: linear-gradient(135deg, var(--vp-c-indigo-soft) 0%, rgba(99, 102, 241, 0.1) 100%);
+  border: 1px solid var(--vp-c-indigo-1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+.lecture-course-banner .banner-content h4 {
+  margin: 0 0 12px 0;
+  color: var(--vp-c-indigo-1);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.lecture-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lecture-info .info-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.lecture-info .info-label {
+  color: var(--vp-c-text-2);
+}
+
+.lecture-info .info-value {
+  color: var(--vp-c-text-1);
+  font-weight: 500;
+}
+
+.lecture-info .info-value.highlight {
+  color: var(--vp-c-indigo-1);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.lecture-info .lecture-hint {
+  background: rgba(99, 102, 241, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+  .lecture-course-banner {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .lecture-course-banner .banner-content h4 {
     font-size: 16px;
   }
 }

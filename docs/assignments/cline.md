@@ -46,9 +46,9 @@ Cline 扩展（AI 编程助手）可以不登陆使用，在 Cline 界面下方�
 
 你也可以使用课程专用大模型网关：
 
-- 访问 http://162.105.151.181 申请 IP 白名单权限。
+- 访问 http://llmapi.aiphys.cn 申请 IP 白名单权限。
 - 在 Cline 的模型配置菜单中，API Provider 选择 OpenAI Compatible。
-- Base URL 填写：http://162.105.151.181/v1
+- Base URL 填写：http://llmapi.aiphys.cn/v1
 - API Key 在网关页面申请令牌后复制粘贴。
 - Model ID 填写你希望调用的模型名称（可在网关页面查看支持的模型列表）。
 
