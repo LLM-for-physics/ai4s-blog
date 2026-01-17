@@ -29,7 +29,14 @@
 
     <div v-if="results.length > 0" class="results">
       <h3>{{ studentName }} ({{ queriedStudentId }}) 的成绩信息</h3>
-      
+
+      <!-- AI 批改声明 -->
+      <div class="ai-disclaimer-banner">
+        <div class="disclaimer-text">
+          【注意】部分作业的批改反馈借助了 AI 编程助手来自动化；如有问题请联系助教。
+        </div>
+      </div>
+
       <!-- 图书馆 agent 比赛项目提示框 -->
       <div v-if="agentProject" class="agent-project-banner">
         <div class="banner-icon">🎉</div>
@@ -64,9 +71,10 @@
             ⚠️ 此作业尚未提交，请尽快完成提交
           </div>
           <div class="card-header">
-            <div class="header-row">
-              <h4>{{ getAssignmentTitle(result.assignment) }}</h4>
+            <h4>{{ getAssignmentTitle(result.assignment) }}</h4>
+            <div class="header-meta">
               <span :class="['status-badge', result.status === '已提交' ? 'submitted' : 'not-submitted']">
+                <span class="status-icon">{{ result.status === '已提交' ? '✓' : '⚠️' }}</span>
                 {{ result.status }}
               </span>
               <div class="score-display">
@@ -160,7 +168,7 @@ const hasSearched = ref(false)
 const agentProject = ref(null)
 
 const servers = ['58', '132', '197']
-const MAX_ASSIGNMENTS = 6
+const MAX_ASSIGNMENTS = 7
 
 function getAssignmentTitle(assignmentNum) {
   if (assignmentNum === 5) {
@@ -168,6 +176,9 @@ function getAssignmentTitle(assignmentNum) {
   }
   if (assignmentNum === 6) {
     return '陈基老师课堂小测'
+  }
+  if (assignmentNum === 7) {
+    return '大作业：AI for science 应用探索'
   }
   return `作业 ${assignmentNum}`
 }
@@ -178,6 +189,9 @@ function getFullScore(assignmentNum) {
   }
   if (assignmentNum === 6) {
     return 5
+  }
+  if (assignmentNum === 7) {
+    return 20
   }
   return 10
 }
