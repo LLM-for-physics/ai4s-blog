@@ -22,6 +22,8 @@
 
 ### 6. [Claude Code 安装配置](./claude-code.md)
 
+### 7. [OpenClaw 安装配置（原 Clawdbot/Moltbot）](./openclaw.md)
+
 ## 💻 代码示例
 
 所有课程相关的代码示例都存放在 [`code-examples`](./code-examples/index) 中，包括：

@@ -40,7 +40,7 @@ export default defineConfig({
       { text: '作业', link: '/assignments/overview' },
       { text: '资源', link: '/resources/links' },
       { text: 'LLM 网关', link: '/course/llm-gateway' },
-      { text: '成绩查询', link: '/score-query' },
+      // { text: '成绩查询', link: '/score-query' },
     ],
 
     // 侧边栏
@@ -54,7 +54,7 @@ export default defineConfig({
             { text: '课程讲义', link: '/course/slides' },
             { text: '评分标准', link: '/course/grading' },
             { text: 'LLM 网关', link: '/course/llm-gateway' },
-            { text: '成绩查询', link: '/score-query' },
+            // { text: '成绩查询', link: '/score-query' },
           ]
         },
         {
@@ -66,7 +66,8 @@ export default defineConfig({
             { text: '工具调用', link: '/course/llm-agent/tool-calling' },
             { text: 'MCP Server', link: '/course/llm-agent/mcp-server' },
             { text: 'RAG', link: '/course/llm-agent/rag' },
-            { text: 'claude code 安装配置', link: '/course/llm-agent/claude-code'}
+            { text: 'claude code 安装配置', link: '/course/llm-agent/claude-code'},
+            { text: 'openclaw 安装配置', link: '/course/llm-agent/openclaw' },
           ]
         },
         {
