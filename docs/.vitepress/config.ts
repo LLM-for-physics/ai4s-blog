@@ -1,10 +1,13 @@
 import { defineConfig } from 'vitepress'
+import { loadEnv } from 'vite'
 import { MermaidPlugin } from '@leelaa/vitepress-plugin-extended'
 import { pageContentApiPlugin } from './plugins/pageContentApi'
 import terms from '../../terms.json'
 import { preparePublic } from '../../scripts/public-safety.mjs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+const llmEnv = { ...loadEnv('development', process.cwd(), 'LLM_'), ...process.env }
 
 const configDir = path.dirname(fileURLToPath(import.meta.url))
 const publicDir = preparePublic(path.resolve(configDir, '../public'), path.resolve(configDir, '../../.site-public'))
@@ -202,13 +205,14 @@ export default defineConfig({
       // 开发环境代理配置：将 /api/llm/ 转发到环境变量配置的 API 地址
       proxy: {
         '/api/llm': {
-          target: process.env.VITE_OPENAI_BASE_URL || 'https://api.openai.com/v1',
+          target: llmEnv.LLM_BASE_URL || 'https://api.openai.com/v1',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api\/llm/, ''),
           configure: (proxy, _options) => {
             proxy.on('proxyReq', (proxyReq, req, _res) => {
-              // 添加 Authorization header
-              const apiKey = process.env.VITE_OPENAI_API_KEY
+              // Server-only credentials; never accept a browser-supplied credential.
+              proxyReq.removeHeader('Authorization')
+              const apiKey = llmEnv.LLM_API_KEY
               if (apiKey) {
                 proxyReq.setHeader('Authorization', `Bearer ${apiKey}`)
               }

@@ -11,7 +11,8 @@
     "archive:build": "node scripts/build-archive.mjs",
     "site:build": "yarn docs:build && yarn archive:build",
     "site:verify": "python3 scripts/verify-site.py",
-    "deploy:test": "python3 -m unittest discover -s deploy/tests -v"
+    "deploy:test": "python3 -m unittest discover -s deploy/tests -v",
+    "chat:test": "node --test tests/chat-stream.test.mjs"
   },
   "keywords": [
     "ai",
