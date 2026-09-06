@@ -90,7 +90,7 @@ API_KEY = os.getenv("API_KEY")
 
 ### 获取 API Key
 
-1. 在 [LLM 网关](http://llmapi.aiphys.cn/) 注册账号（用户名设置为学号）
+1. 按 [本学期 LLM 网关说明](../llm-gateway) 获取账号与 API key（发放方式待公布）
 2. 在左侧"令牌管理"处点击"添加令牌"获取 API Key
 3. 根据需要选择不同的分组（普通用户使用 default 分组，VIP 分组可访问 Claude、Gemini 等模型）
 
@@ -238,7 +238,7 @@ Cherry Studio 是一个本地的大语言模型对话客户端,支持添加各�
 
 #### 基本配置
 
-首先,在 162.105.151.181 平台上开通账号、权限,并创建新的 API Key。
+首先，按本学期课程通知确认平台地址、开通权限并创建 API key。
 
 然后,从 [Cherry Studio 官网](https://cherry-ai.com/) 下载并安装该软件。
 

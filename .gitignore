@@ -40,3 +40,9 @@ Desktop.ini
 
 assignment-4-material
 assignment-3-material
+# Rebuildable term staging and artifacts
+.archive-build/
+artifacts/
+__pycache__/
+
+.site-public/

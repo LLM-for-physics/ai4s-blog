@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: "AI x Physics"
-  text: "2025 年秋"
+  text: "2026 年秋"
   tagline: "人工智能与物理学交叉学科学习平台"
   actions:
     - theme: brand
@@ -31,30 +31,21 @@ hero:
 <div class="info-card">
 
 ### 📱 加入课程群
-<img src="./wechat.jpg" alt="课程群二维码" width="200" />
+2026 秋课程群与二维码待公布。
 
 </div>
 
 <div class="info-card">
 
-### 💻 开发组招募
-欢迎加入开发组，共同维护课程平台：
-- LLM 网关维护
-- 课程网站维护
-- 物理 Agent 平台维护
-
-**联系方式（微信）**: i-m-eden 
+### 📅 课程安排
+课表、教室与教学安排待公布，请关注[课程介绍](/course/introduction)。
 
 </div>
 
 <div class="info-card">
 
 ### 📞 联系我们
-**授课教师**: 宋慧超、林晨、马滟青、冯旭、陈基、张亿、王力乐、朱华星
-
-**助教**: 方尤乐、见东山、李想
-
-**邮箱**: yqma@pku.edu.cn 马滟青
+授课教师、助教名单与联系方式待公布。
 
 </div>
 

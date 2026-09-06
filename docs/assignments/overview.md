@@ -1,27 +1,7 @@
-# 作业指南
+# 作业概述
 
-课程作业暂定为：包含 AI 基础的平时作业（ 40% ）+ 专题课作业（40%，每个专题 5 分） + 期末大作业（20%）。
+2026 秋作业题目、截止日期和评分标准待发布。
 
-课程作业及考核标准可能根据实际教学进度进行微调，具体变动将及时通知学生。
+发布后可在此查看本学期作业安排。[提交方式](./submission)将同步更新。
 
-[第一次作业](./assignment-1)
-
-[第二次作业](./assignment-2)
-
-[第三次作业](./assignment-3)
-
-[第四次作业](./assignment-4)
-
-[讲座课小作业：Monte Carlo 方法采样 Ising 模型](./assignment-5.md)
-
-讲座课作业内容由八位老师决定
-
-[大作业](./final-project)
-
-[作业提交方法](./submission)
-
-# 参考题解
-
-[第三次作业-参考题解](./assignment-3-solution/index.md)
-
-[第四次作业-参考题解](./assignment-4-solution.md)
+[查看 2025 秋作业归档](https://aiphy.pku.edu.cn/archive/2025-fall/assignments/overview)

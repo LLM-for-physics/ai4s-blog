@@ -1,7 +1,13 @@
 import { defineConfig } from 'vitepress'
 import { MermaidPlugin } from '@leelaa/vitepress-plugin-extended'
 import { pageContentApiPlugin } from './plugins/pageContentApi'
-import { feedbackApiPlugin } from './plugins/feedbackApi'
+import terms from '../../terms.json'
+import { preparePublic } from '../../scripts/public-safety.mjs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const configDir = path.dirname(fileURLToPath(import.meta.url))
+const publicDir = preparePublic(path.resolve(configDir, '../public'), path.resolve(configDir, '../../.site-public'))
 
 export default defineConfig({
   title: 'AI x Physics 课程主页',
@@ -21,7 +27,7 @@ export default defineConfig({
   
   // 头部配置
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }],
+    ['link', { rel: 'icon', href: '/image.svg' }],
     ['meta', { name: 'theme-color', content: '#3c82f6' }],
     ['meta', { name: 'og:type', content: 'website' }],
     ['meta', { name: 'og:locale', content: 'zh-CN' }],
@@ -40,7 +46,10 @@ export default defineConfig({
       { text: '作业', link: '/assignments/overview' },
       { text: '资源', link: '/resources/links' },
       { text: 'LLM 网关', link: '/course/llm-gateway' },
-      // { text: '成绩查询', link: '/score-query' },
+      { text: `版本: ${terms.current.label}`, items: [
+        { text: `${terms.current.label}（当前）`, link: 'https://aiphy.pku.edu.cn/', target: '_self' },
+        ...terms.archives.map(term => ({ text: `${term.label}（归档）`, link: `https://aiphy.pku.edu.cn/archive/${term.id}/`, target: '_self' }))
+      ] },
     ],
 
     // 侧边栏
@@ -103,24 +112,10 @@ export default defineConfig({
           ]
         },
       ],
-      '/assignments/': [
-        {
-          text: '作业指南',
-          items: [
-            { text: '作业概述', link: '/assignments/overview' },
-            { text: '作业1: 编写一个 LLM 多轮对话的 Python 程序', link: '/assignments/assignment-1' },
-            { text: '作业2: LLM Agent 项目实践', link: '/assignments/assignment-2' },
-            { text: '作业3: 使用 PINN 求解泊松方程', link: '/assignments/assignment-3' },
-            { text: '作业4: 极小极大搜索求解博弈问题', link: '/assignments/assignment-4' },
-            { text: '讲座课小作业：Monte Carlo 方法采样 Ising 模型', link: '/assignments/assignment-5' },
-            { text: '提交方式', link: '/assignments/submission' },
-            { text: 'cline 指南', link: '/assignments/cline' },
-            { text: '作业3: 参考题解', link: '/assignments/assignment-3-solution/index' },
-            { text: '作业4: 参考题解', link: '/assignments/assignment-4-solution/index' },
-            { text: '大作业: ai for science 应用探索', link: '/assignments/final-project' }
-          ]
-        }
-      ],
+      '/assignments/': [{ text: '作业指南', items: [
+        { text: '作业概述', link: '/assignments/overview' },
+        { text: '提交方式', link: '/assignments/submission' }
+      ] }],
       '/resources/': [
         {
           text: '资源',
@@ -141,7 +136,7 @@ export default defineConfig({
     // 页脚
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2025 AI x Physics Course Team'
+      copyright: 'Copyright © 2025-2026 AI x Physics Course Team'
     },
 
     // 搜索
@@ -196,9 +191,9 @@ export default defineConfig({
 
   // Vite 配置
   vite: {
+    publicDir,
     plugins: [
-      pageContentApiPlugin(),
-      feedbackApiPlugin()
+      pageContentApiPlugin()
     ],
     server: {
       fs: {

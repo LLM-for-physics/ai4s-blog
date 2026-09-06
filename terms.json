@@ -1,0 +1,13 @@
+{
+  "current": {
+    "id": "2026-fall",
+    "label": "2026 秋"
+  },
+  "archives": [
+    {
+      "id": "2025-fall",
+      "label": "2025 秋",
+      "commit": "2bb11ac239c3bc79c73c22c857913b54d9d98f40"
+    }
+  ]
+}

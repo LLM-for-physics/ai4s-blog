@@ -44,6 +44,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { withBase } from 'vitepress'
 
 const props = defineProps({
   src: {
@@ -95,7 +96,7 @@ async function loadCode() {
   error.value = ''
   
   try {
-    const response = await fetch(props.src)
+    const response = await fetch(withBase(props.src))
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
@@ -190,7 +191,7 @@ function showCopyError() {
 
 function downloadFile() {
   const link = document.createElement('a')
-  link.href = props.src
+  link.href = withBase(props.src)
   link.download = computedFilename.value
   document.body.appendChild(link)
   link.click()
