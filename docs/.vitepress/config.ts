@@ -47,8 +47,6 @@ export default defineConfig({
       { text: '环境配置', link: '/setup/overview' },
       { text: '计算机基础', link: '/computer-basic/overview' },
       { text: '作业', link: '/assignments/overview' },
-      { text: '资源', link: '/resources/links' },
-      { text: 'LLM 网关', link: '/course/llm-gateway' },
       { text: `版本: ${terms.current.label}`, items: [
         { text: `${terms.current.label}（当前）`, link: 'https://aiphy.pku.edu.cn/', target: '_self' },
         ...terms.archives.map(term => ({ text: `${term.label}（归档）`, link: `https://aiphy.pku.edu.cn/archive/${term.id}/`, target: '_self' }))
@@ -78,8 +76,6 @@ export default defineConfig({
             { text: '工具调用', link: '/course/llm-agent/tool-calling' },
             { text: 'MCP Server', link: '/course/llm-agent/mcp-server' },
             { text: 'RAG', link: '/course/llm-agent/rag' },
-            { text: 'claude code 安装配置', link: '/course/llm-agent/claude-code'},
-            { text: 'openclaw 安装配置', link: '/course/llm-agent/openclaw' },
           ]
         },
         {
@@ -119,16 +115,6 @@ export default defineConfig({
         { text: '作业概述', link: '/assignments/overview' },
         { text: '提交方式', link: '/assignments/submission' }
       ] }],
-      '/resources/': [
-        {
-          text: '资源',
-          items: [
-            { text: 'LLM 网关', link: '/course/llm-gateway' },
-            { text: '相关链接', link: '/resources/links' },
-            { text: 'FAQ', link: '/resources/faq' }
-          ]
-        }
-      ]
     },
 
     // 社交链接

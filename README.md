@@ -52,7 +52,6 @@ ai4s-blog/
 │   │       └── code-examples/  # 代码示例索引
 │   ├── setup/              # 环境配置
 │   ├── assignments/        # 作业指南
-│   ├── resources/          # 学习资源
 │   ├── public/             # 静态资源
 │   │   └── course/llm-agent/code-examples/  # 代码示例文件
 │   ├── score-query.md      # 成绩查询页面

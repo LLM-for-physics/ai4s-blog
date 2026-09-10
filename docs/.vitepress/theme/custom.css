@@ -178,3 +178,62 @@
     font-size: 1rem;
   }
 }
+
+/* Course schedule on small screens */
+@media (max-width: 640px) {
+  .vp-doc .course-schedule table {
+    display: block;
+    width: 100%;
+  }
+
+  .vp-doc .course-schedule thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .vp-doc .course-schedule tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  .vp-doc .course-schedule tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 12px 16px;
+    border: 1px solid var(--vp-c-divider);
+    border-radius: 8px;
+    background: var(--vp-c-bg-soft);
+  }
+
+  .vp-doc .course-schedule td {
+    display: block;
+    padding: 4px 0;
+    border: 0;
+    white-space: normal;
+  }
+
+  .vp-doc .course-schedule td:first-child {
+    font-weight: 600;
+  }
+
+  .vp-doc .course-schedule td:nth-child(2) {
+    text-align: right;
+    color: var(--vp-c-text-2);
+  }
+
+  .vp-doc .course-schedule td:nth-child(3),
+  .vp-doc .course-schedule td:nth-child(4) {
+    grid-column: 1 / -1;
+  }
+
+  .vp-doc .course-schedule td:nth-child(4) {
+    color: var(--vp-c-text-2);
+  }
+
+  .vp-doc .course-schedule td:nth-child(4)::before {
+    content: '授课教师：';
+  }
+}
