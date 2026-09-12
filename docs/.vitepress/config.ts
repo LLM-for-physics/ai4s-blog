@@ -12,6 +12,61 @@ const llmEnv = { ...loadEnv('development', process.cwd(), 'LLM_'), ...process.en
 const configDir = path.dirname(fileURLToPath(import.meta.url))
 const publicDir = preparePublic(path.resolve(configDir, '../public'), path.resolve(configDir, '../../.site-public'))
 
+// Shared navigation groups keep existing document URLs in their new sections.
+const courseSidebar = [
+  {
+    text: '课程介绍',
+    items: [
+      { text: '课程概述', link: '/course/introduction' },
+      { text: '课程大纲', link: '/course/syllabus' },
+      { text: '课程讲义', link: '/course/slides' },
+      { text: '评分标准', link: '/course/grading' },
+      { text: 'LLM 网关', link: '/course/llm-gateway' },
+      // { text: '成绩查询', link: '/score-query' },
+    ]
+  },
+  {
+    text: '作业',
+    items: [
+      { text: '作业概述', link: '/assignments/overview' },
+      { text: '提交方式', link: '/assignments/submission' }
+    ]
+  }
+]
+
+const referenceSidebar = [
+  {
+    text: '计算机基础',
+    items: [
+      { text: '概述', link: '/computer-basic/overview' },
+      // { text: '科学上网', link: '/computer-basic/vpn' },
+      { text: 'git 基础', link: '/computer-basic/git-usage' },
+      { text: 'SSH 使用指南', link: '/computer-basic/ssh' },
+      { text: 'Python 基础', link: '/computer-basic/python' },
+      { text: 'VS Code 介绍', link: '/computer-basic/vscode' },
+      { text: 'Linux 系统', link: '/computer-basic/linux' }
+    ]
+  },
+  {
+    text: 'AI 基础',
+    items: [
+      { text: '神经网络', link: '/course/ai/neural-network' },
+      { text: 'PyTorch 与深度学习', link: '/course/ai/torch' },
+    ]
+  },
+  {
+    text: 'LLM agent 技术文档',
+    items: [
+      { text: '概述', link: '/course/llm-agent/overview' },
+      { text: '基础 API 调用', link: '/course/llm-agent/api-basics' },
+      { text: '高级用法', link: '/course/llm-agent/advanced-usage' },
+      { text: '工具调用', link: '/course/llm-agent/tool-calling' },
+      { text: 'MCP Server', link: '/course/llm-agent/mcp-server' },
+      { text: 'RAG', link: '/course/llm-agent/rag' },
+    ]
+  }
+]
+
 export default defineConfig({
   title: 'AI x Physics 课程主页',
   description: '人工智能与物理学交叉学科课程文档',
@@ -43,49 +98,22 @@ export default defineConfig({
     // 导航栏
     nav: [
       { text: '首页', link: '/' },
-      { text: '课程', link: '/course/introduction' },
+      { text: '课程', link: '/course/introduction', activeMatch: '^/(?:course/(?!ai/|llm-agent/)|assignments/)' },
       { text: '环境配置', link: '/setup/overview' },
-      { text: '计算机基础', link: '/computer-basic/overview' },
-      { text: '作业', link: '/assignments/overview' },
+      { text: '参考文档', link: '/computer-basic/overview', activeMatch: '^/(?:computer-basic|course/(?:ai|llm-agent))/' },
       { text: `版本: ${terms.current.label}`, items: [
         { text: `${terms.current.label}（当前）`, link: 'https://aiphy.pku.edu.cn/', target: '_self' },
         ...terms.archives.map(term => ({ text: `${term.label}（归档）`, link: `https://aiphy.pku.edu.cn/archive/${term.id}/`, target: '_self' }))
       ] },
     ],
 
-    // 侧边栏
+    // More specific course paths belong to reference documents.
     sidebar: {
-      '/course/': [
-        {
-          text: '课程介绍',
-          items: [
-            { text: '课程概述', link: '/course/introduction' },
-            { text: '课程大纲', link: '/course/syllabus' },
-            { text: '课程讲义', link: '/course/slides' },
-            { text: '评分标准', link: '/course/grading' },
-            { text: 'LLM 网关', link: '/course/llm-gateway' },
-            // { text: '成绩查询', link: '/score-query' },
-          ]
-        },
-        {
-          text: 'LLM agent 技术文档',
-          items: [
-            { text: '概述', link: '/course/llm-agent/overview' },
-            { text: '基础 API 调用', link: '/course/llm-agent/api-basics' },
-            { text: '高级用法', link: '/course/llm-agent/advanced-usage' },
-            { text: '工具调用', link: '/course/llm-agent/tool-calling' },
-            { text: 'MCP Server', link: '/course/llm-agent/mcp-server' },
-            { text: 'RAG', link: '/course/llm-agent/rag' },
-          ]
-        },
-        {
-          text: 'AI 基础',
-          items: [
-            { text: '神经网络', link: '/course/ai/neural-network' },
-            { text: 'PyTorch 与深度学习', link: '/course/ai/torch' },
-          ]
-        }
-      ],
+      '/course/ai/': referenceSidebar,
+      '/course/llm-agent/': referenceSidebar,
+      '/computer-basic/': referenceSidebar,
+      '/course/': courseSidebar,
+      '/assignments/': courseSidebar,
       '/setup/': [
         {
           text: '环境配置',
@@ -97,24 +125,6 @@ export default defineConfig({
           ]
         }
       ],
-      '/computer-basic/': [
-        {
-          text: '计算机基础',
-          items: [
-            { text: '概述', link: '/computer-basic/overview' },
-            // { text: '科学上网', link: '/computer-basic/vpn' },
-            { text: 'git 基础', link: '/computer-basic/git-usage' },
-            { text: 'SSH 使用指南', link: '/computer-basic/ssh' },
-            { text: 'Python 基础', link: '/computer-basic/python' },
-            { text: 'VS Code 介绍', link: '/computer-basic/vscode' },
-            { text: 'Linux 系统', link: '/computer-basic/linux' }
-          ]
-        },
-      ],
-      '/assignments/': [{ text: '作业指南', items: [
-        { text: '作业概述', link: '/assignments/overview' },
-        { text: '提交方式', link: '/assignments/submission' }
-      ] }],
     },
 
     // 社交链接
