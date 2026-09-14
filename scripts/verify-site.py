@@ -42,6 +42,34 @@ def verify_sealed(root):
     return data
 
 
+def verify_archive_visibility(root, term):
+    """Check public archive contents, including bundled pages and local search data."""
+    revision = term.get('publicRevision')
+    if not revision:
+        return
+    policies = json.loads((ROOT / 'scripts/archive/visibility.json').read_text())
+    policy = policies.get(term['id'])
+    if not policy or policy['publicRevision'] != revision:
+        raise ValueError('Unknown archive visibility revision')
+    tokens = policy['forbiddenTokens']
+    path_tokens = tokens + policy.get('forbiddenPathTokens', [])
+    encoded = {value.encode('utf-8') for value in tokens}
+    encoded.update(json.dumps(value, ensure_ascii=True)[1:-1].encode('ascii') for value in tokens)
+    for file in root.rglob('*'):
+        relative = file.relative_to(root).as_posix()
+        if any(token in relative for token in path_tokens):
+            raise ValueError(f'Hidden archive resource in public output: {relative}')
+        if not file.is_file():
+            continue
+        # The build does not produce precompressed assets. Reject unexpected copies.
+        if file.suffix in ('.gz', '.br'):
+            raise ValueError(f'Unverified compressed public archive resource: {relative}')
+        if file.suffix in ('.html', '.js', '.json', '.map', '.md', '.txt', '.xml', '.css'):
+            content = file.read_bytes()
+            if any(token in content for token in encoded):
+                raise ValueError(f'Hidden archive content in public output: {relative}')
+
+
 class Links(HTMLParser):
     def __init__(self):
         super().__init__()
@@ -99,6 +127,12 @@ def verify(root, base, source=None):
         raise ValueError('\n'.join(sorted(errors)))
     if not (root / 'index.html').is_file() or not (root / '404.html').is_file():
         raise ValueError('Missing index or 404 page')
+    if base != '/':
+        term_id = base.strip('/').split('/')[-1]
+        terms = json.loads((ROOT / 'terms.json').read_text())['archives']
+        term = next((item for item in terms if item['id'] == term_id), None)
+        if term:
+            verify_archive_visibility(root, term)
     (root / MANIFEST).write_text(json.dumps({'base': base, 'files': file_hashes(root)}, ensure_ascii=False, indent=2) + '\n')
     print(f'Verified {len(pages)} pages and sealed artifact: {root}')
 
@@ -114,4 +148,10 @@ if __name__ == '__main__':
     else:
         verify(ROOT / 'docs/.vitepress/dist', '/', ROOT / 'docs')
         for term in ([] if args.current_only else json.loads((ROOT / 'terms.json').read_text())['archives']):
-            verify(ROOT / 'artifacts/archive' / term['id'], f"/archive/{term['id']}/", ROOT / '.archive-build' / term['id'] / 'docs')
+            if term.get('publicRevision'):
+                artifact = ROOT / 'artifacts/archive-public' / term['publicRevision'] / term['id']
+                source = ROOT / '.archive-build/public' / term['publicRevision'] / term['id'] / 'docs'
+            else:
+                artifact = ROOT / 'artifacts/archive' / term['id']
+                source = ROOT / '.archive-build' / term['id'] / 'docs'
+            verify(artifact, f"/archive/{term['id']}/", source)

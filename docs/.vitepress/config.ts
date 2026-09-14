@@ -21,7 +21,6 @@ const courseSidebar = [
       { text: '课程大纲', link: '/course/syllabus' },
       { text: '课程讲义', link: '/course/slides' },
       { text: '评分标准', link: '/course/grading' },
-      { text: 'LLM 网关', link: '/course/llm-gateway' },
       // { text: '成绩查询', link: '/score-query' },
     ]
   },
@@ -30,6 +29,17 @@ const courseSidebar = [
     items: [
       { text: '作业概述', link: '/assignments/overview' },
       { text: '提交方式', link: '/assignments/submission' }
+    ]
+  }
+]
+
+const courseResourcesSidebar = [
+  {
+    text: '课程资源',
+    items: [
+      { text: 'LLM 网关', link: '/course/llm-gateway' },
+      { text: 'AI 实践', link: '/course/ai-practice' },
+      { text: 'SCOW平台Aether使用', link: '/course/scow-aether' }
     ]
   }
 ]
@@ -98,8 +108,8 @@ export default defineConfig({
     // 导航栏
     nav: [
       { text: '首页', link: '/' },
-      { text: '课程', link: '/course/introduction', activeMatch: '^/(?:course/(?!ai/|llm-agent/)|assignments/)' },
-      { text: '环境配置', link: '/setup/overview' },
+      { text: '课程', link: '/course/introduction', activeMatch: '^/(?:course/(?!ai/|llm-agent/|(?:llm-gateway|ai-practice|scow-aether)(?:$|[/.]))|assignments/)' },
+      { text: '课程资源', link: '/course/llm-gateway', activeMatch: '^/(?:setup/|course/(?:llm-gateway|ai-practice|scow-aether)(?:$|[/.]))' },
       { text: '参考文档', link: '/computer-basic/overview', activeMatch: '^/(?:computer-basic|course/(?:ai|llm-agent))/' },
       { text: `版本: ${terms.current.label}`, items: [
         { text: `${terms.current.label}（当前）`, link: 'https://aiphy.pku.edu.cn/', target: '_self' },
@@ -107,24 +117,17 @@ export default defineConfig({
       ] },
     ],
 
-    // More specific course paths belong to reference documents.
+    // Specific course paths belong to reference documents or course resources.
     sidebar: {
       '/course/ai/': referenceSidebar,
       '/course/llm-agent/': referenceSidebar,
       '/computer-basic/': referenceSidebar,
+      '/course/llm-gateway': courseResourcesSidebar,
+      '/course/ai-practice': courseResourcesSidebar,
+      '/course/scow-aether': courseResourcesSidebar,
       '/course/': courseSidebar,
       '/assignments/': courseSidebar,
-      '/setup/': [
-        {
-          text: '环境配置',
-          items: [
-            { text: '配置概述', link: '/setup/overview' },
-            { text: '服务器使用', link: '/setup/server' },
-            { text: '开发环境', link: '/setup/development' },
-            { text: '常见问题', link: '/setup/troubleshooting' }
-          ]
-        }
-      ],
+      '/setup/': courseResourcesSidebar,
     },
 
     // 社交链接

@@ -1,0 +1,27 @@
+{
+  "2025-fall": {
+    "publicRevision": "without-reference-solutions-v1",
+    "excludedSources": [
+      "assignments/assignment-3-solution",
+      "assignments/assignment-4-solution.md",
+      "assignments/assignment-3-material/reference_solution",
+      "assignments/assignment-3-material/pinn.pth",
+      "public/assignment3_report.zip"
+    ],
+    "hiddenRoutes": [
+      "/assignments/assignment-3-solution",
+      "/assignments/assignment-4-solution"
+    ],
+    "forbiddenPathTokens": ["pinn.pth"],
+    "forbiddenTokens": [
+      "assignment-3-solution",
+      "assignment-4-solution",
+      "assignment3_report",
+      "reference_solution",
+      "strict_solution_data.npz",
+      "参考题解",
+      "如何在对手也采取最优策略的前提下",
+      "高性能实现方案（不必要）"
+    ]
+  }
+}

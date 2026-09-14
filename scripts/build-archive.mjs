@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
 import { assertPublicSafe } from './public-safety.mjs'
+import { applyVisibility, visibilityPolicy } from './archive/visibility.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const terms = JSON.parse(readFileSync(path.join(root, 'terms.json')))
@@ -15,7 +16,10 @@ const run = (cmd, args, options = {}) => execFileSync(cmd, args, { cwd: root, st
 
 for (const term of archives) {
   if (!/^\d{4}-(spring|fall)$/.test(term.id) || !/^[a-f0-9]{40}$/.test(term.commit)) throw new Error('Invalid archive metadata')
-  const stage = path.join(root, '.archive-build', term.id)
+  const policy = visibilityPolicy(term)
+  const stage = policy
+    ? path.join(root, '.archive-build/public', term.publicRevision, term.id)
+    : path.join(root, '.archive-build', term.id)
   rmSync(stage, { recursive: true, force: true })
   mkdirSync(stage, { recursive: true })
   const tar = path.join(stage, 'source.tar')
@@ -55,6 +59,7 @@ for (const term of archives) {
   writeFileSync(serverPath, server)
   // Known pre-existing sidebar link points to a file, not a directory index.
   writeFileSync(configPath, readFileSync(configPath, 'utf8').replaceAll('/assignments/assignment-4-solution/index', '/assignments/assignment-4-solution'))
+  applyVisibility(docs, term)
   // Raw HTML download attributes are not rewritten by VitePress's Markdown link transform.
   function patchHtmlLinks(dir) {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -69,13 +74,17 @@ for (const term of archives) {
   }
   patchHtmlLinks(docs)
   assertPublicSafe(path.join(docs, 'public'))
-  const out = path.join(root, 'artifacts/archive', term.id)
+  const out = policy
+    ? path.join(root, 'artifacts/archive-public', term.publicRevision, term.id)
+    : path.join(root, 'artifacts/archive', term.id)
   rmSync(out, { recursive: true, force: true })
   run(process.execPath, [path.join(root, 'node_modules/vitepress/bin/vitepress.js'), 'build', docs, '--outDir', out])
   assertPublicSafe(out)
-  const adapterFiles = ['scripts/build-archive.mjs', 'scripts/archive/theme.ts', 'scripts/public-safety.mjs']
+  const adapterFiles = ['scripts/build-archive.mjs', 'scripts/archive/theme.ts', 'scripts/public-safety.mjs',
+    'scripts/archive/visibility.mjs', 'scripts/archive/visibility.json']
   const metadata = {
     term: term.id, sourceCommit: term.commit,
+    ...(policy ? { publicRevision: term.publicRevision } : {}),
     node: process.version, packageManager: originalPackage.packageManager,
     lockfileSha256: hash(readFileSync(path.join(stage, 'yarn.lock'))),
     adapterSha256: Object.fromEntries(adapterFiles.map(file => [file, hash(readFileSync(path.join(root, file)))]))

@@ -15,9 +15,11 @@ yarn site:verify
 yarn deploy:test
 ```
 
-`yarn site:build` 合并前两个构建命令。主站输出在 `docs/.vitepress/dist/`，归档在 `artifacts/archive/2025-fall/`。`site-manifest.json` 是全部文件的 SHA-256 清单；`archive-build.json` 记录基线、Node、包管理器、锁文件和适配代码摘要。验证失败的产物不可发布。
+`yarn site:build` 合并前两个构建命令。主站输出在 `docs/.vitepress/dist/`；当前 2025 秋公开归档输出在 `artifacts/archive-public/without-reference-solutions-v1/2025-fall/`，此前保存的完整基线产物位于 `artifacts/archive/2025-fall/`。`site-manifest.json` 是全部文件的 SHA-256 清单；`archive-build.json` 记录基线、Node、包管理器、锁文件和适配代码摘要。验证失败的产物不可发布。
 
 `docs/public` 中的通用代码示例可以在本地有虚拟环境；构建先生成 `.site-public/`，排除隐藏文件、虚拟环境、缓存。学生表、成绩、反馈文件不属于公开资源，检查发现会阻止构建。构建之外还需审计代码示例中的实际凭据，不应把私有数据塞入任意其他文件名绕过限制。
+
+首次向空部署目录发布（包括本地模拟和首次生产迁移）还需要完整基线的已封存产物：将其从保留产物恢复到 `artifacts/archive/2025-fall/`，或通过 `--archives` 指定包含该学期目录的其他位置。当前 `yarn archive:build` 只生成公开版本，不能单独满足首次安装的完整基线前置要求；部署目录已有完整基线时可直接复用。
 
 本地模拟发布（不会修改 nginx）：
 
@@ -47,7 +49,7 @@ sudo python3 deploy/migrate-production.py
 5. 验证首页、归档深层页和刷新、代码预览/下载、Mermaid、移动端横幅和版本切换。未知 URL 返回 404，`/score/extra.yaml`、旧学生表、归档成绩数据路径不可访问。确认旧数据没有通过其他 location/域名公开。
 6. 保留旧站点和配置备份，完成线上验收后再按运维保留策略处理。首次迁移回退需恢复旧 nginx 配置；常规发布回退只切换 current。
 
-发布目录：
+当前公开版本的发布目录（完整基线单独保留）：
 
 ```text
 /var/www/ai4s-site/
@@ -55,8 +57,12 @@ sudo python3 deploy/migrate-production.py
   releases/<release-id>/
     index.html
     archive/index.html
-    archive/2025-fall -> /var/www/ai4s-site/archives/2025-fall
+    archive/2025-fall -> /var/www/ai4s-site/public-archives/without-reference-solutions-v1/2025-fall
   archives/2025-fall/
+    index.html
+    archive-build.json
+    site-manifest.json
+  public-archives/without-reference-solutions-v1/2025-fall/
     index.html
     archive-build.json
     site-manifest.json
@@ -79,6 +85,28 @@ sudo python3 deploy/publish.py --rollback /var/www/ai4s-site/releases/<previous-
 ```
 
 不删除历史发布；磁盘清理由运维另行安排，不能删除 current 或仍需回滚的目标。主站切换是原子的，但已打开旧页面的浏览器仍可能请求旧哈希资源；正常发布后必要时刷新页面。若需要保证跨发布的长会话连续性，可另行建设共享哈希资源存储。
+
+## 2025 秋公开归档：暂时隐藏参考题解
+
+`terms.json` 中的 `publicRevision: without-reference-solutions-v1` 指定当前公开范围；过滤规则在 `scripts/archive/visibility.json` 和 `scripts/archive/visibility.mjs`。适配器只处理从固定 Git 基线提取的临时副本，完整历史资料和已封存的原始归档不被修改。
+
+本公开版本移除作业 3、作业 4 的参考题解页面及入口、作业 3 的完整代码与报告包、参考实现和模型附件。题目正文、自测脚本与测试数据保留。移除发生在 VitePress 构建之前，因此解答不会进入页面脚本、搜索索引和生成资源。
+
+首次准备此公开版本：
+
+```bash
+yarn archive:build 2025-fall
+```
+
+该命令现在将 2025 秋输出到 `artifacts/archive-public/without-reference-solutions-v1/2025-fall/`，临时源位于 `.archive-build/public/without-reference-solutions-v1/2025-fall/docs/`。`archive-build.json` 同时记录原始基线与公开版本；校验器还会扫描禁止公开的文件路径、解答文字、页面脚本及搜索数据。原 `artifacts/archive/2025-fall/` 保持不变。
+
+发布时，完整原始归档仍位于 `/var/www/ai4s-site/archives/2025-fall/`；经过过滤的公开归档安装到 `/var/www/ai4s-site/public-archives/without-reference-solutions-v1/2025-fall/`。新 release 的 `archive/2025-fall` 只链接到该公开版本。nginx 仍仅提供 `current` 下的内容，没有新增指向原始归档的公开路由。
+
+日常发布无需重建该公开版本：已安装的公开版本可直接复用；本地候选存在时必须与已安装版本一致。缺少指定公开版本、公开版本标签不匹配、内容含题解，或产物校验失败时，发布必须中止，不能回退到完整原始归档。
+
+回滚也须符合当前公开范围。指向完整原始归档的旧 release 会被拒绝，即使其主站内容有效。需要恢复旧主站时，应重新生成一个使用当前公开归档的新 release。将来恢复题解须明确修改公开策略、使用新的公开版本编号并重新构建验证；不能通过普通回滚间接恢复。
+
+上线后应检查两篇题解的 clean URL、`.html`、目录和 `index.html` 变体、旧页面脚本、旧搜索脚本和 `assignment3_report.zip` 均返回 404，普通作业页面与测试包仍可使用。服务端隐藏无法撤回访问者已经下载或缓存的历史文件。
 
 ## 下一学期
 

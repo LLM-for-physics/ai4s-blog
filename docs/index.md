@@ -35,6 +35,12 @@ hero:
 
 [查看完整课表（15 周）](/course/syllabus)
 
+### 🔗 常用网站
+- **课程网站**：[aiphy.pku.edu.cn](https://aiphy.pku.edu.cn/)
+- **SCOW 平台**：[scow-zy.pku.edu.cn](http://scow-zy.pku.edu.cn/)
+- **课程 API 网关**：[llmapi.aiphys.cn](http://llmapi.aiphys.cn/)
+- **Aether 官网**：[aether.aiphys.cn](https://aether.aiphys.cn/)
+
 </div>
 
 <div class="info-card">
