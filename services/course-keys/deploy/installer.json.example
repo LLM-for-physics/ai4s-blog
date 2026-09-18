@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 2,
+  "serverId": "190",
+  "keysDirectory": "/etc/ssh/course_authorized_keys",
+  "stateDirectory": "/var/lib/course-key-service/installer",
+  "sshKeygen": "/usr/bin/ssh-keygen",
+  "requiredGroup": "course_students",
+  "deniedGroups": [
+    "sudo",
+    "admin",
+    "wheel",
+    "docker",
+    "lxd"
+  ],
+  "allowedAccounts": {},
+  "minimumRsaBits": 3072
+}

@@ -1,0 +1,27 @@
+[Unit]
+Description=Course SSH key import worker
+After=network.target
+
+[Service]
+Type=simple
+User=course-keys-importer
+Group=course-keys-api
+WorkingDirectory=/usr/local/lib/course-key-service/current
+Environment=NODE_ENV=production
+EnvironmentFile=/etc/course-keys/importer.env
+ExecStart=/usr/local/lib/course-key-service/runtime/bin/node /usr/local/lib/course-key-service/current/src/worker.js
+Restart=on-failure
+RestartSec=3
+RuntimeDirectory=course-keys-importer
+RuntimeDirectoryMode=0750
+UMask=0007
+PrivateTmp=true
+ProtectHome=true
+# The sole sudo command needs setuid. Do not set NoNewPrivileges=true,
+# RestrictSUIDSGID=true, or an empty CapabilityBoundingSet here.
+ProtectSystem=strict
+ReadWritePaths=/var/lib/course-key-service/importer /var/lib/course-key-service/installer /etc/ssh/course_authorized_keys /run/course-keys-importer
+InaccessiblePaths=/var/lib/course-key-service/web
+# Backend changes the socket to 0660; the shared group may connect, not write code.
+[Install]
+WantedBy=multi-user.target

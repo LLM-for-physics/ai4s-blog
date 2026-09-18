@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily course key recovery snapshot
+
+[Timer]
+OnCalendar=*-*-* 03:17:00
+RandomizedDelaySec=10m
+Persistent=true
+Unit=course-keys-backup.service
+
+[Install]
+WantedBy=timers.target

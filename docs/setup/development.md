@@ -1,27 +1,36 @@
 # Python 开发环境
 
+本文适用于 **2026 秋学期**。请先按[服务器使用指南](/setup/server)完成公钥提交、SSH 登录和服务器分配信息核对，再在自己分配到的服务器上使用开发环境。
+
+::: tip 版本和输出以当前服务器为准
+本页沿用原教程的操作、示例和软件包表格。Python 3.13、表格中的软件包版本，以及下方 CUDA 可用和设备数量为 10 的输出，都是原教程的环境记录或示例，不代表 2026 年三台服务器的当前配置。请在分配到的服务器上运行 `python --version`、`conda list` 和相应检查命令，以实际结果为准。
+:::
+
 ## 概述
 
-本文档详细介绍了服务器上预配置的 Python 开发环境的使用方法。我们为所有用户提供了一个统一的公共 Python 虚拟环境 `pubpy`，该环境基于 Python 3.13 构建，预装了人工智能和科学计算相关的核心库。
+本文档介绍服务器上公共 Python 虚拟环境 `pubpy` 的使用方法。环境位于 `/opt/miniconda/envs/pubpy`，由管理员维护，用于课程的人工智能和科学计算练习；具体 Python 版本和已安装依赖请通过下面的命令核对。
 
 ## 环境信息
 
 - **环境名称**: `pubpy`
-- **Python 版本**: 3.13
+- **Python 版本**: 运行 `python --version` 确认；原教程示例为 3.13
 - **管理工具**: Conda
 - **适用场景**: AI 开发、科学计算、数据分析
 
 ### 快速开始
 
-通过以下命令来配置 conda；以后每次打开终端都可以直接使用 conda 命令
+下面的命令在**登录后的服务器 Bash 终端**中执行，VS Code 的远端终端也适用。首次使用时，若 `conda` 尚未初始化，可以运行：
+
 ```bash
-# 永久配置 conda，修改 shell 配置文件
+# 让当前 Bash 会话可以使用 Conda
 eval "$(/opt/miniconda/bin/conda shell.bash hook)"
-conda init
-# 重新加载 shell 配置或重启终端
-source ~/.bashrc
+# 将初始化配置写入自己的 ~/.bashrc
+conda init bash
+# 在当前终端进入课程环境
 conda activate pubpy
 ```
+
+之后重新连接或新开 Bash 终端即可加载 Conda，无需重复初始化；使用课程环境前仍需确认已激活 `pubpy`。是否自动显示 `(base)` 取决于配置，可运行 `conda env list` 检查已有环境。
 
 ### 激活虚拟环境
 
@@ -46,18 +55,22 @@ conda list
 python -c "import numpy, matplotlib, openai, anthropic; print('环境配置正确')"
 ```
 
-测试 torch 是否已安装以及 cuda 是否可用
+检查当前环境是否已安装 PyTorch，以及 CUDA 是否可用：
+
 ```bash
-python3 -c "import torch; print(f'PyTorch版本: {torch.__version__}'); print(f'CUDA可用: {torch.cuda.is_available()}'); print(f'CUDA设备数量: {torch.cuda.device_count()}' if torch.cuda.is_available() else 'CUDA不可用')"
+python -c "import torch; print(f'PyTorch版本: {torch.__version__}'); print(f'CUDA可用: {torch.cuda.is_available()}'); print(f'CUDA设备数量: {torch.cuda.device_count()}' if torch.cuda.is_available() else 'CUDA不可用')"
 ```
-期待输出
-```
+原教程示例输出如下。当前版本、CUDA 可用状态和设备数量以分配服务器的实际结果为准；如提示缺少依赖，请联系助教确认课程环境。
+
+```text
 PyTorch版本: 2.6.0+cu124
 CUDA可用: True
 CUDA设备数量: 10
 ```
 
 ## 预装软件包
+
+以下保留原教程的软件包与版本记录，便于了解用途；它不是当前服务器的软件清单或 2026 年固定版本要求。请使用 `conda list` 核对当前环境，课程指定版本以本学期要求为准。
 
 ### 核心计算库
 
@@ -103,7 +116,7 @@ CUDA设备数量: 10
 1. 打开 VSCode 并连接到服务器
 2. 在 Python 文件中按 `Ctrl+Shift+P` 打开命令面板
 3. 选择 "Python: Select Interpreter"
-4. 选择 `pubpy` 环境对应的 Python 解释器
+4. 选择 `pubpy` 环境对应的 Python 解释器；若列表中没有显示，可选择输入解释器路径并填写 `/opt/miniconda/envs/pubpy/bin/python`
 
 ### 示例代码
 
@@ -144,9 +157,9 @@ print("✅ 开发环境配置验证完成")
 
 ### 重要提醒
 
-> ⚠️ **注意**: 这是一个共享环境，你可以 pip install 将一些依赖安装在自己用户目录下，但是没有 sudo 权限，不会影响共享环境。
+> ⚠️ **注意**: `pubpy` 是管理员维护的共享环境，请不要直接在其中运行 `pip install` 或 `conda install` 修改依赖。安装到用户目录的包也可能改变 Python 实际加载的版本，不能以没有 `sudo` 权限来判断是否会影响环境。
 
-> 💡 **提示**: 如需安装额外的包，请联系课程团队或助教，或在个人目录下创建独立的虚拟环境。
+> 💡 **提示**: 如需额外依赖，请联系课程团队或助教；也可以在自己的目录中创建独立虚拟环境，确认已切换到该个人环境后再安装。VS Code 解释器和 Notebook 内核也应选为对应的个人环境。
 
 ### 最佳实践
 

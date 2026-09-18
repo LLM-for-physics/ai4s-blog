@@ -1,0 +1,19 @@
+[Unit]
+Description=Snapshot central course keys and installer allowlist on a receiver
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/bin/python3 -I -S /usr/local/libexec/course-keys/backup-target.py
+TimeoutStartSec=120
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/backups/course-key-target
+RestrictAddressFamilies=AF_UNIX
+PrivateNetwork=true
+CapabilityBoundingSet=
+AmbientCapabilities=

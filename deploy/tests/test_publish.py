@@ -97,7 +97,8 @@ class PublicationTests(unittest.TestCase):
             publish.rollback(self.root, self.source, [self.term])
 
     def prepare_public_archive(self):
-        self.public_term = {**self.term, 'publicRevision': 'without-reference-solutions-v1'}
+        policy = json.loads((publish.ROOT / 'scripts/archive/visibility.json').read_text())
+        self.public_term = {**self.term, 'publicRevision': policy[self.term['id']]['publicRevision']}
         self.public_archive = self.public_archives / self.public_term['publicRevision'] / self.term['id']
         self.public_archive.mkdir(parents=True)
         (self.public_archive / 'index.html').write_text('2025 public')

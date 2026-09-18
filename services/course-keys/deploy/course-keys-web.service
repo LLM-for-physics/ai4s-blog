@@ -1,0 +1,33 @@
+[Unit]
+Description=Course SSH key portal API
+After=network.target course-keys-importer.service
+Wants=course-keys-importer.service
+
+[Service]
+Type=simple
+User=course-keys-web
+Group=course-keys-web
+SupplementaryGroups=course-keys-api
+WorkingDirectory=/usr/local/lib/course-key-service/current
+Environment=NODE_ENV=production
+EnvironmentFile=/etc/course-keys/web.env
+ExecStart=/usr/local/lib/course-key-service/runtime/bin/node /usr/local/lib/course-key-service/current/src/server.js
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/course-key-service/web
+InaccessiblePaths=/var/lib/course-key-service/importer /var/lib/course-key-service/installer
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target

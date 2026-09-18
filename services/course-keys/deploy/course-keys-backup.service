@@ -1,0 +1,17 @@
+[Unit]
+Description=Snapshot course key databases under their service owners
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/bin/python3 -I -S /usr/local/libexec/course-keys/backup.py
+TimeoutStartSec=210
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/backups/course-key-service /var/lib/course-key-service/web /var/lib/course-key-service/importer
+ReadOnlyPaths=/var/lib/course-key-service/installer /etc/course-keys /etc/ssh/course_authorized_keys
+RestrictAddressFamilies=AF_UNIX

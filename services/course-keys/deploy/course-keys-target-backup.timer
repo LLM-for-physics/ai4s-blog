@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily receiver central-key recovery snapshot
+
+[Timer]
+OnCalendar=*-*-* 03:27:00 UTC
+RandomizedDelaySec=10m
+Persistent=true
+Unit=course-keys-target-backup.service
+
+[Install]
+WantedBy=timers.target
