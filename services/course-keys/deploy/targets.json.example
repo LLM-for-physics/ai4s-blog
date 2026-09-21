@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "190": { "transport": "local" },
+    "132": {
+      "transport": "ssh", "host": "162.105.151.132", "port": 2024,
+      "user": "course-keys-receiver",
+      "identityFile": "/var/lib/course-key-service/importer/ssh/id_ed25519",
+      "knownHostsFile": "/etc/course-keys/known_hosts"
+    },
+    "197": {
+      "transport": "ssh", "host": "162.105.151.197", "port": 2024,
+      "user": "course-keys-receiver",
+      "identityFile": "/var/lib/course-key-service/importer/ssh/id_ed25519",
+      "knownHostsFile": "/etc/course-keys/known_hosts"
+    }
+  }
+}

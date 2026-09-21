@@ -40,7 +40,11 @@ const courseResourcesSidebar = [
     items: [
       { text: 'LLM 网关', link: '/course/llm-gateway' },
       { text: 'AI 实践', link: '/course/ai-practice' },
-      { text: 'SCOW平台Aether使用', link: '/course/scow-aether' }
+      { text: 'SCOW平台Aether使用', link: '/course/scow-aether' },
+      { text: '服务器使用', link: '/setup/server' },
+      { text: '开发环境', link: '/setup/development' },
+      { text: '服务器公钥提交', link: '/course/ssh-keys' },
+      { text: '公钥提交指南', link: '/course/ssh-keys-guide' }
     ]
   }
 ]
@@ -87,7 +91,7 @@ export default defineConfig({
   srcDir: '.',
   
   // 作业下载附件不参与文档页扫描。
-  srcExclude: ["public/materials/2026-fall/assignment-1/**"],
+  srcExclude: ['public/materials/2026-fall/assignment-1/**'],
 
   // 网站基础配置
   base: '/',
@@ -112,8 +116,8 @@ export default defineConfig({
     // 导航栏
     nav: [
       { text: '首页', link: '/' },
-      { text: '课程', link: '/course/introduction', activeMatch: '^/(?:course/(?!ai/|llm-agent/|(?:llm-gateway|ai-practice|scow-aether)(?:$|[/.]))|assignments/)' },
-      { text: '课程资源', link: '/course/llm-gateway', activeMatch: '^/(?:setup/|course/(?:llm-gateway|ai-practice|scow-aether)(?:$|[/.]))' },
+      { text: '课程', link: '/course/introduction', activeMatch: '^/(?:course/(?!ai/|llm-agent/|(?:llm-gateway|ai-practice|scow-aether|ssh-keys(?:-guide|-admin(?:-guide)?)?)(?:$|[/.]))|assignments/)' },
+      { text: '课程资源', link: '/course/llm-gateway', activeMatch: '^/(?:setup/|course/(?:llm-gateway|ai-practice|scow-aether|ssh-keys(?:-guide|-admin(?:-guide)?)?)(?:$|[/.]))' },
       { text: '参考文档', link: '/computer-basic/overview', activeMatch: '^/(?:computer-basic|course/(?:ai|llm-agent))/' },
       { text: `版本: ${terms.current.label}`, items: [
         { text: `${terms.current.label}（当前）`, link: 'https://aiphy.pku.edu.cn/', target: '_self' },
@@ -129,6 +133,7 @@ export default defineConfig({
       '/course/llm-gateway': courseResourcesSidebar,
       '/course/ai-practice': courseResourcesSidebar,
       '/course/scow-aether': courseResourcesSidebar,
+      '/course/ssh-keys': courseResourcesSidebar,
       '/course/': courseSidebar,
       '/assignments/': courseSidebar,
       '/setup/': courseResourcesSidebar,
@@ -207,6 +212,10 @@ export default defineConfig({
       },
       // 开发环境代理配置：将 /api/llm/ 转发到环境变量配置的 API 地址
       proxy: {
+        '/api/course-keys': {
+          target: process.env.COURSE_KEYS_API_URL || 'http://127.0.0.1:3081',
+          changeOrigin: false
+        },
         '/api/llm': {
           target: llmEnv.LLM_BASE_URL || 'https://api.openai.com/v1',
           changeOrigin: true,

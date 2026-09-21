@@ -1,0 +1,8 @@
+# Multi-server receiver for 132/197; 190 uses local sudo.
+# install-receiver.py renders this with a validated source IP and public key.
+# Place in a ROOT-OWNED authorized-keys file for a dedicated import account.
+# Replace the key and validated source address; never use a student account here.
+restrict,from="REPLACE_WITH_190_EGRESS_IP",command="/usr/bin/sudo -n /usr/bin/python3 -I -S /usr/local/libexec/course-keys/helper.py" ssh-ed25519 REPLACE_WITH_IMPORTER_PUBLIC_KEY
+# The dedicated account receives only the same exact helper sudo command.
+# Keep an executable shell for forced-command execution; do not use nologin.
+# Do not read, parse, evaluate or append SSH_ORIGINAL_COMMAND.

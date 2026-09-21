@@ -1,0 +1,4 @@
+# Install as /etc/sudoers.d/course-keys, root:root 0440, after visudo -cf.
+# Exact interpreter + flags + script path. No wildcard and no extra argv allowed.
+Cmnd_Alias COURSE_KEYS_HELPER = /usr/bin/python3 -I -S /usr/local/libexec/course-keys/helper.py
+course-keys-importer ALL=(root) NOPASSWD: NOSETENV: COURSE_KEYS_HELPER

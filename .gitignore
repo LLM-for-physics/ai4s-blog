@@ -46,3 +46,8 @@ artifacts/
 __pycache__/
 
 .site-public/
+
+# Private course key service development state
+services/course-keys/.data/
+services/course-keys/*.sqlite3*
+services/course-keys/*.sock
