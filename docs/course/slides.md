@@ -36,4 +36,10 @@ python lesson1.py
 python lesson2.py
 ```
 
+## 第 3 周（9 月 21 日）
+
+### 课堂讲义
+
+- [大语言模型深入使用（PDF）](/slides/2026-fall/3-4、大语言模型深入使用.pdf)
+
 历史资料请访问 [2025 秋归档](https://aiphy.pku.edu.cn/archive/2025-fall/)。

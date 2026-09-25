@@ -29,6 +29,7 @@ const courseSidebar = [
     items: [
       { text: '作业概述', link: '/assignments/overview' },
       { text: '作业 1：LLM 多轮对话与上下文管理', link: '/assignments/assignment-1' },
+      { text: '作业 2：Skills 的使用', link: '/assignments/assignment-2' },
       { text: '提交方式', link: '/assignments/submission' }
     ]
   }
@@ -91,7 +92,10 @@ export default defineConfig({
   srcDir: '.',
   
   // 作业下载附件不参与文档页扫描。
-  srcExclude: ['public/materials/2026-fall/assignment-1/**'],
+  srcExclude: [
+    'public/materials/2026-fall/assignment-1/**',
+    'public/materials/2026-fall/assignment-2/**'
+  ],
 
   // 网站基础配置
   base: '/',
