@@ -30,6 +30,7 @@ const courseSidebar = [
       { text: '作业概述', link: '/assignments/overview' },
       { text: '作业 1：LLM 多轮对话与上下文管理', link: '/assignments/assignment-1' },
       { text: '作业 2：Skills 的使用', link: '/assignments/assignment-2' },
+      { text: '作业 3：神经网络学习加法与 PINN 求解静电势', link: '/assignments/assignment-3' },
       { text: '提交方式', link: '/assignments/submission' }
     ]
   }
@@ -94,7 +95,8 @@ export default defineConfig({
   // 作业下载附件不参与文档页扫描。
   srcExclude: [
     'public/materials/2026-fall/assignment-1/**',
-    'public/materials/2026-fall/assignment-2/**'
+    'public/materials/2026-fall/assignment-2/**',
+    'public/materials/2026-fall/assignment-3/**'
   ],
 
   // 网站基础配置
