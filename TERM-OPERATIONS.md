@@ -132,3 +132,17 @@ yarn archive:build 2025-fall
 - 配置备份：`/var/backups/ai4s-site/20260906T154609Z/`，其中 `deployment.json` 记录迁移结果。
 - 原站点 `/var/www/ai4s-blog/` 保留，首次迁移前没有旧 release。若需退回迁移前版本，应恢复上述备份中的 nginx 配置并执行 `nginx -t`、reload；不能使用不存在的 previous release 回滚。
 - 后续内容更新执行 `bash deploy/deploy.sh`，不要重复运行一次性迁移脚本。
+
+
+## 课堂实践材料维护
+
+课程资源侧栏的“课堂实践”包含 AI 实践、神经网络实践、计算图与反向传播和梯度下降演示器。AI 实践保留原网址。
+
+- Notebook 内容源和原文件下载：`docs/public/classroom/2026-fall/notebook/课堂展示-new.ipynb`。替换时保留需要展示的已保存输出；发布流程不会运行 Notebook。
+- 运行 `yarn classroom:render`，由 `scripts/render-classroom-notebook.mjs` 生成 `docs/course/neural-network-practice.md` 和图片。该 Markdown 是生成文件，应修改 Notebook 内容源后再生成，避免直接编辑生成页。`yarn docs:dev` 和 `yarn docs:build` 启动前会自动转换；开发服务已运行时替换 Notebook 后需再次运行转换命令。
+- 运行 `yarn classroom:test` 检查转换行为及实际 Notebook 内容保真。
+- 反向传播原件保存在 `docs/public/classroom/2026-fall/autograd/`，须保留 HTML、Python、README 的相对路径；对应页面为 `docs/course/backprop-demo.md`。
+- 参数地形演示及许可证保存在同级 `training-landscape/`，视频、海报、字幕保存在 `training-animation/`；对应页面为 `docs/course/network-training-visualization.md`。
+- 仅同步面向学生的教学成品和配套文件，不复制制作分镜、配音片段、制作日志或制作素材目录。原始 README、Python 和 Notebook 下载用 HTML 链接保留扩展名。
+
+这些内容仍按日常主站流程构建、验证和发布，不重建归档、不调整公钥服务。

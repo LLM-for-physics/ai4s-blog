@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="用一个可以手算的 PyTorch 例子，逐步理解计算图、链式法则与梯度的反向传播。">
+<title>计算图与反向传播 · AI × Physics</title>
+<style>
+:root{color-scheme:light dark;--bg:#fafaf8;--paper:#fff;--ink:#20242e;--sub:#616773;--line:#dfe2e8;--accent:#3959c9;--soft:#edf1ff;--code:#f0f2f6;--green:#37694c;--update:#a65f0e;--mono:"Cascadia Code",Consolas,monospace;--sans:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif;--serif:"Noto Serif CJK SC","Source Han Serif SC","Songti SC",SimSun,serif}
+@media(prefers-color-scheme:dark){:root{--bg:#1b1b1f;--paper:#202127;--ink:#e2e3e8;--sub:#a9adb8;--line:#383b45;--accent:#a6b2ff;--soft:#2d334c;--code:#252831;--green:#9ed5b3;--update:#edb66b}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.8 var(--sans)}a{color:var(--accent);text-underline-offset:4px}button{font:inherit}button,a{-webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:5px}::selection{background:var(--soft)}
+.topbar{border-bottom:1px solid var(--line);background:var(--bg)}.topbar-inner{max-width:1240px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 32px}.brand{color:var(--ink);text-decoration:none;font-weight:700;letter-spacing:-.4px;font-size:19px}.brand span{font-size:13px;margin-left:14px;color:var(--sub);font-weight:400;letter-spacing:1px}.topnav{display:flex;gap:28px;font-size:14px}.topnav a{color:var(--sub);text-decoration:none}.topnav a:hover{color:var(--accent)}
+main{max-width:1240px;margin:auto;padding:0 32px}.intro{padding:68px 0 44px;display:grid;grid-template-columns:1.35fr 1fr;gap:60px;align-items:end}.eyebrow{font:12px var(--mono);letter-spacing:2px;color:var(--accent);margin:0 0 20px}.intro h1{font:600 clamp(32px,4.2vw,54px)/1.32 var(--serif);letter-spacing:-1px;margin:0 0 20px}.intro p{max-width:650px;color:var(--sub);margin:0;font-size:17px}.model-note{border-left:2px solid var(--accent);padding:8px 0 8px 28px}.model-note .equation{font-size:26px;white-space:nowrap;margin-bottom:10px}.model-note p{font-size:14px}.math{font-family:Georgia,"Times New Roman",var(--serif);font-size:1.14em}.math sub{font-size:.7em}.math sup{font-size:.7em}.values{font:14px/1.9 var(--mono);color:var(--sub)}
+.section{padding:42px 0 48px;border-top:1px solid var(--line)}.section-top{display:flex;align-items:baseline;gap:18px;margin-bottom:24px}.section-no{font:13px var(--mono);letter-spacing:1px;color:var(--accent)}h2{font-size:26px;font-weight:600;letter-spacing:-.5px;margin:0}h3{font-size:18px;margin:0 0 12px;font-weight:600}p{margin:0 0 16px}.section-lead{max-width:790px;color:var(--sub);margin:0 0 26px}.demo-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,1fr);gap:44px;align-items:start}.graph-wrap{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}.graph-frame{display:block;width:100%;height:720px;border:0;background:var(--paper)}.graph-foot{border-top:1px solid var(--line);padding:12px 20px;font-size:13px;color:var(--sub);display:flex;flex-wrap:wrap;gap:8px 20px}.legend-line{display:inline-block;width:22px;height:2px;background:#9299a7;vertical-align:middle;margin-right:8px}.legend-line.back{background:#3694ff}.legend-line.update{background:var(--update)}.update-value{color:var(--update)}.reading-notes{padding-top:7px}.note{padding:0 0 25px;margin:0 0 25px;border-bottom:1px solid var(--line)}.note:last-child{border:0;margin:0;padding:0}.note-label{font:12px var(--mono);letter-spacing:1px;color:var(--accent);margin-bottom:8px}.note p{color:var(--sub);font-size:15px;margin-bottom:8px}.note strong{color:var(--ink);font-weight:600}.formula{font-family:Georgia,"Times New Roman",var(--serif);font-size:22px;line-height:1.7;padding:12px 0;overflow-wrap:anywhere}.small{font-size:13px;color:var(--sub)}.highlight{border-left:3px solid var(--accent);padding:4px 0 4px 18px;margin-top:28px}.highlight p{margin:0;color:var(--ink)}
+.explain-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px}.explain-grid p{color:var(--sub)}.derivation{padding:20px 24px;background:var(--soft);border-radius:10px;margin:18px 0}.derivation .formula{padding:0}.derivation p{font-size:14px;margin:10px 0 0}.sequence{display:flex;gap:12px;align-items:stretch;flex-wrap:wrap;margin-top:25px}.sequence div{flex:1;min-width:170px;border-top:2px solid var(--line);padding-top:14px}.sequence code{display:block;color:var(--accent);font-size:14px}.sequence span{font-size:14px;color:var(--sub)}code{font-family:var(--mono);font-size:.88em;overflow-wrap:anywhere}p code,li code{background:var(--code);border-radius:4px;padding:2px 5px}
+.code-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(250px,1fr);gap:34px}.code-box{min-width:0;background:var(--code);border:1px solid var(--line);border-radius:12px;overflow:hidden}.code-toolbar{padding:11px 18px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);font:12px var(--mono);color:var(--sub)}.code-actions{display:flex;align-items:center;gap:16px}.copy{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:5px 12px;font:13px var(--sans);cursor:pointer}.copy:hover{background:var(--soft)}pre{margin:0;padding:22px;overflow:auto;font:13px/1.85 var(--mono);tab-size:4}pre code{font:inherit;overflow-wrap:normal}.code-comment{color:var(--sub)}.code-keyword{color:var(--accent)}.output{background:var(--paper);border-top:1px solid var(--line)}.output-label{font:12px var(--sans);color:var(--sub);padding:14px 22px 0}.output pre{padding-top:8px;line-height:1.7}.code-notes{padding-top:6px}.code-notes ol{padding-left:24px;margin:0}.code-notes li{padding-left:5px;margin-bottom:21px}.code-notes li p{font-size:15px;color:var(--sub);margin-top:6px}.notice{margin-top:20px;padding:16px 20px;background:var(--soft);border-radius:8px;font-size:14px}.notice p:last-child{margin-bottom:0}
+.questions{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}.questions details{border-bottom:1px solid var(--line);padding:20px 0;align-self:start}.questions summary{font-weight:500;cursor:pointer;list-style:none;display:flex;gap:20px;justify-content:space-between;align-items:baseline}.questions summary::after{content:'+';font:22px var(--mono);color:var(--accent)}.questions details[open] summary::after{content:'−'}.questions details p{color:var(--sub);font-size:15px;margin:15px 0 0}.optional{border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin-top:32px}.optional summary{cursor:pointer;font-weight:500}.optional p{color:var(--sub);margin:18px 0}.optional pre{background:var(--code);border-radius:8px}.references{display:flex;gap:12px 25px;flex-wrap:wrap;font-size:14px;margin:24px 0 0}.references a{color:var(--sub)}.footer{max-width:1240px;margin:auto;padding:24px 32px 40px;border-top:1px solid var(--line);color:var(--sub);font-size:13px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.noscript{padding:15px;background:var(--soft)}
+@media(min-width:1500px){body{font-size:17px}.intro{padding-top:80px}}
+@media(max-width:1000px){.intro{gap:32px}.demo-layout{gap:28px;grid-template-columns:minmax(0,1.35fr) minmax(260px,1fr)}.code-layout{grid-template-columns:minmax(0,1.4fr) minmax(230px,1fr)}.graph-frame{height:740px}}
+@media(max-width:820px){.intro,.demo-layout,.code-layout,.explain-grid{grid-template-columns:1fr}.intro{padding-top:40px;gap:28px}.model-note{padding-left:20px}.reading-notes{display:grid;grid-template-columns:1fr 1fr;gap:26px}.note:last-child{grid-column:1/-1}.note{margin:0;padding:0;border:0}.graph-frame{height:720px}.code-notes{padding-top:8px}.questions{grid-template-columns:1fr}.brand span{display:none}.topnav{gap:18px}.section{padding-top:32px}.explain-grid{gap:30px}}
+@media(max-width:480px){main{padding:0 18px}.topbar-inner{padding:17px 18px;gap:10px;align-items:flex-start;flex-direction:column}.topnav{font-size:13px}.intro{padding-top:32px}.intro h1{font-size:32px}.intro p{font-size:15px}.model-note .equation{font-size:24px}.reading-notes{grid-template-columns:1fr}.note:last-child{grid-column:auto}.graph-frame{height:755px}.section-top{gap:12px}h2{font-size:23px}.derivation{padding:16px}.formula{font-size:20px}.optional{padding:16px}.footer{padding:24px 18px}.code-toolbar{padding:10px 14px}pre{padding:16px}.output pre{padding:12px 16px}.output-label{padding-left:16px}.sequence div{min-width:100%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{body{background:#fff;color:#222}.topnav,.copy,.code-actions{display:none}.intro{padding-top:15px}.graph-wrap{break-inside:avoid}details{display:block}.section{break-inside:auto}pre{white-space:pre-wrap}.footer{margin-top:20px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar-inner"><a class="brand" href="#">AI × Physics<span>课堂实践</span></a><nav class="topnav" aria-label="页面导航"><a href="#graph">计算图</a><a href="#chain-rule">链式法则</a><a href="#pytorch">PyTorch 代码</a></nav></div></header>
+<main>
+<section class="intro" aria-labelledby="page-title"><div><div class="eyebrow">PYTORCH / AUTOGRAD</div><h1 id="page-title">梯度，如何走回参数？</h1><p>从一个可以手算的模型出发，看看数值怎样算出来，<br>梯度又怎样沿着计算图传回去。</p></div><div class="model-note"><div class="equation math">ŷ = wx + b &nbsp; · &nbsp; L = (ŷ − y)<sup>2</sup></div><p>输入 x = 2，目标 y = 5；初始参数 w = 3，b = 1。</p><div class="values">预测 ŷ = 7 &nbsp; → &nbsp; 损失 L = 4</div></div></section>
+<section class="section" id="graph" aria-labelledby="graph-title"><div class="section-top"><span class="section-no">01</span><h2 id="graph-title">顺着算，反着求导</h2></div><p class="section-lead">计算图记录一次计算由哪些运算组成，以及各个量之间的依赖关系。点击“下一步”查看梯度，再点击“更新参数”，观察参数沿梯度的反方向变化。</p><noscript><p class="noscript">交互演示需要启用 JavaScript。下面的推导和代码仍可直接阅读。</p></noscript><div class="demo-layout"><div class="graph-wrap"><iframe class="graph-frame" src="computation-graph.html" title="计算图与梯度逐步反向传播演示" loading="eager"></iframe><div class="graph-foot"><span><i class="legend-line" aria-hidden="true"></i>灰色：正向依赖</span><span><i class="legend-line back" aria-hidden="true"></i>蓝色：梯度反向传播</span><span><i class="legend-line update" aria-hidden="true"></i>橙色：参数更新</span></div></div><aside class="reading-notes" aria-label="读图提示"><div class="note"><div class="note-label">FORWARD / 正向</div><h3>先把每一步的数值算出来</h3><div class="formula">a = wx = 6<br>ŷ = a + b = 7<br>e = ŷ − y = 2<br>L = e<sup>2</sup> = 4</div><p>每个节点先有一个<strong>数值</strong>；这个阶段还没有计算参数的梯度。</p></div><div class="note"><div class="note-label">BACKWARD / 反向</div><h3>再问：谁影响了损失？</h3><p>图中的 <strong>g = ∂L/∂变量</strong> 表示：该变量发生很小的变化时，最终损失会怎样变化。</p><p>反向传播从 <strong>∂L/∂L = 1</strong> 开始，最终得到 <strong>∂L/∂w = 8</strong>、<strong>∂L/∂b = 4</strong>。</p></div><div class="note"><div class="note-label">UPDATE / 参数更新</div><h3>求完梯度，再更新参数</h3><p><code>backward()</code> 后，参数仍为 <strong>w = 3、b = 1</strong>。最后一步用普通 SGD，取学习率 <strong>η = 0.05</strong>：</p><div class="formula">w ← 3 − 0.05 × 8 = <span class="update-value">2.6</span><br>b ← 1 − 0.05 × 4 = <span class="update-value">0.8</span></div><p>这里两个梯度都为正，所以参数都减小。<strong>橙色</strong>标出新参数和变化量；中间量保留上轮结果。</p><p class="small">这是便于讲解的计算关系图；显示顺序不代表 PyTorch 引擎中每个分支的实际执行顺序。</p></div></aside></div></section>
+<section class="section" id="chain-rule" aria-labelledby="chain-title"><div class="section-top"><span class="section-no">02</span><h2 id="chain-title">每经过一步，乘上局部导数</h2></div><div class="explain-grid"><div><h3>沿一条路径：相乘</h3><p>以参数 w 为例：先看损失对误差的变化，再看误差对预测的变化，最后一路回到 w。</p><div class="derivation"><div class="formula">∂L/∂w = 2e × 1 × 1 × x<br>= 4 × 1 × 1 × 2 = <strong>8</strong></div><p>平方 → 减法 → 加法 → 乘法</p></div><p>同理，b 经过的路径更短：</p><div class="formula">∂L/∂b = 2e × 1 × 1 = <strong>4</strong></div></div><div><h3>多条路径汇合：相加</h3><p>如果同一个量通过多条路径影响损失，就把各条路径的梯度贡献相加。这也是更复杂网络中反向传播的基本规则。</p><h3>局部导数和梯度是两回事</h3><p>乘法节点 a = wx 对 w 的<strong>局部导数是 x = 2</strong>；但最终损失对 w 的<strong>梯度是 8</strong>，因为还要乘上后续运算传回来的梯度 4。</p><div class="highlight"><p>PyTorch 替我们按链式法则完成这些计算，不需要手动为整个网络推导公式。</p></div></div></div><div class="sequence" aria-label="一次训练的主要步骤"><div><code>optimizer.zero_grad()</code><span>清除上一次存储的参数梯度</span></div><div><code>pred = model(x)</code><span>正向计算预测，再计算损失</span></div><div><code>loss.backward()</code><span>反向计算参数梯度</span></div><div><code>optimizer.step()</code><span>根据梯度更新参数</span></div></div></section>
+<section class="section" id="pytorch" aria-labelledby="code-title"><div class="section-top"><span class="section-no">03</span><h2 id="code-title">在 PyTorch 中亲眼验证</h2></div><p class="section-lead">把下面的代码放进一个 Notebook 单元格，完整运行一次。它与上面的计算图一一对应，只依赖 PyTorch。</p><div class="code-layout"><div class="code-box"><div class="code-toolbar"><span>autograd_demo.py</span><div class="code-actions"><a href="autograd_demo.py" download>下载代码</a><button type="button" class="copy" id="copy-code">复制代码</button></div></div><pre><code id="demo-code">import torch
+
+# 已知数据：本例不需要计算它们的梯度
+x = torch.tensor(2.0)
+y = torch.tensor(5.0)
+
+# 模型参数：需要计算损失对它们的梯度
+w = torch.tensor(3.0, requires_grad=True)
+b = torch.tensor(1.0, requires_grad=True)
+optimizer = torch.optim.SGD([w, b], lr=0.05)
+
+# 正向计算
+a = w * x
+pred = a + b
+error = pred - y
+loss = error ** 2
+
+# 仅为了观察：保留中间量的梯度
+for value in (a, pred, error):
+    value.retain_grad()
+
+# 反向传播：计算梯度，不更新参数
+loss.backward()
+
+for name, value in [
+    ("error", error), ("pred", pred), ("a", a),
+    ("w", w), ("b", b)
+]:
+    print(f"{name}: 数值={value.item()}, 梯度={value.grad.item()}")
+
+# 梯度计算完成后，由优化器更新参数
+optimizer.step()
+print(f"更新后的 w = {w.item():.1f}")
+print(f"更新后的 b = {b.item():.1f}")
+# 已有的 pred、loss 不会自动刷新；新的结果需要重新前向计算。</code></pre><div class="output"><div class="output-label">预期输出</div><pre>error: 数值=2.0, 梯度=4.0
+pred: 数值=7.0, 梯度=4.0
+a: 数值=6.0, 梯度=4.0
+w: 数值=3.0, 梯度=8.0
+b: 数值=1.0, 梯度=4.0
+更新后的 w = 2.6
+更新后的 b = 0.8</pre></div></div><div class="code-notes"><ol><li><strong>requires_grad=True</strong><p>允许自动求导记录相关运算。它不表示梯度已经算好了；新建 w、b 后，它们的 <code>.grad</code> 仍然是 <code>None</code>。</p></li><li><strong>retain_grad()</strong><p>中间量 a、pred、error 也参与反向传播，但默认不保存自己的 <code>.grad</code>。这里额外保留，是为了观察过程。</p></li><li><strong>loss.backward()</strong><p>从损失出发，计算并累积梯度。计算完成后，可以通过 <code>w.grad</code> 和 <code>b.grad</code> 查看结果。</p></li><li><strong>item()</strong><p>把只有一个元素的张量转换成普通 Python 数值，方便打印。参与反向传播的 loss 本身仍应保持为张量。</p></li><li><strong>optimizer.step()</strong><p>这里使用普通 SGD，按“参数减去学习率乘梯度”更新 w、b。优化器不会自动清空梯度，也不会刷新之前算出的预测和损失。</p></li></ol><div class="notice"><p>普通训练通常不需要给中间量调用 <code>retain_grad()</code>。</p><p>重新演示时，请重新运行整个单元格，创建新的参数和计算图。</p></div><p class="small" id="copy-status" role="status" aria-live="polite"></p></div></div></section>
+<section class="section" id="questions" aria-labelledby="question-title"><div class="section-top"><span class="section-no">04</span><h2 id="question-title">把几个容易混淆的地方分开</h2></div><div class="questions"><details><summary>输入 x 不求梯度，能计算 w 的梯度吗？</summary><p>可以。计算 ∂L/∂w 时会用到 x 的数值，但不要求计算 x 自己的梯度。本例中 <code>x.grad</code> 是 <code>None</code>，表示没有为它存储梯度，并不是数学导数为零。普通函数拟合通常只需要模型参数的梯度。</p></details><details><summary>为什么每轮训练要 zero_grad()？</summary><p>PyTorch 默认把新算出的梯度累积到已有的 <code>.grad</code> 中。通常每轮更新只使用本轮的梯度，所以先清除上一轮存储的梯度。这与一张计算图中多条路径贡献相加，是两个不同层面的“累加”。</p></details><details><summary>backward() 和 step() 有什么不同？</summary><p><code>backward()</code> 负责计算梯度；<code>step()</code> 负责更新参数。以普通 SGD 为例，更新规则是 w ← w − 学习率 × ∂L/∂w。参数更新后，要重新进行前向计算，才能得到新的预测和损失。</p></details><details><summary>计算图是先画好再执行的吗？</summary><p>在本例使用的 PyTorch 默认即时执行模式中，相关运算发生时就会建立计算图。多层网络只是组合了更多运算，求导的链式法则不变。</p></details></div><details class="optional"><summary>拓展：查看自己网络的实际计算图</summary><p><code>torchviz</code> 可以绘制 PyTorch 的反向运算图。下面假设已经定义好课堂示例中的 <code>model</code>、<code>grid</code>、<code>potential</code> 和 <code>loss_fn</code>。</p><pre><code>from torchviz import make_dot
+from IPython.display import display
+
+pred_demo = model(grid[:2])
+loss_demo = loss_fn(pred_demo, potential(grid[:2]))
+
+display(make_dot(
+    loss_demo,
+    params=dict(model.named_parameters())
+))</code></pre><p>需要 Python 包 <code>torchviz</code>，以及运行环境中的 Graphviz 程序。它展示的是静态运算关系，节点可能叫 <code>AddmmBackward</code>、<code>EluBackward</code> 等；不会自动播放梯度传播，也不会自动标出上面演示中的全部梯度数值。</p></details><div class="references" aria-label="参考资料"><a href="https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html" target="_blank" rel="noopener noreferrer">PyTorch：自动求导</a><a href="https://docs.pytorch.org/tutorials/beginner/understanding_leaf_vs_nonleaf_tutorial.html" target="_blank" rel="noopener noreferrer">PyTorch：叶子与非叶子张量</a><a href="https://github.com/szagoruyko/pytorchviz" target="_blank" rel="noopener noreferrer">torchviz 项目说明</a></div></section>
+</main><footer class="footer"><span>AI × Physics · 神经网络课堂实践</span><span>一个模型，一个样本，一次反向传播。</span></footer>
+<script>
+(() => {
+ const button=document.getElementById('copy-code');
+ const code=document.getElementById('demo-code');
+ const status=document.getElementById('copy-status');
+ button.addEventListener('click',async()=>{
+   try {
+     if(!navigator.clipboard?.writeText)throw new Error('Clipboard unavailable');
+     await navigator.clipboard.writeText(code.textContent);
+     status.textContent='代码已复制，可以粘贴到 Notebook 单元格中。';
+   } catch {
+     const selection=window.getSelection();
+     const range=document.createRange();range.selectNodeContents(code);
+     selection.removeAllRanges();selection.addRange(range);
+     status.textContent='已选中代码，请按 Ctrl+C（macOS 使用 Command+C）复制。';
+   }
+ });
+})();
+</script>
+</body>
+</html>

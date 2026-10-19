@@ -41,12 +41,26 @@ const courseResourcesSidebar = [
     text: '课程资源',
     items: [
       { text: 'LLM 网关', link: '/course/llm-gateway' },
-      { text: 'AI 实践', link: '/course/ai-practice' },
       { text: 'SCOW平台Aether使用', link: '/course/scow-aether' },
       { text: '服务器使用', link: '/setup/server' },
       { text: '开发环境', link: '/setup/development' },
       { text: '服务器公钥提交', link: '/course/ssh-keys' },
       { text: '公钥提交指南', link: '/course/ssh-keys-guide' }
+    ]
+  },
+  {
+    text: '课堂实践',
+    items: [
+      { text: 'AI 实践', link: '/course/ai-practice' },
+      { text: '神经网络实践', link: '/course/neural-network-practice' },
+      { text: '计算图与反向传播', link: '/course/backprop-demo' },
+      { text: '梯度下降演示器', link: '/course/network-training-visualization' }
+    ]
+  },
+  {
+    text: '网络学习资源',
+    items: [
+      { text: '神经网络学习资料', link: '/course/neural-network-resources' }
     ]
   }
 ]
@@ -92,11 +106,12 @@ export default defineConfig({
   // 指定源文件目录
   srcDir: '.',
   
-  // 作业下载附件不参与文档页扫描。
+  // 作业和课堂实践下载附件不参与文档页扫描。
   srcExclude: [
     'public/materials/2026-fall/assignment-1/**',
     'public/materials/2026-fall/assignment-2/**',
-    'public/materials/2026-fall/assignment-3/**'
+    'public/materials/2026-fall/assignment-3/**',
+    'public/classroom/2026-fall/**'
   ],
 
   // 网站基础配置
@@ -122,8 +137,8 @@ export default defineConfig({
     // 导航栏
     nav: [
       { text: '首页', link: '/' },
-      { text: '课程', link: '/course/introduction', activeMatch: '^/(?:course/(?!ai/|llm-agent/|(?:llm-gateway|ai-practice|scow-aether|ssh-keys(?:-guide|-admin(?:-guide)?)?)(?:$|[/.]))|assignments/)' },
-      { text: '课程资源', link: '/course/llm-gateway', activeMatch: '^/(?:setup/|course/(?:llm-gateway|ai-practice|scow-aether|ssh-keys(?:-guide|-admin(?:-guide)?)?)(?:$|[/.]))' },
+      { text: '课程', link: '/course/introduction', activeMatch: '^/(?:course/(?!ai/|llm-agent/|(?:llm-gateway|ai-practice|neural-network-practice|backprop-demo|network-training-visualization|neural-network-resources|scow-aether|ssh-keys(?:-guide|-admin(?:-guide)?)?)(?:$|[/.]))|assignments/)' },
+      { text: '课程资源', link: '/course/llm-gateway', activeMatch: '^/(?:setup/|course/(?:llm-gateway|ai-practice|neural-network-practice|backprop-demo|network-training-visualization|neural-network-resources|scow-aether|ssh-keys(?:-guide|-admin(?:-guide)?)?)(?:$|[/.]))' },
       { text: '参考文档', link: '/computer-basic/overview', activeMatch: '^/(?:computer-basic|course/(?:ai|llm-agent))/' },
       { text: `版本: ${terms.current.label}`, items: [
         { text: `${terms.current.label}（当前）`, link: 'https://aiphy.pku.edu.cn/', target: '_self' },
@@ -138,6 +153,10 @@ export default defineConfig({
       '/computer-basic/': referenceSidebar,
       '/course/llm-gateway': courseResourcesSidebar,
       '/course/ai-practice': courseResourcesSidebar,
+      '/course/neural-network-practice': courseResourcesSidebar,
+      '/course/backprop-demo': courseResourcesSidebar,
+      '/course/network-training-visualization': courseResourcesSidebar,
+      '/course/neural-network-resources': courseResourcesSidebar,
       '/course/scow-aether': courseResourcesSidebar,
       '/course/ssh-keys': courseResourcesSidebar,
       '/course/': courseSidebar,
