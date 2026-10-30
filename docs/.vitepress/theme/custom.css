@@ -224,16 +224,20 @@
     color: var(--vp-c-text-2);
   }
 
-  .vp-doc .course-schedule td:nth-child(3),
-  .vp-doc .course-schedule td:nth-child(4) {
+  .vp-doc .course-schedule td:nth-child(n + 3) {
     grid-column: 1 / -1;
   }
 
-  .vp-doc .course-schedule td:nth-child(4) {
+  .vp-doc .course-schedule td:nth-child(3),
+  .vp-doc .course-schedule td:nth-child(5) {
     color: var(--vp-c-text-2);
   }
 
   .vp-doc .course-schedule td:nth-child(4)::before {
+    content: '课程主题：';
+  }
+
+  .vp-doc .course-schedule td:nth-child(5)::before {
     content: '授课教师：';
   }
 }

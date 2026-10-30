@@ -31,6 +31,7 @@ const courseSidebar = [
       { text: '作业 1：LLM 多轮对话与上下文管理', link: '/assignments/assignment-1' },
       { text: '作业 2：Skills 的使用', link: '/assignments/assignment-2' },
       { text: '作业 3：神经网络学习加法与 PINN 求解静电势', link: '/assignments/assignment-3' },
+      { text: '作业 4：神经网络与搜索——重力四子棋', link: '/assignments/assignment-4' },
       { text: '提交方式', link: '/assignments/submission' }
     ]
   }
@@ -111,6 +112,7 @@ export default defineConfig({
     'public/materials/2026-fall/assignment-1/**',
     'public/materials/2026-fall/assignment-2/**',
     'public/materials/2026-fall/assignment-3/**',
+    'public/materials/2026-fall/assignment-4/**',
     'public/classroom/2026-fall/**'
   ],
 

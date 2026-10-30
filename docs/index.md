@@ -33,7 +33,7 @@ hero:
 - **上课时间**：周一 15:00–18:00
 - **上课地点**：理教103
 
-[查看完整课表（15 周）](/course/syllabus)
+[查看完整课表（15 次课）](/course/syllabus)
 
 ### 🔗 常用网站
 - **课程网站**：[aiphy.pku.edu.cn](https://aiphy.pku.edu.cn/)
