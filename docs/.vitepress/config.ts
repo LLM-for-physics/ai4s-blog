@@ -32,6 +32,7 @@ const courseSidebar = [
       { text: '作业 2：Skills 的使用', link: '/assignments/assignment-2' },
       { text: '作业 3：神经网络学习加法与 PINN 求解静电势', link: '/assignments/assignment-3' },
       { text: '作业 4：神经网络与搜索——重力四子棋', link: '/assignments/assignment-4' },
+      { text: '讲座课作业：AI 与凝聚态物理', link: '/assignments/assignment-5' },
       { text: '提交方式', link: '/assignments/submission' }
     ]
   }

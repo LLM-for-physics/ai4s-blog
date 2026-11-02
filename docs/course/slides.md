@@ -80,4 +80,10 @@ python lesson2.py
 - [对抗搜索（PDF）](/slides/2026-fall/7-16、对抗搜索.pdf)
 - [蒙特卡洛树搜索（PDF）](/slides/2026-fall/7-17、蒙特卡洛搜索.pdf)
 
+## 第 9 周（11 月 2 日，第 8 次课）
+
+### 课堂讲义
+
+- [AI 与凝聚态物理（PDF）](/slides/2026-fall/AI与凝聚态物理课件-2026-JiChen.pdf)
+
 历史资料请访问 [2025 秋归档](https://aiphy.pku.edu.cn/archive/2025-fall/)。
