@@ -43,6 +43,10 @@ assignment-3-material
 # Rebuildable term staging and artifacts
 .archive-build/
 artifacts/
+
+# SRC 漏洞报告原件（含未脱敏信息，仅限本地处置使用，不入库）
+report.pdf
+previewreport.pdf
 __pycache__/
 
 .site-public/

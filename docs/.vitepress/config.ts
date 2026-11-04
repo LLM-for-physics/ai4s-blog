@@ -1,13 +1,10 @@
 import { defineConfig } from 'vitepress'
-import { loadEnv } from 'vite'
 import { MermaidPlugin } from '@leelaa/vitepress-plugin-extended'
 import { pageContentApiPlugin } from './plugins/pageContentApi'
 import terms from '../../terms.json'
 import { preparePublic } from '../../scripts/public-safety.mjs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-
-const llmEnv = { ...loadEnv('development', process.cwd(), 'LLM_'), ...process.env }
 
 const configDir = path.dirname(fileURLToPath(import.meta.url))
 const publicDir = preparePublic(path.resolve(configDir, '../public'), path.resolve(configDir, '../../.site-public'))
@@ -245,19 +242,10 @@ export default defineConfig({
           changeOrigin: false
         },
         '/api/llm': {
-          target: llmEnv.LLM_BASE_URL || 'https://api.openai.com/v1',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/llm/, ''),
-          configure: (proxy, _options) => {
-            proxy.on('proxyReq', (proxyReq, req, _res) => {
-              // Server-only credentials; never accept a browser-supplied credential.
-              proxyReq.removeHeader('Authorization')
-              const apiKey = llmEnv.LLM_API_KEY
-              if (apiKey) {
-                proxyReq.setHeader('Authorization', `Bearer ${apiKey}`)
-              }
-            })
-          }
+          // 开发环境转发到本地 llm-proxy 服务：校验、系统提示词与密钥都在服务端。
+          // 启动方式：node services/llm-proxy/src/server.js --env .env
+          target: process.env.LLM_PROXY_URL || 'http://127.0.0.1:3082',
+          changeOrigin: false
         }
       }
     },

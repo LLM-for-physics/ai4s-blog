@@ -1,0 +1,31 @@
+[Unit]
+Description=AI4S course site LLM proxy
+After=network.target
+
+[Service]
+Type=simple
+User=llm-proxy
+Group=llm-proxy
+WorkingDirectory=/usr/local/lib/ai4s-llm-proxy/current
+Environment=NODE_ENV=production
+EnvironmentFile=/etc/ai4s-llm-proxy/llm-proxy.env
+# Production hosts have no system node; this is the bundled runtime course-keys uses.
+# Point at /usr/bin/node only on hosts that actually have one.
+ExecStart=/usr/local/lib/course-key-service/runtime/bin/node /usr/local/lib/ai4s-llm-proxy/current/src/server.js
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target
