@@ -86,4 +86,12 @@ python lesson2.py
 
 - [AI 与凝聚态物理（PDF）](/slides/2026-fall/AI与凝聚态物理课件-2026-JiChen.pdf)
 
+## 第 12 周（11 月 23 日，第 11 次课）
+
+### 课堂讲义
+
+- [AI 与量子多体物理——张亿（PDF）](/slides/2026-fall/物理与人工智能(YZ2026Lecture11).pdf)
+
+本次作业见[讲座课作业：AI与量子多体物理](/assignments/assignment-6)。
+
 历史资料请访问 [2025 秋归档](https://aiphy.pku.edu.cn/archive/2025-fall/)。

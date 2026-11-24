@@ -1,0 +1,37 @@
+# 讲座课作业：AI与量子多体物理
+
+二维经典 Ising 模型在低温时倾向于有序，高温时趋于无序。请利用提供的自旋构型与温度数据，结合课程学过的 AI 方法和工具，大致判断相变温度 $T_c$ 的位置。
+
+## 作业材料
+
+- <a href="/materials/2026-fall/assignment-6/phase_dataset.npy" download="phase_dataset.npy">训练数据（phase_dataset.npy，约 60.3 MiB）</a>
+- <a href="/materials/2026-fall/assignment-6/作业说明.md" download="作业说明.md">原始作业说明（Markdown）</a>
+
+## 数据说明
+
+`phase_dataset.npy` 中每条记录为 `(自旋构型, 温度 T)`。构型形状为 `(784, 1)`，对应 `28 × 28` 个格点，自旋取值为 `+1` 或 `−1`。数据没有“有序／无序”类别标签。
+
+```python
+import numpy as np
+
+data = np.load("phase_dataset.npy", allow_pickle=True)
+spins, T = data[0]             # 读取一条样本
+image = spins.reshape(28, 28)  # 还原为二维构型
+```
+
+## 作业要求
+
+1. 选择一种 AI 方法（如神经网络分类、聚类或降维），分析不同温度下的自旋构型。
+2. 给出 $T_c$ 的估计，并用一幅结果图和简短说明解释判断依据。
+
+## 提交与评分
+
+请在所属课程服务器的个人目录下建立 `homework6` 文件夹（`~/homework6/`），放入可运行的 Python 代码或 Jupyter Notebook，以及结果图、$T_c$ 估计和简短说明。图和说明可写在 Notebook 中，无需提交数据集。
+
+**截止时间：2026 年 11 月 28 日 23:59（北京时间）。**
+
+本题满分 **5 分**，主要根据相变点估计的准确性评分，允许合理误差。
+
+## 课程讲义
+
+- [AI 与量子多体物理——张亿（PDF）](/slides/2026-fall/物理与人工智能(YZ2026Lecture11).pdf)
